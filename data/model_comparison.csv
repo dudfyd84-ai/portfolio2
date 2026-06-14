@@ -1,0 +1,7 @@
+﻿model,backtest_wape
+xgb,38.0
+lgbm,35.3
+swma,39.1
+ets,41.6
+ens4,36.1
+ens_xl,35.7
