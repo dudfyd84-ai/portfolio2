@@ -1,0 +1,500 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LUMEN SCENT - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-surface": "#111c2d",
+                "on-secondary-fixed-variant": "#434749",
+                "on-background": "#111c2d",
+                "on-surface-variant": "#41484e",
+                "secondary-fixed": "#e0e3e5",
+                "secondary-container": "#dde0e2",
+                "on-secondary-fixed": "#181c1e",
+                "secondary": "#5b5f61",
+                "surface": "#f9f9ff",
+                "surface-tint": "#20648c",
+                "error-container": "#ffdad6",
+                "error": "#ba1a1a",
+                "tertiary-fixed": "#d3e4fe",
+                "tertiary-fixed-dim": "#b7c8e1",
+                "surface-bright": "#f9f9ff",
+                "outline": "#71787f",
+                "on-primary-fixed": "#001e2f",
+                "inverse-surface": "#263143",
+                "on-primary": "#ffffff",
+                "on-primary-fixed-variant": "#004b70",
+                "on-primary-container": "#95d0fe",
+                "on-tertiary": "#ffffff",
+                "surface-container": "#e7eeff",
+                "on-tertiary-fixed": "#0b1c30",
+                "background": "#f9f9ff",
+                "tertiary": "#2f3f54",
+                "on-tertiary-fixed-variant": "#38485d",
+                "on-secondary-container": "#5f6365",
+                "primary": "#004262",
+                "surface-variant": "#d8e3fb",
+                "surface-dim": "#cfdaf2",
+                "on-error-container": "#93000a",
+                "surface-container-low": "#f0f3ff",
+                "outline-variant": "#c0c7cf",
+                "surface-container-high": "#dee8ff",
+                "primary-container": "#0f5a82",
+                "on-tertiary-container": "#bbcbe5",
+                "inverse-on-surface": "#ecf1ff",
+                "surface-container-lowest": "#ffffff",
+                "on-error": "#ffffff",
+                "inverse-primary": "#92cdfb",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#92cdfb",
+                "tertiary-container": "#46566c",
+                "surface-container-highest": "#d8e3fb",
+                "secondary-fixed-dim": "#c4c7c9",
+                "primary-fixed": "#cae6ff"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "stack-sm": "8px",
+                "stack-md": "16px",
+                "gutter-mobile": "12px",
+                "base": "4px",
+                "padding-card": "16px",
+                "margin-mobile": "16px",
+                "touch-target": "44px",
+                "stack-lg": "24px"
+        },
+        "fontFamily": {
+                "headline-md": [
+                        "Hanken Grotesk"
+                ],
+                "headline-lg": [
+                        "Hanken Grotesk"
+                ],
+                "headline-sm": [
+                        "Hanken Grotesk"
+                ],
+                "body-md": [
+                        "Hanken Grotesk"
+                ],
+                "body-lg": [
+                        "Hanken Grotesk"
+                ],
+                "label-md": [
+                        "Hanken Grotesk"
+                ],
+                "label-sm": [
+                        "Hanken Grotesk"
+                ]
+        },
+        "fontSize": {
+                "headline-md": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-sm": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "label-sm": [
+                        "11px",
+                        {
+                                "lineHeight": "14px",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { font-family: 'Hanken Grotesk', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-surface-container-lowest border-r border-outline-variant flex flex-col hidden md:flex shrink-0 overflow-y-auto">
+<div class="h-24 flex items-center px-6 border-b border-outline-variant shrink-0">
+<a href="code.html" class="font-headline-md text-headline-md text-primary font-bold tracking-tight hover:opacity-80 transition-opacity cursor-pointer">LUMEN SCENT</a>
+</div>
+<nav class="flex-1 py-8 px-4 space-y-8">
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 bg-primary text-on-primary rounded-lg shadow-sm" href="code.html"><span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span><span class="font-body-md text-body-md font-semibold">메인 대시보드</span></a>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">키워드 &amp; SEO</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">경쟁사 모니터링</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">업무 도구 (DT Dashboard)</h3>
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="sales_analysis.html"><span class="material-symbols-outlined mr-3 text-[20px]">bar_chart</span><span class="font-body-md text-body-md">Sales Analysis &amp; Reports</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_analytics.html"><span class="material-symbols-outlined mr-3 text-[20px]">groups</span><span class="font-body-md text-body-md">Store &amp; Customer Analytics</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="current_inventory.html"><span class="material-symbols-outlined mr-3 text-[20px]">inventory_2</span><span class="font-body-md text-body-md">Current Inventory &amp; Forecast</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_dispatch.html"><span class="material-symbols-outlined mr-3 text-[20px]">local_shipping</span><span class="font-body-md text-body-md">Store Dispatch</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="material_order.html"><span class="material-symbols-outlined mr-3 text-[20px]">package_2</span><span class="font-body-md text-body-md">Material Order</span></a>
+</div>
+</div>
+</nav>
+</aside>
+<!-- Main Content -->
+<div class="flex-1 flex flex-col overflow-hidden">
+<!-- TopAppBar -->
+<header class="h-16 bg-surface-container-lowest border-b border-outline-variant flex justify-between items-center px-6 shrink-0 md:hidden">
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<a href="code.html" class="font-headline-md text-headline-md text-primary font-bold tracking-tight hover:opacity-80 transition-opacity cursor-pointer">LUMEN SCENT</a>
+</header>
+<!-- Desktop Header -->
+<header class="h-24 bg-surface-container-lowest border-b border-outline-variant hidden md:flex justify-between items-center px-10 shrink-0">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">대시보드 <span class="text-on-surface-variant text-headline-sm font-normal ml-3 border-l border-outline-variant pl-3">LUMEN SCENT 통합 현황</span></h1>
+</header>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto p-6 md:p-10 bg-background">
+<div class="max-w-7xl mx-auto space-y-12">
+<!-- Welcome Banner -->
+<div class="bg-primary rounded-2xl border border-primary-container p-8 md:p-10 shadow-md flex flex-col justify-center text-on-primary bg-gradient-to-br from-primary to-surface-tint">
+<h2 class="font-headline-lg text-[28px] leading-[36px] font-bold flex items-center tracking-tight">루멘 센트 대시보드</h2>
+</div>
+<!-- Keyword & SEO Section -->
+<section>
+<h2 class="font-headline-md text-headline-md mb-6 text-on-surface flex items-center"><span class="w-1.5 h-6 bg-primary rounded-full mr-3"></span>키워드 &amp; SEO</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Target Keywords Card -->
+<a href="keyword_seo.html#target" class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300 block">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mr-4 border border-orange-100">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">타겟 키워드 선정</h3>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<p class="font-body-sm text-body-md text-on-surface-variant mb-6 leading-relaxed">키워드 목록에서 서비스에 적합한 타겟 키워드를 자동 선별합니다.</p>
+<div class="mt-auto">
+<div class="flex justify-between items-end mb-6">
+<div>
+<p class="font-headline-lg text-[32px] leading-tight text-primary font-bold">1,245</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1 uppercase tracking-wider">Active Keywords</p>
+</div>
+<div class="flex items-center text-success bg-success/10 px-3 py-1.5 rounded-lg border border-success/20">
+<span class="material-symbols-outlined text-[18px] mr-1">trending_up</span>
+<span class="font-label-md text-label-md font-bold">+12%</span>
+</div>
+</div>
+<div class="mt-4 flex gap-3">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">검색량 분석</span>
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">관련성 평가</span>
+</div>
+</div>
+</a>
+<!-- Long-tail Keywords Card -->
+<a href="keyword_seo.html#longtail" class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300 block">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mr-4 border border-purple-100">
+<span class="material-symbols-outlined text-[24px]">query_stats</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">롱테일 키워드</h3>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<p class="font-body-sm text-body-md text-on-surface-variant mb-6 leading-relaxed">기본 키워드를 기반으로 실제 검색되는 롱테일 키워드 50개를 생성합니다.</p>
+<div class="mt-auto">
+<div class="flex justify-between items-center bg-surface-container-low p-4 rounded-xl border border-outline-variant/40 mb-6">
+<span class="font-body-md text-on-surface-variant font-medium">Generated This Week</span>
+<span class="font-headline-md text-primary font-bold text-[24px]">350</span>
+</div>
+<div class="flex gap-3">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">50개 생성</span>
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">15~25자</span>
+</div>
+</div>
+</a>
+<!-- SEO Health Card -->
+<a href="keyword_seo.html#seo" class="block bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center mr-4 border border-green-100">
+<span class="material-symbols-outlined text-[24px]">shield_with_heart</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">SEO 분석</h3>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<p class="font-body-sm text-body-md text-on-surface-variant mb-6 leading-relaxed">웹사이트의 전반적인 SEO 상태와 최적화 점수를 모니터링합니다.</p>
+<div class="mt-auto pt-2">
+<div class="flex justify-between items-end mb-3">
+<span class="font-label-md text-on-surface-variant font-medium">Overall Health Score</span>
+<span class="font-headline-md text-primary font-bold text-[24px]">85<span class="text-[16px] text-outline font-normal">/100</span></span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-2.5 mb-6 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+</div>
+<div class="flex gap-3">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">타이틀 최적화</span>
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">메타 분석</span>
+</div>
+</div>
+</div>
+</a>
+</section>
+<!-- Competitor Monitoring Section -->
+<section>
+<h2 class="font-headline-md text-headline-md mb-6 text-on-surface flex items-center"><span class="w-1.5 h-6 bg-primary rounded-full mr-3"></span>경쟁사 모니터링</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Weekly Summary Card -->
+<a href="competitor_monitor.html" class="block bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mr-4 border border-blue-100">
+<span class="material-symbols-outlined text-[24px]">insights</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">경쟁사 대시보드</h3>
+</div>
+</div>
+</div>
+<p class="font-body-sm text-body-md text-on-surface-variant mb-6 leading-relaxed">신제품 주간요약·데일리 모니터링을 주차별로 통합 요약합니다.</p>
+<div class="mt-auto">
+<ul class="space-y-3 mb-6 bg-surface-container-low p-4 rounded-xl border border-outline-variant/40">
+<li class="flex items-start text-body-sm text-on-surface">
+<span class="w-2 h-2 rounded-full bg-primary mt-1.5 mr-3 shrink-0"></span>
+<span class="leading-snug">Brand X launched new serum line in APAC</span>
+</li>
+<li class="flex items-start text-body-sm text-on-surface">
+<span class="w-2 h-2 rounded-full bg-primary mt-1.5 mr-3 shrink-0"></span>
+<span class="leading-snug">Brand Y price drop campaign started</span>
+</li>
+</ul>
+<div class="flex gap-3">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">주간 자동 갱신</span>
+</div>
+</div>
+</a>
+<!-- New Product Tracking Card -->
+<a href="competitor_monitor.html" class="block bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center mr-4 border border-red-100">
+<span class="material-symbols-outlined text-[24px]">auto_awesome</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">신제품 출시 추적</h3>
+</div>
+</div>
+</div>
+<p class="font-body-sm text-body-md text-on-surface-variant mb-6 leading-relaxed">경쟁사 신제품 출시를 타임라인으로 정밀하게 추적합니다.</p>
+<div class="mt-auto">
+<div class="bg-error/10 text-error p-4 rounded-xl mb-6 flex items-center border border-error/20 shadow-sm">
+<span class="material-symbols-outlined mr-3 text-[20px]">notifications_active</span>
+<span class="font-label-md text-body-md font-bold">3 New Alerts Today</span>
+</div>
+<div class="flex gap-3">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">출시 타임라인</span>
+</div>
+</div>
+</a>
+<!-- Competitor SEO Card -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center">
+<div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center mr-4 border border-cyan-100">
+<span class="material-symbols-outlined text-[24px]">radar</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">경쟁사 SEO 분석</h3>
+</div>
+</div>
+</div>
+<p class="font-body-sm text-body-md text-on-surface-variant mb-6 leading-relaxed">경쟁 브랜드 URL의 SEO 전략, 주요 콘텐츠, 타겟 키워드를 심층 분석합니다.</p>
+<div class="mt-auto">
+<div class="flex justify-between items-center bg-surface-container-low p-4 rounded-xl border border-outline-variant/40 mb-6">
+<span class="font-body-md text-on-surface-variant font-medium">Analyzed Competitors</span>
+<span class="font-headline-md text-primary font-bold text-[24px]">12</span>
+</div>
+<div class="flex gap-3">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">SEO 전략 분석</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- DT Dashboard Section -->
+<section>
+<h2 class="font-headline-md text-headline-md mb-6 text-on-surface flex items-center"><span class="w-1.5 h-6 bg-primary rounded-full mr-3"></span>업무 도구 (DT Dashboard)</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Revenue Card -->
+<a href="sales_analysis.html" class="block bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300">
+<div class="flex items-center mb-6">
+<div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mr-4 border border-emerald-100">
+<span class="material-symbols-outlined text-[24px]">leaderboard</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">매출 현황 (1~6월)</h3>
+</div>
+<div class="flex-1 flex flex-col justify-center py-4 mb-6">
+<p class="font-label-md text-on-surface-variant mb-1 uppercase tracking-wider">YTD 매출 · 전년比 +5.1%</p>
+<p class="font-headline-lg text-[36px] leading-tight text-primary font-bold">185.8<span class="text-[20px] text-on-surface-variant font-normal ml-1">억</span></p>
+<div class="h-20 mt-4 flex items-end gap-2">
+<div class="flex-1 bg-primary/30 rounded-t-sm" style="height:69%"></div>
+<div class="flex-1 bg-primary/40 rounded-t-sm" style="height:75%"></div>
+<div class="flex-1 bg-primary/50 rounded-t-sm" style="height:76%"></div>
+<div class="flex-1 bg-primary/70 rounded-t-sm" style="height:81%"></div>
+<div class="flex-1 bg-primary h-full rounded-t-sm shadow-[0_0_10px_rgba(0,66,98,0.3)]"></div>
+<div class="flex-1 bg-primary/60 rounded-t-sm" style="height:73%"></div>
+</div>
+</div>
+<div class="flex gap-3">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">Sales Analysis</span>
+</div>
+</a>
+<!-- Store & Customer Analytics Card -->
+<a href="store_analytics.html" class="block bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300 flex flex-col">
+<div class="flex items-center mb-6">
+<div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mr-4 border border-indigo-100">
+<span class="material-symbols-outlined text-[24px]">groups</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">매장 · 고객 분석</h3>
+</div>
+<div class="flex-1 flex flex-col justify-center py-4 mb-6">
+<p class="font-label-md text-on-surface-variant mb-1 uppercase tracking-wider">POS 기반 · 최근 12개월</p>
+<div class="grid grid-cols-2 gap-4 mt-2">
+<div><p class="font-headline-lg text-[30px] leading-tight text-primary font-bold">8.8<span class="text-[16px] text-on-surface-variant font-normal">%</span></p><p class="font-label-sm text-on-surface-variant">재구매율</p></div>
+<div><p class="font-headline-lg text-[30px] leading-tight font-bold" style="color:#b45309">66<span class="text-[16px] text-on-surface-variant font-normal">명</span></p><p class="font-label-sm text-on-surface-variant">리셀러 의심</p></div>
+</div>
+</div>
+<div class="flex gap-3 flex-wrap">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">리텐션</span>
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">Top품목</span>
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">리셀러</span>
+</div>
+</a>
+<!-- Stock Alerts Card -->
+<a href="current_inventory.html" class="block bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300 flex flex-col">
+<div class="flex items-center mb-6">
+<div class="w-12 h-12 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center mr-4 border border-yellow-100">
+<span class="material-symbols-outlined text-[24px]">warehouse</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">재고 소진 · 수요 예측</h3>
+</div>
+<div class="flex-1">
+<div class="bg-error/5 border border-error/20 rounded-xl p-4 mb-3 flex justify-between items-center shadow-sm">
+<span class="text-body-md font-medium text-on-surface">디퓨저 오일 15ml 오션 모스</span>
+<span class="text-error font-bold text-label-md bg-white px-2 py-1 rounded">소진 D-9</span>
+</div>
+<div class="bg-orange-50/50 border border-orange-200/50 rounded-xl p-4 mb-6 flex justify-between items-center shadow-sm">
+<span class="text-body-md font-medium text-on-surface">악성재고 (90일 판매 ≤30)</span>
+<span class="text-orange-600 font-bold text-label-md bg-white px-2 py-1 rounded">20종</span>
+</div>
+</div>
+<div class="mt-auto flex gap-3">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">Current Inventory</span>
+</div>
+</a>
+<!-- Production Card -->
+<a href="production_planning.html" class="block bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-8 hover:shadow-md hover:border-primary/30 transition-all duration-300 flex flex-col">
+<div class="flex items-center mb-6">
+<div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mr-4 border border-indigo-100">
+<span class="material-symbols-outlined text-[24px]">settings_suggest</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">AI 생산량 추천 (M+1~3)</h3>
+</div>
+<div class="flex-1 py-4">
+<div class="flex justify-between items-end mb-3">
+<span class="font-body-md font-medium text-on-surface-variant">7~9월 추천 생산</span>
+<span class="font-headline-md text-primary font-bold text-[28px]">198천</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-3 mb-8 relative overflow-hidden">
+<div class="bg-primary h-full rounded-full shadow-sm" style="width: 94%"></div>
+<div class="absolute top-0 bottom-0 border-r-2 border-on-surface" style="left: 100%;"></div>
+</div>
+<p class="text-label-md text-on-surface-variant text-center uppercase tracking-wider">예측 186천 → 추천 198천 (안전계수 평균 1.09x)</p>
+</div>
+<div class="mt-auto flex gap-3">
+<span class="px-3 py-1.5 bg-surface-container-low rounded-md text-label-md text-on-surface-variant border border-outline-variant/40">Production Planning</span>
+</div>
+</a>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="h-16 bg-surface-container-lowest shadow-[0_-5px_15px_rgba(0,0,0,0.05)] flex justify-around items-center px-gutter-mobile pb-safe fixed bottom-0 w-full z-50 rounded-t-2xl md:hidden shrink-0 border-t border-outline-variant/20">
+<a class="flex flex-col items-center justify-center text-primary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md mt-1 font-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">search_insights</span>
+<span class="font-label-md text-label-md mt-1">SEO</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-md text-label-md mt-1">Competitors</span>
+</a>
+</nav>
+</div>
+
+
+</body></html>

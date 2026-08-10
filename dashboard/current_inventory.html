@@ -1,0 +1,485 @@
+<!-- Current Inventory & Forecast — 완제품 소진 예측 + 악성재고 + AI 수요예측 핵심 + 카테고리별 상품 예측, DESIGN1 톤 -->
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LUMEN SCENT - Current Inventory & Forecast</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = { darkMode:"class", theme:{ extend:{
+    "colors": {
+      "on-surface":"#111c2d","on-background":"#111c2d","on-surface-variant":"#41484e",
+      "secondary-container":"#dde0e2","secondary":"#5b5f61","surface":"#f9f9ff",
+      "surface-tint":"#20648c","error-container":"#ffdad6","error":"#ba1a1a",
+      "surface-bright":"#f9f9ff","outline":"#71787f","on-primary":"#ffffff",
+      "on-primary-container":"#95d0fe","surface-container":"#e7eeff","background":"#f9f9ff",
+      "tertiary":"#2f3f54","on-secondary-container":"#5f6365","primary":"#004262",
+      "surface-variant":"#d8e3fb","surface-dim":"#cfdaf2","surface-container-low":"#f0f3ff",
+      "outline-variant":"#c0c7cf","surface-container-high":"#dee8ff","primary-container":"#0f5a82",
+      "inverse-on-surface":"#ecf1ff","surface-container-lowest":"#ffffff","on-error":"#ffffff",
+      "inverse-primary":"#92cdfb","on-secondary":"#ffffff","surface-container-highest":"#d8e3fb",
+      "primary-fixed":"#cae6ff","success":"#1a7f4b","warning":"#b45309"
+    },
+    "borderRadius":{ "DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px" },
+    "fontFamily":{ "headline-md":["Hanken Grotesk"],"headline-lg":["Hanken Grotesk"],"headline-sm":["Hanken Grotesk"],
+      "body-md":["Hanken Grotesk"],"body-lg":["Hanken Grotesk"],"label-md":["Hanken Grotesk"],"label-sm":["Hanken Grotesk"] },
+    "fontSize":{
+      "headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],
+      "headline-lg":["24px",{"lineHeight":"32px","fontWeight":"700"}],
+      "headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],
+      "body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],
+      "body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],
+      "label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],
+      "label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}]
+    }
+  } } }
+</script>
+<style> body{font-family:'Hanken Grotesk',sans-serif;} .num{font-variant-numeric:tabular-nums;} </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden">
+<aside class="w-64 bg-surface-container-lowest border-r border-outline-variant flex flex-col hidden md:flex shrink-0 overflow-y-auto">
+<div class="h-24 flex items-center px-6 border-b border-outline-variant shrink-0">
+<a href="code.html" class="font-headline-md text-headline-md text-primary font-bold tracking-tight hover:opacity-80 transition-opacity cursor-pointer">LUMEN SCENT</a>
+</div>
+<nav class="flex-1 py-8 px-4 space-y-8">
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="code.html"><span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span><span class="font-body-md text-body-md">메인 대시보드</span></a>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">키워드 &amp; SEO</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">경쟁사 모니터링</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">업무 도구 (DT Dashboard)</h3>
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="sales_analysis.html"><span class="material-symbols-outlined mr-3 text-[20px]">bar_chart</span><span class="font-body-md text-body-md">Sales Analysis &amp; Reports</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_analytics.html"><span class="material-symbols-outlined mr-3 text-[20px]">groups</span><span class="font-body-md text-body-md">Store &amp; Customer Analytics</span></a>
+<a class="flex items-center px-4 py-2.5 bg-primary text-on-primary rounded-lg shadow-sm" href="current_inventory.html"><span class="material-symbols-outlined mr-3 text-[20px]">inventory_2</span><span class="font-body-md text-body-md font-semibold">Current Inventory &amp; Forecast</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_dispatch.html"><span class="material-symbols-outlined mr-3 text-[20px]">local_shipping</span><span class="font-body-md text-body-md">Store Dispatch</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="material_order.html"><span class="material-symbols-outlined mr-3 text-[20px]">package_2</span><span class="font-body-md text-body-md">Material Order</span></a>
+</div>
+</div>
+</nav>
+</aside>
+<div class="flex-1 flex flex-col overflow-hidden">
+<header class="h-24 bg-surface-container-lowest border-b border-outline-variant hidden md:flex justify-between items-center px-10 shrink-0">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Current Inventory &amp; Forecast <span class="text-on-surface-variant text-headline-sm font-normal ml-3 border-l border-outline-variant pl-3">재고 소진 · 수요 예측</span></h1>
+<div class="flex items-center space-x-4">
+<span class="text-on-surface-variant font-label-md bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant flex items-center"><span class="w-2 h-2 rounded-full bg-[#1a7f4b] mr-2"></span><span id="dataStamp">ML 앙상블 · 기준 2026-06-26 · 7~9월 예측</span></span></div>
+</header>
+<main class="flex-1 overflow-y-auto p-6 md:p-10 bg-background">
+<div class="max-w-7xl mx-auto space-y-8">
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-start justify-between mb-4"><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">예측 품목</p><span class="material-symbols-outlined text-primary/40 text-[20px]">category</span></div>
+<p class="num text-[32px] leading-tight text-primary font-bold"><span id="kpiNprod">60</span><span class="text-[15px] text-on-surface-variant font-normal ml-1">종</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">본품 기준 (단종·샘플 제외) · 재고 0 품목 포함</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-start justify-between mb-4"><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">예측 신뢰도</p><span class="material-symbols-outlined text-primary/40 text-[20px]">verified</span></div>
+<p class="num text-[32px] leading-tight text-primary font-bold"><span id="kpiConf">78</span><span class="text-[15px] text-on-surface-variant font-normal ml-1">%</span></p>
+<p id="kpiConfSub" class="font-body-md text-body-md text-on-surface-variant mt-2">월(발주) WAPE 22% · ETS+계절WMA</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-start justify-between mb-4"><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">재고 매칭</p><span class="material-symbols-outlined text-primary/40 text-[20px]">link</span></div>
+<p class="num text-[32px] leading-tight text-primary font-bold"><span id="kpiMatch">36</span><span class="text-[15px] text-on-surface-variant font-normal ml-1">종</span></p>
+<p id="kpiMatchSub" class="font-body-md text-body-md text-on-surface-variant mt-2">현재고↔예측 곡선 연결</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-start justify-between mb-4"><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">악성재고</p><span class="material-symbols-outlined text-[20px]" style="color:#b45309">warning</span></div>
+<p class="num text-[32px] leading-tight font-bold" style="color:#b45309"><span id="kpiDead">20</span><span class="text-[15px] text-on-surface-variant font-normal ml-1">종</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">최근 90일 판매 ≤30 · 자산 묶임</p></div>
+</div>
+
+<div class="inline-flex bg-surface-container-low p-1 rounded-xl border border-outline-variant/40" id="tabStrip">
+<button data-tab="depletion" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">재고 소진</button>
+<button data-tab="forecast" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">수요 예측</button>
+<button data-tab="turnover" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">재고 회전율</button>
+<button data-tab="accuracy" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">예측 검증</button>
+</div>
+
+<!-- ============ 재고 소진 ============ -->
+<section data-panel="depletion" class="space-y-8">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center justify-between"><div class="flex items-center"><span class="material-symbols-outlined mr-3" style="color:#ba1a1a">hourglass_bottom</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">완제품 소진 현황 (예측 · 판매속도 기준)</h3></div><span class="font-label-sm text-label-sm text-on-surface-variant" id="depCount"></span></div>
+<div class="max-h-[560px] overflow-y-auto">
+<table class="w-full text-left"><thead class="sticky top-0 z-10"><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">품목</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">현재고</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">소진예정</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-center">D-Day</th>
+</tr></thead><tbody id="depRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant">누적 예측 수요가 현재고를 초과하는 시점 = 소진예정일. 예측 기간 내 미소진 품목은 최근 90일 판매속도로 추정(소진 없으면 —).</p>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#b45309">inventory</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">악성재고 (최근 90일 판매 ≤30)</h3></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">품목</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">재고</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">90일 판매</th>
+</tr></thead><tbody id="deadRows" class="divide-y divide-outline-variant/60"></tbody></table>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant">샘플·증정 포함 · 청산/소진 프로모션 대상.</p>
+</div>
+</div>
+<div id="invInsight"></div>
+</section>
+
+<!-- ============ 수요 예측 ============ -->
+<section data-panel="forecast" class="space-y-8 hidden">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-center mb-1"><span class="material-symbols-outlined text-primary mr-3">show_chart</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">월별 총 예측 수요</h3></div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">향후 3개월 월별 총수요 (첫 달은 부분월)</p>
+<div class="relative" style="height:280px"><canvas id="monChart"></canvas></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-center mb-1"><span class="material-symbols-outlined text-primary mr-3">donut_small</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold" id="invCatTitle">카테고리별 예측 (3개월 합)</h3></div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">오일 퍼퓸이 절반 이상 — 핵심 카테고리</p>
+<div class="relative" style="height:280px"><canvas id="catChart"></canvas></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center justify-between flex-wrap gap-3">
+<div class="flex items-center min-w-0 flex-1 mr-3"><span class="material-symbols-outlined text-primary mr-3 shrink-0">filter_list</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold truncate">카테고리별 상품 예측</h3></div>
+<div class="relative shrink-0">
+<select id="catSel" class="appearance-none bg-surface-container-lowest border border-outline-variant rounded-lg pl-3 pr-9 h-10 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary cursor-pointer" style="-webkit-appearance:none;-moz-appearance:none;appearance:none;forced-color-adjust:none;background-image:none;"></select>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">품목</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right" id="invM1Th">7월</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right" id="invM2Th">8월</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right" id="invM3Th">9월</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">3개월 합</th>
+</tr></thead><tbody id="prodRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+</section>
+
+<!-- ============ 재고 회전율 ============ -->
+<section data-panel="turnover" class="space-y-8 hidden">
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">⭐ 스타</p><p class="font-headline-lg text-headline-lg font-bold" style="color:#1a7f4b"><span id="qStar">–</span><span class="text-body-md text-on-surface-variant">종</span></p><p class="font-label-sm text-on-surface-variant mt-1">고회전·고매출</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">💰 자본묶임</p><p class="font-headline-lg text-headline-lg font-bold" style="color:#b45309"><span id="qCash">–</span><span class="text-body-md text-on-surface-variant">종</span></p><p class="font-label-sm text-on-surface-variant mt-1">저회전·고매출</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">⚡ 빠른회전</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="qFast">–</span><span class="text-body-md text-on-surface-variant">종</span></p><p class="font-label-sm text-on-surface-variant mt-1">고회전·저매출</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">🧊 청산후보</p><p class="font-headline-lg text-headline-lg font-bold" style="color:#ba1a1a"><span id="qDead">–</span><span class="text-body-md text-on-surface-variant">종</span></p><p class="font-label-sm text-on-surface-variant mt-1">저회전·저매출</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">자본 묶임</p><p class="font-headline-lg text-headline-lg font-bold" style="color:#b45309"><span id="qLocked">–</span><span class="text-body-md text-on-surface-variant">억</span></p><p class="font-label-sm text-on-surface-variant mt-1">저회전·고매출 매출</p></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-center mb-1"><span class="material-symbols-outlined text-primary mr-3">bubble_chart</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">회전율 × 매출 매트릭스</h3></div>
+<p class="font-label-sm text-on-surface-variant mb-4">가로=회전율(회/년, 로그) · 세로=12개월 매출(백만) · 버블 크기=현재고 · 원가 미보유로 Y축은 매출 기여 · 점선=중앙값(<span id="tvMed">–</span>회 / <span id="rvMed">–</span>백만)</p>
+<div class="relative" style="height:420px"><canvas id="matChart"></canvas></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#b45309">savings</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">자본 묶임 상위 (발주량 축소 검토)</h3></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant"><th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">품목</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">현재고</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">회전</th><th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">매출(백만)</th></tr></thead><tbody id="cashRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#ba1a1a">ac_unit</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">청산 후보 (번들·소진 프로모션)</h3></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant"><th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">품목</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">현재고</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">회전</th><th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-center">D-Day</th></tr></thead><tbody id="deadMatRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+</div>
+<div id="matInsight"></div>
+</section>
+
+<!-- ============ 예측 검증 ============ -->
+
+<section data-panel="accuracy" class="space-y-8">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">물량 가중 오차</p>
+<p class="num text-[32px] leading-tight font-bold" style="color:#1a7f4b"><span id="accWapeW">—</span><span class="text-[15px] font-normal ml-1">%</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">발주량 기준 실제 오차</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">품목 평균 오차</p>
+<p class="num text-[32px] leading-tight font-bold text-on-surface"><span id="accWapeM">—</span><span class="text-[15px] font-normal ml-1">%</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2"><span id="accTotal2">—</span>종 동등 평균 · 중앙값 <span id="accWapeMed">—</span>%</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">예측 편향</p>
+<p class="num text-[32px] leading-tight font-bold text-on-surface"><span id="accBias">—</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">예측÷실적 · 1.0이면 편향 없음</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">오차 10% 이내</p>
+<p class="num text-[32px] leading-tight font-bold text-on-surface"><span id="accGood">—</span><span class="text-[15px] font-normal ml-1">종</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">전체 <span id="accTotal">—</span>종 중</p></div>
+</div>
+<div id="stockoutCard"></div>
+<div id="accInsight"></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3 text-primary">grid_view</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">ABC × XYZ 관리 등급</h3></div>
+<div class="p-6 overflow-x-auto" id="gradeMatrix"></div>
+<p class="px-6 pb-4 font-label-sm text-label-sm text-on-surface-variant"><b>ABC</b>는 매출 기여 누적(A 상위 80% · B 다음 15% · C 나머지), <b>XYZ</b>는 예측 오차(X ≤10% · Y 10~25% · Z >25%)입니다. 원가 미보유로 ABC는 매출을 사용가치 대용치로 사용합니다. 60종을 같은 규칙으로 관리하면 A급은 결품, C급은 과잉이 되므로 등급별로 관리 강도를 나눕니다.</p>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center justify-between">
+<div class="flex items-center"><span class="material-symbols-outlined mr-3 text-primary">fact_check</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">품목별 검증 결과와 향후 예측</h3></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="accWindow"></span></div>
+<div class="max-h-[620px] overflow-x-auto overflow-y-auto">
+<table class="w-full text-left min-w-[860px]"><thead class="sticky top-0 z-10">
+<tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 pt-3 pb-1 font-label-sm text-label-sm" rowspan="2">품목</th>
+<th class="px-3 pt-3 pb-1 font-label-sm text-label-sm text-center" rowspan="2">등급</th>
+<th class="px-4 pt-3 pb-1 font-label-sm text-label-sm text-center border-l border-outline-variant/60" colspan="4"><span class="text-primary font-bold">검증 (지난 실적 대조)</span><br><span class="font-normal" id="accHeadPast">—</span></th>
+<th class="px-4 pt-3 pb-1 font-label-sm text-label-sm text-center border-l border-outline-variant/60" colspan="3"><span style="color:#1a7f4b" class="font-bold">향후 예측</span><br><span class="font-normal" id="accHeadFuture">—</span></th>
+</tr>
+<tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-4 py-2 font-label-md text-label-md uppercase tracking-wider text-right border-l border-outline-variant/60">실적</th>
+<th class="px-4 py-2 font-label-md text-label-md uppercase tracking-wider text-right">예측</th>
+<th class="px-4 py-2 font-label-md text-label-md uppercase tracking-wider text-right">편차</th>
+<th class="px-4 py-2 font-label-md text-label-md uppercase tracking-wider text-right">오차율</th>
+<th class="px-4 py-2 font-label-md text-label-md uppercase tracking-wider text-right border-l border-outline-variant/60" id="accM1Th">—</th>
+<th class="px-4 py-2 font-label-md text-label-md uppercase tracking-wider text-right" id="accM2Th">—</th>
+<th class="px-4 py-2 font-label-md text-label-md uppercase tracking-wider text-right" id="accM3Th">—</th>
+</tr></thead><tbody id="accRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant"><b>검증</b>은 예측을 실제 판매와 대조한 결과입니다. 모델이 해당 기간 실적을 보지 않은 상태로 예측한 값(홀드아웃)이라 실제 정확도를 그대로 보여줍니다. 편차는 예측−실적(+면 과대예측), 오차율은 절대 오차 비율. <b>향후 예측</b>은 이 정확도로 산출한 앞으로의 월별 수요입니다. 물량 많은 순 정렬.</p>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+
+<script>
+const fmt=n=>Number(n).toLocaleString();
+const CFONT={family:'Hanken Grotesk',size:12};
+let DEP=[],DEAD=[],MON={},CAT=[],PROD_FC=[],ACC=[];
+// 재사용 3단 카드 — What(데이터) / So What(인사이트) / Now What(추천 액션)
+function insightCards(what,so,now){ return `<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#5b5f61">database</span><h4 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">What · 데이터</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${what}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#4648d4"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#4648d4">lightbulb</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#4648d4">So What · 인사이트</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${so}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#1a7f4b; background:#f2fbf6"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#1a7f4b">bolt</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#0d3d24">Now What · 추천 액션</h4></div><p class="font-body-md text-body-md leading-relaxed" style="color:#0d3d24">${now}</p></div>
+</div>`; }
+function renderInvInsight(m){ const el=document.getElementById('invInsight'); if(!el||!DEP.length)return;
+  const dd=r=>r[3], u7=DEP.filter(r=>dd(r)!=null&&dd(r)<=7), u14=DEP.filter(r=>dd(r)!=null&&dd(r)<=14);
+  const s=DEP.find(r=>dd(r)!=null)||DEP[0];
+  const what=`완제품 <b>${DEP.length}종</b> 소진 추적 · 7일 이내 소진 <b>${u7.length}종</b>, 14일 이내 ${u14.length}종. 최단 <b>${s[0]}</b>(D+${dd(s)}, 재고 ${fmt(s[1])}개). 데드스톡 ${m.n_dead}종 · 예측 신뢰도 ${m.conf}%(WAPE ${m.wape}%).`;
+  const so=u7.length>=3
+    ? `<b>결품 위험이 임박</b>했습니다. 생산 리드타임(7일)을 감안하면 지금 착수해도 일부는 품절 구간이 생깁니다.`
+    : u7.length>0 ? `일부 품목이 소진 임박입니다. 리드타임(7일) 내 대응이 가능한 구간입니다.`
+    : `단기 결품 위험은 제한적입니다. 14일 구간을 모니터링하면 충분합니다.`;
+  const now=`소진 임박 품목은 <b>Production Planning</b>에서 개시일을 확인해 <b>즉시 생산 착수</b>하고, 데드스톡 ${m.n_dead}종은 <b>번들·소진 프로모션</b>으로 재고를 회전시키세요. 예측 오차(WAPE ${m.wape}%)를 감안해 안전재고를 상향 검토합니다.`;
+  el.innerHTML=insightCards(what,so,now); }
+
+// ABC(매출 기여) × XYZ(예측 난이도) 등급 — 관리 강도 차등의 근거
+const GRADE_DESC={A:'매출 상위 80%',B:'다음 15%',C:'하위 5%',X:'오차 10% 이하',Y:'10~25%',Z:'25% 초과'};
+function gradeBadge(g){ if(!g)return '<span class="text-on-surface-variant">—</span>';
+  const a=g[0], x=g[1];
+  const bg=a==='A'?'#004262':a==='B'?'#4b6a7a':'#8a9aa3';
+  const dot=x==='X'?'#1a7f4b':x==='Y'?'#b45309':'#be123c';
+  return `<span title="${a}: ${GRADE_DESC[a]} · ${x}: 예측 ${GRADE_DESC[x]}" class="num inline-flex items-center gap-1 px-2 h-6 rounded-md font-label-sm text-white" style="background:${bg}">${a}<span class="inline-block w-1.5 h-1.5 rounded-full" style="background:${dot}"></span>${x}</span>`; }
+function renderGradeMatrix(){
+  const el=document.getElementById('gradeMatrix'); if(!el||!ACC.length)return;
+  const cnt={}, rev={}; let tot=0;
+  ACC.forEach(r=>{ const g=r[8]||'CZ'; cnt[g]=(cnt[g]||0)+1; rev[g]=(rev[g]||0)+(r[9]||0); tot+=(r[9]||0); });
+  const PLAN={A:{X:'자동발주 · 안전재고 최소',Y:'주 단위 점검',Z:'수요 원인 규명 우선'},
+              B:{X:'월 단위 정기발주',Y:'월 단위 점검',Z:'안전재고 상향'},
+              C:{X:'최소재고 유지',Y:'최소재고 유지',Z:'주문생산 · 단종 검토'}};
+  let h='<table class="w-full text-center border-collapse"><thead><tr class="text-on-surface-variant">'
+      +'<th class="px-3 py-2 font-label-md text-label-md"></th>'
+      +['X (오차 ≤10%)','Y (10~25%)','Z (>25%)'].map(t=>`<th class="px-3 py-2 font-label-md text-label-md">${t}</th>`).join('')
+      +'</tr></thead><tbody>';
+  ['A','B','C'].forEach(a=>{
+    h+=`<tr><th class="px-3 py-3 font-label-md text-label-md text-on-surface-variant text-left">${a} (${GRADE_DESC[a]})</th>`;
+    ['X','Y','Z'].forEach(x=>{ const g=a+x, n=cnt[g]||0, share=tot?(rev[g]||0)/tot*100:0;
+      const em=(a==='A'&&x!=='X')||(a==='C'&&x==='Z');
+      h+=`<td class="px-3 py-3 border border-outline-variant/40 ${n?'':'opacity-40'}" style="${em&&n?'background:#fff7ed':''}">
+        <div class="num font-bold text-[20px] text-on-surface">${n}<span class="text-[12px] font-normal text-on-surface-variant ml-1">종</span></div>
+        <div class="font-label-sm text-label-sm text-on-surface-variant">매출 ${share.toFixed(1)}%</div>
+        <div class="font-label-sm text-label-sm mt-1" style="color:#4648d4">${PLAN[a][x]}</div></td>`; });
+    h+='</tr>'; });
+  el.innerHTML=h+'</tbody></table>';
+}
+
+
+// 결품 측정 — 소진 '예정일'은 예측이라, 실제 품절 여부는 재고 스냅샷을 쌓아야 알 수 있다
+function renderStockout(m){
+  const el=document.getElementById('stockoutCard'); const s=m.stockout;
+  if(!el||!s){ if(el)el.innerHTML=''; return; }
+  const MIN_DAYS=14, thin=s.days<MIN_DAYS;
+  const note=thin
+    ? `누적 <b>${s.days}일</b> — 결품 일수 추이는 ${MIN_DAYS}일 이상 쌓인 뒤부터 의미가 있습니다. 현재는 <b>오늘 시점</b> 수치입니다.`
+    : `누적 <b>${s.days}일</b> (${s.first} ~ ${s.last}) 스냅샷 기준입니다.`;
+  const top=(s.out_days_top||[]).slice(0,5);
+  el.innerHTML=`<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+  <div class="p-6 border-b border-outline-variant/60 flex items-center justify-between">
+    <div class="flex items-center"><span class="material-symbols-outlined mr-3" style="color:#b45309">inventory</span>
+    <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">결품 측정 (재고 가용률)</h3></div>
+    <span class="font-label-sm text-label-sm text-on-surface-variant">${s.first} ~ ${s.last} · ${s.days}일</span></div>
+  <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2">재고 가용률</p>
+      <p class="num text-[32px] font-bold" style="color:${s.in_stock_rate>=95?'#1a7f4b':'#b45309'}">${s.in_stock_rate}<span class="text-[15px] font-normal ml-1">%</span></p>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">재고 보유 품목 비율</p></div>
+    <div><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2">현재 결품</p>
+      <p class="num text-[32px] font-bold text-on-surface">${s.out_now}<span class="text-[15px] font-normal ml-1">종</span></p>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">추적 ${s.n_products}종 중</p></div>
+    <div><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2">결품 이력 상위</p>
+      ${top.length?`<ul class="font-body-md text-body-md text-on-surface space-y-1">${top.map(t=>`<li>${t[0]} <span class="num text-on-surface-variant">${t[1]}/${t[2]}일</span></li>`).join('')}</ul>`
+        :'<p class="font-body-md text-body-md text-on-surface-variant">결품 이력 없음</p>'}</div>
+  </div>
+  <p class="px-6 pb-4 font-label-sm text-label-sm text-on-surface-variant">${note} 재고 0 상태를 결품으로 집계합니다. 판매 기회손실은 결품 일수 × 평소 판매속도로 추후 산출합니다.</p>
+  </div>`;
+}
+
+// 예측 검증 — 품목별 예측 vs 실적 (편차·오차율)
+function renderAccuracy(m){
+  if(!ACC.length)return;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e&&v!=null)e.textContent=v;};
+  const w=ACC.map(r=>r[5]).filter(v=>v!=null).sort((a,b)=>a-b);
+  const med=w.length?(w.length%2?w[(w.length-1)/2]:(w[w.length/2-1]+w[w.length/2])/2):null;
+  const sa=ACC.reduce((s,r)=>s+r[2],0), sp=ACC.reduce((s,r)=>s+r[3],0);
+  const good=ACC.filter(r=>r[5]!=null&&r[5]<=10).length;
+  set('accWapeW',m.wape_w!=null?m.wape_w:'—'); set('accWapeM',m.wape!=null?m.wape:'—');
+  set('accWapeMed',med!=null?med.toFixed(1):'—'); set('accBias',sa?(sp/sa).toFixed(3):'—');
+  set('accGood',good); set('accTotal',ACC.length); set('accTotal2',ACC.length);
+  const per=(m.eval_start&&m.eval_end)?m.eval_start+' ~ '+m.eval_end:'최근 '+(m.eval_days||30)+'일';
+  const mo=m.months||[];
+  set('accWindow','검증 '+per+' ('+(m.eval_days||30)+'일) · 예측 '+(mo.length?mo[0]+'~'+mo[mo.length-1]+'월':'')+' · '+ACC.length+'종');
+  set('accHeadPast',per);
+  set('accHeadFuture',mo.length?mo[0]+'월 ~ '+mo[mo.length-1]+'월 (월별 수요)':'');
+  mo.forEach((v,i)=>set('accM'+(i+1)+'Th',v+'월'));
+  const dev=v=>{ if(v==null)return '<span class="text-on-surface-variant">—</span>';
+    const c=Math.abs(v)<=5?'#5b5f61':v>0?'#b45309':'#0b6bcb';
+    return `<span class="num" style="color:${c}">${v>0?'+':''}${v.toFixed(1)}%</span>`; };
+  const errBadge=v=>{ if(v==null)return '—';
+    const c=v<=10?'bg-[#e6f4ea] text-[#0d3d24]':v<=25?'bg-[#fef3c7] text-[#b45309]':'bg-[#ffe4e6] text-[#be123c]';
+    return `<span class="num inline-flex items-center justify-center px-2.5 h-7 rounded-lg font-label-sm ${c}">${v.toFixed(1)}%</span>`; };
+  const fc=(v)=>v==null?'<span class="text-on-surface-variant">—</span>':`<span class="num">${fmt(v)}</span>`;
+  document.getElementById('accRows').innerHTML=ACC.map(r=>{ const f=r[7]||[];
+    return `<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md font-semibold text-on-surface">${r[0]}</td>
+    <td class="px-3 py-3 text-center">${gradeBadge(r[8])}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface border-l border-outline-variant/60">${fmt(r[2])}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${fmt(r[3])}</td>
+    <td class="px-4 py-3 text-right font-body-md text-body-md">${dev(r[4])}</td>
+    <td class="px-4 py-3 text-right">${errBadge(r[5])}</td>
+    <td class="px-4 py-3 text-right font-body-md text-body-md text-on-surface border-l border-outline-variant/60">${fc(f[0])}</td>
+    <td class="px-4 py-3 text-right font-body-md text-body-md text-on-surface">${fc(f[1])}</td>
+    <td class="px-4 py-3 text-right font-body-md text-body-md text-on-surface">${fc(f[2])}</td></tr>`;}).join("");
+  const el=document.getElementById('accInsight'); if(!el)return;
+  const top=ACC[0], bias=sa?sp/sa:1, worst=[...ACC].filter(r=>r[5]!=null).sort((a,b)=>b[5]-a[5])[0];
+  const ex=m.acc_excluded||[];
+  const exTxt=ex.length?` 단종·일시품절 <b>${ex.length}종</b>은 제외했습니다(${ex.join(', ')}).`:'';
+  const what=`홀드아웃 ${m.eval_days||30}일 기준 <b>${ACC.length}종</b> 검증. 물량 가중 오차 <b>${m.wape_w}%</b>, 품목 평균 ${m.wape}%(중앙값 ${med!=null?med.toFixed(1):'—'}%). 오차 10% 이내 <b>${good}종</b>. 최대 물량 <b>${top[0]}</b>은 실적 ${fmt(top[2])} vs 예측 ${fmt(top[3])}(${top[5].toFixed(1)}%).${exTxt}`;
+  const so=Math.abs(bias-1)<=0.05
+    ? `예측 편향이 <b>${bias.toFixed(3)}배</b>로 사실상 없습니다. 체계적 과대·과소 없이 <b>발주량을 예측값 그대로 신뢰</b>할 수 있는 상태입니다.`
+    : bias>1 ? `예측이 실적보다 <b>${((bias-1)*100).toFixed(1)}% 높습니다</b>. 그대로 발주하면 과잉재고가 쌓입니다.`
+    : `예측이 실적보다 <b>${((1-bias)*100).toFixed(1)}% 낮습니다</b>. 그대로 발주하면 결품 위험이 있습니다.`;
+  const now=`물량 가중 오차(${m.wape_w}%)가 낮으므로 <b>주력품은 예측값 기준으로 발주</b>하고, 오차가 큰 <b>${worst?worst[0]:'-'}</b> 등 소량 품목만 안전재고를 별도 상향하세요. 품목 평균(${m.wape}%)이 가중치보다 높은 것은 물량이 적은 품목의 변동성 때문이며, 재고 금액 영향은 제한적입니다.`;
+  el.innerHTML=insightCards(what,so,now);
+}
+
+function ddBadge(d){ if(d==null) return '<span class="font-label-sm text-on-surface-variant">—</span>';
+  const c=d<14?'bg-[#ffe4e6] text-[#be123c]':d<30?'bg-[#fef3c7] text-[#b45309]':'bg-surface-container-low text-on-surface-variant';
+  return `<span class="num inline-flex items-center justify-center px-2.5 h-7 rounded-lg font-label-sm ${c}">D-${d}</span>`; }
+function renderTables(){
+  const dc=document.getElementById('depCount'); if(dc)dc.textContent=DEP.length+'종';
+  document.getElementById('depRows').innerHTML=DEP.map(r=>`<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md font-semibold text-on-surface">${r[0]}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface">${fmt(r[1])}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${r[2]}</td>
+    <td class="px-4 py-3 text-center">${ddBadge(r[3])}</td></tr>`).join("");
+  document.getElementById('deadRows').innerHTML=DEAD.map(r=>`<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md text-on-surface">${r[0]}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md font-bold text-on-surface">${fmt(r[1])}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md" style="color:#b45309">${r[2]}</td></tr>`).join("");
+}
+function renderProducts(cat){
+  const rows=PROD_FC.filter(r=>r[0]===cat).sort((a,b)=>(b[2]+b[3]+b[4])-(a[2]+a[3]+a[4]));
+  document.getElementById('prodRows').innerHTML=rows.map(r=>`<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md font-semibold text-on-surface">${r[1]}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface">${fmt(r[2])}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface">${fmt(r[3])}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface">${fmt(r[4])}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md font-bold text-primary">${fmt(r[2]+r[3]+r[4])}</td></tr>`).join("");
+}
+document.getElementById('catSel').addEventListener('change',e=>renderProducts(e.target.value));
+
+let CH={};
+function draw(id,cfg){ if(CH[id]||typeof Chart==='undefined')return; const el=document.getElementById(id); if(el)CH[id]=new Chart(el,cfg); }
+function drawForecast(){
+  if(!Object.keys(MON).length)return;
+  const mc=Object.keys(MON).map((k,i)=>i===0?'#c0c7cf':'#004262');
+  draw('monChart',{type:'bar',data:{labels:Object.keys(MON),datasets:[{data:Object.values(MON),backgroundColor:mc,borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:CFONT}},y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>(v/1000)+'k'}}}}});
+  draw('catChart',{type:'bar',data:{labels:CAT.map(c=>c[0]),datasets:[{data:CAT.map(c=>c[1]),backgroundColor:['#004262','#0f5a82','#20648c','#5b5f61','#c0c7cf'],borderRadius:5}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>(v/1000)+'k'}},y:{grid:{display:false},ticks:{font:CFONT}}}}});
+}
+let MATRIX=null;
+const QC={star:'#1a7f4b',cash_slow:'#b45309',churn_fast:'#004262',dead:'#ba1a1a'};
+const QN={star:'⭐ 스타',cash_slow:'💰 자본묶임',churn_fast:'⚡ 빠른회전',dead:'🧊 청산후보'};
+function drawTurnover(){
+  if(!MATRIX||!MATRIX.items||!MATRIX.items.length)return;
+  const M=MATRIX, set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('qStar',M.quad.star);set('qCash',M.quad.cash_slow);set('qFast',M.quad.churn_fast);set('qDead',M.quad.dead);
+  set('qLocked',(M.locked_rev/1e8).toFixed(1));set('tvMed',M.t_med);set('rvMed',Math.round(M.r_med/1e6));
+  const ymax=Math.max(...M.items.map(x=>x.rev/1e6))*1.05, rmed=M.r_med/1e6, tmed=M.t_med;
+  const ds=['star','cash_slow','churn_fast','dead'].map(q=>({
+    label:QN[q], data:M.items.filter(x=>x.quad===q).map(x=>({x:x.turns,y:Math.round(x.rev/1e6),r:Math.max(3,Math.sqrt(x.cur)/6),nm:x.name,cur:x.cur,dd:x.dday})),
+    backgroundColor:QC[q]+'cc', borderColor:QC[q], borderWidth:1 }));
+  ds.push({type:'line',label:'_v',data:[{x:tmed,y:0},{x:tmed,y:ymax}],borderColor:'#9aa0a6',borderDash:[5,4],borderWidth:1,pointRadius:0,fill:false});
+  ds.push({type:'line',label:'_h',data:[{x:0.03,y:rmed},{x:300,y:rmed}],borderColor:'#9aa0a6',borderDash:[5,4],borderWidth:1,pointRadius:0,fill:false});
+  draw('matChart',{type:'bubble',data:{datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:CFONT,boxWidth:10,filter:i=>!i.text.startsWith('_')}},
+        tooltip:{callbacks:{label:c=>{const d=c.raw;return d.nm?` ${d.nm}: 회전 ${d.x}회 · 매출 ${fmt(d.y)}백만 · 재고 ${fmt(d.cur)} · D${d.dd!=null?'+'+d.dd:'—'}`:'';}}}},
+      scales:{x:{type:'logarithmic',title:{display:true,text:'회전율 (회/년) →',font:CFONT},grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>[0.1,0.3,1,3,10,30,100,300].includes(v)?v:''}},
+        y:{title:{display:true,text:'12개월 매출 (백만) →',font:CFONT},grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>fmt(v)},min:0}}}});
+  const rowH=x=>`<tr><td class="px-5 py-2.5 font-body-md text-body-md text-on-surface">${x.name}</td><td class="px-3 py-2.5 text-right num text-on-surface-variant">${fmt(x.cur)}</td><td class="px-3 py-2.5 text-right num" style="color:#b45309">${x.turns}</td>`;
+  const cash=M.items.filter(x=>x.quad==='cash_slow').sort((a,b)=>b.rev-a.rev).slice(0,6);
+  const dead=M.items.filter(x=>x.quad==='dead').sort((a,b)=>a.turns-b.turns).slice(0,6);
+  document.getElementById('cashRows').innerHTML=cash.map(x=>rowH(x)+`<td class="px-4 py-2.5 text-right num font-semibold text-on-surface">${fmt(Math.round(x.rev/1e6))}</td></tr>`).join('');
+  document.getElementById('deadMatRows').innerHTML=dead.map(x=>rowH(x)+`<td class="px-4 py-2.5 text-center num text-on-surface-variant">${x.dday!=null?'D+'+x.dday:'—'}</td></tr>`).join('');
+  const tc=cash[0], td=dead[0];
+  const what=`추적 <b>${M.n}종</b> — 스타 ${M.quad.star} · 자본묶임 ${M.quad.cash_slow} · 빠른회전 ${M.quad.churn_fast} · 청산후보 ${M.quad.dead}. 저회전·고매출 <b>${M.quad.cash_slow}종</b>에 매출 <b>${(M.locked_rev/1e8).toFixed(1)}억</b>이 묶여 있습니다.`;
+  const so=`회전 중앙값 ${M.t_med}회 대비, <b>${tc?tc.name:'-'}</b> 등은 매출은 크지만 회전이 느려 재고 자본이 과도하게 잠겨 있습니다. 청산후보 ${M.quad.dead}종(${td?td.name+' D+'+td.dday:''})은 사실상 안 도는 재고입니다.`;
+  const now=`<b>자본묶임</b> SKU는 발주량·안전재고를 하향(회전 회복 전까지)하고, <b>청산후보</b>는 번들·소진 프로모션으로 현금화하세요. <b>빠른회전</b> 중 회전이 과도한 품목은 품절 위험이 있어 안전재고 상향을 검토합니다.`;
+  document.getElementById('matInsight').innerHTML=insightCards(what,so,now);
+}
+let curTab='depletion';
+function activate(tab){ curTab=tab;
+  document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
+  document.querySelectorAll('.tab-btn').forEach(b=>{const on=b.dataset.tab===tab;
+    b.classList.toggle('bg-surface-container-lowest',on);b.classList.toggle('shadow-sm',on);
+    b.classList.toggle('text-primary',on);b.classList.toggle('font-bold',on);b.classList.toggle('text-on-surface-variant',!on);});
+  if(tab==='forecast')drawForecast();
+  if(tab==='turnover')drawTurnover();
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>activate(b.dataset.tab)));
+activate('depletion');
+
+fetch('data/inventory.json?_='+Date.now()).then(r=>r.json()).then(D=>{
+  const m=D.meta, set=(id,v)=>{const e=document.getElementById(id);if(e&&v!=null)e.textContent=v;};
+  set('kpiNprod',m.n_products); set('kpiConf',m.conf); set('kpiMatch',m.n_match); set('kpiDead',m.n_dead);
+  if(m.conf!=null&&m.wape!=null)set('kpiConfSub','월(발주) WAPE '+m.wape+'% · ETS+계절WMA');
+  DEP=D.DEP; DEAD=D.DEAD; MON=D.MON; CAT=D.CAT; PROD_FC=D.PROD_FC; MATRIX=D.MATRIX; ACC=D.ACC||[];
+  renderTables(); renderInvInsight(m); renderStockout(m); renderAccuracy(m); renderGradeMatrix();
+  // 소진 추적 모집단 명시 — 예측 곡선 보유분 + 예측 없어 판매속도로 외삽한 분
+  const extrap=Math.max(DEP.length-(m.n_match||0),0);
+  set('kpiMatchSub','현재고↔예측 곡선 연결 · 나머지 '+extrap+'종은 판매속도 외삽');
+  const dc2=document.getElementById('depCount');
+  if(dc2)dc2.textContent=DEP.length+'종 (예측 '+(m.n_match||0)+' · 외삽 '+extrap+')';
+  const cats=[...new Set(PROD_FC.map(r=>r[0]))];
+  document.getElementById('catSel').innerHTML=cats.map(c=>`<option value="${c}">${c}</option>`).join("");
+  if(cats.length)renderProducts(cats[0]);
+  const st=document.getElementById('dataStamp');
+  if(st)st.textContent='ML 앙상블 · 기준 '+(m.fc_base||'')+' · '+(m.months?m.months[0]+'~'+m.months[m.months.length-1]+'월':'')+' 예측';
+  if(m.months&&m.months.length===3){
+    set('invCatTitle','카테고리별 예측 ('+m.months[0]+'~'+m.months[2]+'월 합)');
+    set('invM1Th',m.months[0]+'월'); set('invM2Th',m.months[1]+'월'); set('invM3Th',m.months[2]+'월');
+  }
+  Object.values(CH).forEach(c=>c&&c.destroy()); CH={}; if(curTab==='forecast')drawForecast();
+}).catch(e=>console.error('inventory.json 로드 실패',e));
+</script>
+</body></html>

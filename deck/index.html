@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="swiss-grid">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>데이터로 밸류체인을 다시 이은 기록</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/swiss-grid.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+<style>
+  .t td, .t th { font-size: 15px; }
+  .num-big { font-size: 50px; font-weight: 800; line-height: 1.1; }
+  .num-mid { font-size: 34px; font-weight: 800; line-height: 1.15; }
+  .arrow { color: var(--dim); padding: 0 6px; }
+  .tag { display:inline-block; padding:2px 9px; border-radius:999px; font-size:12px; font-weight:700; }
+  .tag-bad { background:#fde8e8; color:#b3261e; }
+  .tag-good { background:#e6f4ea; color:#1a7f4b; }
+  /* 무엇을·왜·어떻게 — 케이스마다 같은 자리에 같은 형식으로 둔다 */
+  .how { border-left: 3px solid var(--accent, #111); padding-left: 14px; margin-top: 18px; }
+  .how p { margin: 3px 0; font-size: 14.5px; line-height: 1.6; }
+  .how b { letter-spacing: -.01em; }
+  .slide.compact .num-big { font-size: 40px; }
+  .slide.compact .t td, .slide.compact .t th { font-size: 14px; }
+  .slide.compact .how p { font-size: 13.5px; }
+  /* 1280x800(노트북)에서도 한 화면에 담기도록 여백을 좁힌다 */
+  @media (max-height: 850px) {
+    .how { margin-top: 12px; }
+    .how p { font-size: 13.5px; line-height: 1.5; }
+    .slide.compact .how p { font-size: 13px; line-height: 1.45; }
+    .num-big { font-size: 44px; }
+    .slide.compact .num-big { font-size: 36px; }
+    .t td, .t th { font-size: 14px; }
+    .slide.compact .t td, .slide.compact .t th { font-size: 13px; }
+    .slide.compact .two-col .card { padding: 16px 20px; }
+    .slide.compact .two-col .card h4 { margin-bottom: 4px; }
+  }
+</style>
+</head>
+<body data-themes="swiss-grid,minimal-white,corporate-clean,academic-paper,editorial-serif" data-theme-base="../assets/themes/">
+<div class="deck">
+
+<!-- 1 -->
+<section class="slide" data-title="표지">
+  <p class="kicker">Data Analyst Portfolio · 2026</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">숫자는 맞는데<br><span class="gradient-text">답이 틀렸을 때</span></h1>
+  <p class="lede">수요예측 · SCM 최적화 · 고객 행동 · 경쟁 분석<br>향수 브랜드의 밸류체인을 데이터로 다시 이은 7개 케이스</p>
+  <div class="deck-footer"><span class="dim2">LUMEN SCENT (가명) · 모든 고유명사와 매출은 익명 처리</span><span class="slide-number" data-current="1" data-total="26"></span></div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-title="요약">
+  <p class="kicker">TL;DR</p>
+  <h2 class="h2">지표를 고친 게 아니라 <span class="gradient-text">지표가 감추던 것</span>을 찾았습니다</h2>
+  <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><p class="eyebrow">예측 신뢰도</p><div class="num-mid">−61 <span class="arrow">→</span> <span style="color:var(--good)">89</span></div><p class="dim">지표 정의 재설계</p></div>
+    <div class="card"><p class="eyebrow">출고량 최적화</p><div class="num-mid">−50<span style="font-size:20px">%</span></div><p class="dim">결품률은 0.3%p만 증가</p></div>
+    <div class="card"><p class="eyebrow">거짓 발주 경보</p><div class="num-mid">16 <span class="arrow">→</span> <span style="color:var(--good)">3</span></div><p class="dim">13건이 오탐이었음</p></div>
+    <div class="card"><p class="eyebrow">매출 기회 규모</p><div class="num-mid">+2.3<span style="font-size:20px">만명</span></div><p class="dim">재구매 전환 개선 여지</p></div>
+  </div>
+  <p class="dim mt-l">모델을 바꾼 게 아닙니다. <b>데이터가 무엇을 뜻하는지</b> 다시 정의했고, 모든 결론은 과거 시점으로 되돌려 검증한 뒤에만 반영했습니다.</p>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-title="문제">
+  <p class="kicker">Context</p>
+  <h2 class="h2">예측은 있는데 아무도 그걸로 결정하지 않았습니다</h2>
+  <div class="vs mt-l">
+    <div class="card bad-side side anim-fade-left" data-anim="fade-left">
+      <h3>현장에서 벌어지던 일</h3>
+      <ul>
+        <li>대시보드 <b>예측 신뢰도가 −61</b>로 표시됨</li>
+        <li>매장은 감으로 요청하고 본사는 감으로 출고</li>
+        <li>부자재는 "45일 전 발주" 고정 규칙</li>
+        <li>고객 이탈·경쟁 위치를 볼 지표가 없음</li>
+      </ul>
+    </div>
+    <div class="mid">→</div>
+    <div class="card good-side side anim-fade-right" data-anim="fade-right">
+      <h3>내가 던진 질문</h3>
+      <ul>
+        <li>신뢰도가 음수? <b>계산식이 틀린 건 아닐까</b></li>
+        <li>출고량은 무엇을 근거로 정해야 하나</li>
+        <li>실사 없이 매장 재고를 알 방법은</li>
+        <li>어디서 고객이 빠지고, 우린 어디쯤 있나</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-title="방법론">
+  <p class="kicker">How I work</p>
+  <h2 class="h2">모든 결론은 <span class="gradient-text">되돌려 검증</span>한 뒤에만 반영했습니다</h2>
+  <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><p class="eyebrow">01 의심</p><p class="dim">지표가 이상하면 데이터보다 <b>정의</b>를 먼저 본다</p></div>
+    <div class="card"><p class="eyebrow">02 분해</p><p class="dim">전체 평균을 <b>규모·상태·시점</b>별로 쪼갠다</p></div>
+    <div class="card"><p class="eyebrow">03 검증</p><p class="dim">과거 시점으로 되돌려 <b>실제 결과</b>와 대조</p></div>
+    <div class="card"><p class="eyebrow">04 보정</p><p class="dim">편향이 남으면 <b>계수로 되돌린 뒤</b> 배포</p></div>
+  </div>
+  <div class="how">
+    <p><b>도구</b> — Python(pandas·numpy) · SQL/Supabase · XGBoost·LightGBM·ETS·SWMA · Notion API · GitHub Actions</p>
+    <p><b>AI 활용</b> — 코드 생산이 아니라 <b>가설을 빠르게 반증</b>하는 데 썼습니다. 백테스트 스크립트를 즉석에서 만들어 하루 5~6회 검증 사이클을 돌렸고, 틀린 가설은 그날 폐기했습니다.</p>
+    <p><b>원칙</b> — 되돌릴 기준을 먼저 정하고 시작합니다. "이 수치보다 나빠지면 원복"을 정해두지 않으면 개선인지 아닌지 알 수 없습니다.</p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide center tc" data-title="케이스1">
+  <div><p class="kicker">Case 01 · 예측 검증</p><h2 class="h2">신뢰도 <span class="gradient-text">−61점</span>의 정체</h2>
+  <p class="lede mt-l">평균 하나가 59개 품목을 대표할 수 있는가</p></div>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-title="케이스1-발견">
+  <p class="kicker">Case 01 · 발견</p>
+  <h2 class="h2">단 한 품목이 전체 평균을 <span class="gradient-text">148%p</span> 끌어올리고 있었습니다</h2>
+  <div class="card mt-l" style="padding:4px 12px">
+  <table class="t">
+    <thead><tr><th>품목</th><th class="num">실적</th><th class="num">예측</th><th class="num">오차율</th></tr></thead>
+    <tbody>
+      <tr><td>디퓨저 오일 15ml 문라이트 듀 <span class="tag tag-bad">단종</span></td><td class="num">4</td><td class="num">354</td><td class="num" style="color:var(--bad)"><b>8,746%</b></td></tr>
+      <tr><td>핸드크림 75ml 시그니처 벨벳로즈 <span class="tag tag-bad">일시품절</span></td><td class="num">1,496</td><td class="num">2,870</td><td class="num">92%</td></tr>
+      <tr><td>오일 퍼퓸 10ml 시그니처 벨벳로즈</td><td class="num">21,812</td><td class="num">21,065</td><td class="num" style="color:var(--good)">3.4%</td></tr>
+      <tr><td>디퓨저 오일 15ml 시그니처 벨벳로즈</td><td class="num">3,505</td><td class="num">3,431</td><td class="num" style="color:var(--good)">2.1%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="how">
+    <p><b>무엇을</b> — 신뢰도 −61이 표시되는 걸 보고 지표 산식을 역추적했습니다.</p>
+    <p><b>왜</b> — 신뢰도가 음수인 건 데이터 문제가 아니라 <b>정의 문제</b>일 가능성이 높습니다. <code>100 − 평균오차율</code>인데 평균이 161%면 음수가 됩니다.</p>
+    <p><b>어떻게</b> — 품목별 오차율을 전부 꺼내 분포를 봤습니다. 월 4개 팔리는 단종 품목에 %오차를 매기면 8,746%가 나오고, 이 한 건이 59종 평균을 지배했습니다.</p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide compact" data-title="케이스1-분해">
+  <p class="kicker">Case 01 · 분해</p>
+  <h2 class="h2">규모별로 쪼개니 문제 구간이 드러났습니다</h2>
+  <div class="card mt-l" style="padding:4px 12px">
+  <table class="t">
+    <thead><tr><th>월 판매 규모</th><th class="num">품목</th><th class="num">물량 비중</th><th class="num">오차율 평균</th><th class="num">절대오차</th></tr></thead>
+    <tbody>
+      <tr><td>1,000개 이상</td><td class="num">15</td><td class="num"><b>83.5%</b></td><td class="num" style="color:var(--good)">10.4%</td><td class="num">3,177</td></tr>
+      <tr><td>200 ~ 1,000개</td><td class="num">14</td><td class="num">12.6%</td><td class="num" style="color:var(--good)">9.4%</td><td class="num">545</td></tr>
+      <tr><td>50 ~ 200개</td><td class="num">15</td><td class="num">3.3%</td><td class="num">15.9%</td><td class="num">326</td></tr>
+      <tr><td>50개 미만</td><td class="num">15</td><td class="num">0.6%</td><td class="num" style="color:var(--bad)"><b>2,937%</b></td><td class="num">397</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="how">
+    <p><b>왜 이렇게 봤나</b> — %오차는 분모가 작을수록 폭발합니다. 실적 1개를 0개로 예측하면 100%, 4개를 354개로 예측하면 8,746%입니다. <b>규모를 통제하지 않은 평균은 의미가 없습니다.</b></p>
+    <p><b>발견</b> — 물량의 <b>0.6%</b>가 평균을 지배했고, 실제 발주에 쓰는 상위 20종 오차는 <b>6.4%</b>였습니다. 다만 "50개 미만" 구간도 절대오차 397개로 무시할 수 없어 <b>버리지 않고 별도 관리군</b>으로 뒀습니다.</p>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-title="케이스1-결과">
+  <p class="kicker">Case 01 · 결과</p>
+  <h2 class="h2">산식은 그대로 두고 <span class="gradient-text">판매 중단 품목만 제외</span>했습니다</h2>
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><p class="eyebrow">품목 평균 WAPE</p><div class="num-big">161<span class="arrow">→</span><span style="color:var(--good)">11</span><span style="font-size:20px">%</span></div></div>
+    <div class="card"><p class="eyebrow">예측 신뢰도</p><div class="num-big">−61<span class="arrow">→</span><span style="color:var(--good)">89</span></div></div>
+    <div class="card"><p class="eyebrow">물량 가중 WAPE</p><div class="num-big">7.7<span class="arrow">→</span><span style="color:var(--good)">4.2</span><span style="font-size:20px">%</span></div></div>
+  </div>
+  <div class="how">
+    <p><b>왜 산식을 안 바꿨나</b> — 이미 그 지표로 일하던 사람들이 있었습니다. 정의를 바꾸면 과거와 비교가 끊기고 신뢰를 잃습니다. <b>단종·일시품절 4종을 검증 대상에서 빼는 것만으로</b> 값이 저절로 정상화됐습니다.</p>
+    <p><b>어떻게 신뢰를 지켰나</b> — 제외한 4종의 품목명을 화면에 그대로 노출했습니다. 숨기면 "왜 갑자기 좋아졌지?"라는 의심이 남습니다.</p>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide center tc" data-title="케이스2">
+  <div><p class="kicker">Case 02 · 데이터 품질</p><h2 class="h2">대량 구매 건이<br><span class="gradient-text">예측을 오염</span>시키고 있었습니다</h2></div>
+</section>
+
+<!-- 10 -->
+<section class="slide compact" data-title="케이스2-발견">
+  <p class="kicker">Case 02 · 발견</p>
+  <h2 class="h2">현업의 "이 매장에 캔들이 과하게 나간다"는 감을 추적했습니다</h2>
+  <div class="two-col mt-l">
+    <div class="card"><h4>시스템이 계산한 일판매</h4><div class="num-big">1.32<span style="font-size:18px">개/일</span></div><p class="dim">28일 평균 기준</p></div>
+    <div class="card"><h4>실제 최근 판매</h4><div class="num-big" style="color:var(--good)">0.25<span style="font-size:18px">개/일</span></div><p class="dim">최근 12일 실적 기준</p></div>
+  </div>
+  <div class="how">
+    <p><b>무엇을</b> — 특정 매장·품목의 출고가 과하다는 현업 피드백을 받고 일판매 산정 과정을 되짚었습니다.</p>
+    <p><b>발견</b> — <b>대량 구매 한 건</b>이 28일 평균을 <b>5배</b>로 부풀렸습니다. 평소 하루 1~2개 팔리는 품목에 25개 단건이 들어오자 그 값이 평균에 그대로 반영됐고, 재고가 <b>24일치</b>까지 쌓였습니다.</p>
+    <p><b>왜 중요한가</b> — 대량 구매는 <b>반복되지 않는 수요</b>입니다. 일상 판매율로 환산하면 이후 몇 달간 발주가 계속 부풀려집니다.</p>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-title="케이스2-해결">
+  <p class="kicker">Case 02 · 해결</p>
+  <h2 class="h2">절대 기준은 못 씁니다 — <span class="gradient-text">상대 기준</span>이어야 합니다</h2>
+  <div class="vs mt-l">
+    <div class="card bad-side side"><h3>❌ "하루 10개 이상은 이상치"</h3>
+      <ul><li>주력 매장은 하루 <b>40~70개</b>가 정상</li><li>정상 판매의 16%가 잘려나감</li></ul></div>
+    <div class="mid">→</div>
+    <div class="card good-side side"><h3>✅ "그 조합의 중앙값 대비 3배 초과분만 절단"</h3>
+      <ul><li>주력: 중앙값 37 → 상한 111, <b>절단 없음</b></li><li>문제 조합: 중앙값 1.5 → 상한 5, <b>25개 → 5개</b></li></ul></div>
+  </div>
+  <div class="how">
+    <p><b>왜 이 방식인가</b> — 절대 수량으로 이상치를 정의하면 주력 품목의 정상 판매가 잘립니다. <b>매장×품목 조합마다 기준이 달라야</b> 합니다.</p>
+    <p><b>어떻게 검증했나</b> — K값(중앙값의 몇 배)을 2.5·3·4로 바꿔가며 영향 범위를 측정했습니다. K=3에서 전체 조합의 <b>6.2%</b>, 물량의 <b>1.4%</b>만 보정되어 <b>최소 개입으로 왜곡만 제거</b>됐습니다.</p>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide center tc" data-title="케이스3">
+  <div><p class="kicker">Case 03 · 자재 소요</p><h2 class="h2">"팔릴 만큼"과 <span class="gradient-text">"만들 만큼"</span>은<br>다른 숫자입니다</h2></div>
+</section>
+
+<!-- 13 -->
+<section class="slide compact" data-title="케이스3-발견">
+  <p class="kicker">Case 03 · 발견</p>
+  <h2 class="h2">부자재 소요를 판매 예측으로 계산하고 있었습니다</h2>
+  <div class="card mt-l" style="padding:4px 12px">
+  <table class="t">
+    <thead><tr><th>제품</th><th class="num">4개월 판매 예측</th><th class="num">실제 생산 필요</th><th class="num">비율</th></tr></thead>
+    <tbody>
+      <tr><td>오일 퍼퓸 10ml 시그니처 벨벳로즈</td><td class="num">97,872</td><td class="num">88,500</td><td class="num">90%</td></tr>
+      <tr><td>디퓨저 오일 15ml 시그니처 벨벳로즈</td><td class="num">15,871</td><td class="num">7,000</td><td class="num" style="color:var(--warn)">44%</td></tr>
+      <tr><td>카 디퓨저 화이트오크 필터</td><td class="num">13,213</td><td class="num">5,213</td><td class="num" style="color:var(--warn)">39%</td></tr>
+      <tr><td>오일 퍼퓸 10ml 그린 베르가못</td><td class="num">6,418</td><td class="num">1,500</td><td class="num" style="color:var(--bad)">23%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="how">
+    <p><b>무엇을</b> — BOM(자재명세서)을 전개해 부자재 소요를 산출하는 로직을 검토했습니다.</p>
+    <p><b>발견</b> — 판매 예측을 그대로 곱하고 있어 <b>완제품 재고가 흡수하는 몫</b>이 빠져 있었습니다. 전사 기준 실제 생산 필요량은 판매 예측의 <b>67.5%</b>였습니다.</p>
+    <p><b>어떻게 고쳤나</b> — <code>목표재고 + 예측 − 완제품재고 − 확정입고</code>로 바꾸고 MOQ 로트 사이징·이월을 적용했습니다. 기존 생산계획 모듈의 <b>상수와 함수를 그대로 import</b>해 두 곳의 값이 어긋나지 않게 했습니다.</p>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-title="케이스3-결과">
+  <p class="kicker">Case 03 · 결과</p>
+  <h2 class="h2">발주 경보 <span class="gradient-text">16건 중 13건이 거짓</span>이었습니다</h2>
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><p class="eyebrow">발주 시점 초과</p><div class="num-big">16<span class="arrow">→</span><span style="color:var(--good)">3</span><span style="font-size:20px">종</span></div></div>
+    <div class="card"><p class="eyebrow">순소요 합계</p><div class="num-big">94K<span class="arrow">→</span><span style="color:var(--good)">35K</span></div></div>
+    <div class="card"><p class="eyebrow">발주 데드라인</p><p style="font-size:15px;line-height:1.75;margin-top:6px">소진예정일<br>− 품목별 리드타임<br>− 안전버퍼 7일</p></div>
+  </div>
+  <div class="how">
+    <p><b>왜 중요한가</b> — 거짓 경보가 많으면 진짜 경보도 무시됩니다. 13건을 걷어내자 <b>재고 0인 우드 캡</b>이 목록 맨 위로 올라왔습니다.</p>
+    <p><b>한계도 명시</b> — 미입고 발주(Open PO) 데이터가 없어 순소요는 <b>하한값</b>입니다. 이 사실을 화면에 적어두고, 구매팀이 노션에 발주를 입력하면 자동 회수되도록 연동했습니다.</p>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide compact" data-title="케이스4">
+  <p class="kicker">Case 04 · 출고 최적화</p>
+  <h2 class="h2">출고를 <span class="gradient-text">절반으로 줄여도</span> 결품은 그대로였습니다</h2>
+  <div class="card mt-l" style="padding:4px 12px">
+  <table class="t">
+    <thead><tr><th>안전일수</th><th class="num">권고 출고량</th><th class="num">현행 대비</th><th class="num">결품률</th><th class="num">출고 후 재고일</th></tr></thead>
+    <tbody>
+      <tr><td>0일 (거의 안 보냄)</td><td class="num">285</td><td class="num">0.03배</td><td class="num">2.2%</td><td class="num">19.1일</td></tr>
+      <tr><td><b>5일 (채택)</b></td><td class="num"><b>3,785</b></td><td class="num"><b>0.46배</b></td><td class="num" style="color:var(--good)"><b>1.2%</b></td><td class="num">19.2일</td></tr>
+      <tr><td>8일</td><td class="num">8,860</td><td class="num">1.08배</td><td class="num">0.9%</td><td class="num">19.5일</td></tr>
+      <tr><td>10일</td><td class="num">13,684</td><td class="num">1.66배</td><td class="num">0.9%</td><td class="num">19.8일</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="how">
+    <p><b>발견</b> — 매장은 이미 <b>19일치 적정 재고</b>를 안정적으로 보유하고 있었습니다. 출고를 1.66배로 늘려도 결품률은 0.9%에서 멈춥니다 — 남은 결품은 <b>물량으로 막을 수 없는 종류</b>였습니다.</p>
+    <p><b>어떻게 정했나</b> — 안전일수를 0~10일로 바꿔가며 출고일 4회·조합 3,804건을 시뮬레이션했습니다. <b>결품률과 재고 회전의 교환비</b>를 보고 5일을 택했고, "결품률 0.3%p 증가"라는 대가를 먼저 보고한 뒤 승인받았습니다.</p>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide compact" data-title="케이스4-설계">
+  <p class="kicker">Case 04 · 설계</p>
+  <h2 class="h2">요일을 일수로 세지 않고 <span class="gradient-text">판매량으로</span> 셌습니다</h2>
+  <div class="two-col mt-l">
+    <div class="card"><h4>요일별 판매 지수</h4>
+      <table class="t" style="margin-top:6px"><tbody>
+        <tr><td>토</td><td class="num"><b>1.57</b></td><td>일</td><td class="num">1.36</td></tr>
+        <tr><td>금</td><td class="num">1.04</td><td>목</td><td class="num">0.82</td></tr>
+        <tr><td>수</td><td class="num">0.81</td><td>화</td><td class="num">0.79</td></tr>
+        <tr><td>월</td><td class="num" style="color:var(--bad)">0.64</td><td></td><td></td></tr>
+      </tbody></table>
+    </div>
+    <div class="card"><h4>회차별 커버 환산</h4>
+      <ul style="margin-top:6px">
+        <li>월 출고 → 월·화 = <b>1.43일치</b></li>
+        <li>수 출고 → 수·목 = <b>1.64일치</b></li>
+        <li>금 출고 → 금·토·일 = <b>3.96일치</b></li>
+      </ul>
+    </div>
+  </div>
+  <div class="how">
+    <p><b>왜</b> — 토요일 판매가 월요일의 <b>2.5배</b>입니다. 금요일 출고를 "3일치"로 계산하면 주말에 결품이 납니다.</p>
+    <p><b>어떻게</b> — POS에서 요일 지수를 직접 산출해 커버 기간을 환산했습니다. 목표 재고는 회차마다 바꾸지 않고 <b>고정</b>했습니다 — 회차별로 목표를 달리 두면 큰 회차에만 물량이 몰리는 톱니가 생겨 실제 패턴과 반대로 나왔습니다.</p>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide compact" data-title="케이스5">
+  <p class="kicker">Case 05 · 예측 지평</p>
+  <h2 class="h2">지평을 늘릴 때 <span class="gradient-text">진짜 위험</span>은 정확도가 아니었습니다</h2>
+  <div class="card mt-l" style="padding:4px 12px">
+  <table class="t">
+    <thead><tr><th>지평</th><th class="num">누적 WAPE</th><th class="num">과대예측 편향</th><th class="num">표본</th><th>판단</th></tr></thead>
+    <tbody>
+      <tr><td>3개월 (기존)</td><td class="num">19.3%</td><td class="num">1.047배</td><td class="num">5</td><td class="dim">향료 90일을 못 덮음</td></tr>
+      <tr><td><b>4개월 (채택)</b></td><td class="num"><b>19.3%</b></td><td class="num">1.060배</td><td class="num">5</td><td style="color:var(--good)">조달 리드타임 커버</td></tr>
+      <tr><td>5개월</td><td class="num">19.7%</td><td class="num">1.068배</td><td class="num">4</td><td class="dim">추가 이득 없음</td></tr>
+      <tr><td>6개월</td><td class="num">20.1%</td><td class="num" style="color:var(--bad)">1.074배</td><td class="num" style="color:var(--bad)">3</td><td class="dim">편향·표본 위험 증가</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="how">
+    <p><b>어떻게 검증했나</b> — cutoff를 5개 시점으로 옮겨가며 롤링 백테스트를 돌렸습니다. 단일 시점 검증은 <b>그 시점의 운</b>에 좌우됩니다.</p>
+    <p><b>핵심 발견</b> — 정확도는 6개월까지 0.8%p만 나빠집니다. 문제는 <b>편향이 단조 증가</b>한다는 것 — MOQ 단위로 끊어 사는 부자재에서 12% 과다는 <b>한 배치를 통째로</b> 더 사게 만듭니다. 그래서 6개월이 아니라 4개월을 택했습니다.</p>
+  </div>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-title="편향보정">
+  <p class="kicker">Case 05 · 보정</p>
+  <h2 class="h2">월차마다 다른 계수로 <span class="gradient-text">되돌려서</span> 반영했습니다</h2>
+  <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><p class="eyebrow">M+1</p><div class="num-mid">÷1.003</div><p class="dim">편향 거의 없음</p></div>
+    <div class="card"><p class="eyebrow">M+2</p><div class="num-mid">÷1.062</div><p class="dim">6% 과다</p></div>
+    <div class="card"><p class="eyebrow">M+3</p><div class="num-mid">÷1.082</div><p class="dim">8% 과다</p></div>
+    <div class="card"><p class="eyebrow">M+4</p><div class="num-mid">÷1.098</div><p class="dim">10% 과다</p></div>
+  </div>
+  <div class="how">
+    <p><b>왜 월차별인가</b> — 편향은 지평이 길수록 커집니다. 하나의 계수로 뭉뚱그리면 가까운 달은 과소, 먼 달은 과대 보정됩니다.</p>
+    <p><b>남은 불확실성도 표기</b> — 같은 M+3인데 예측 시점에 따라 오차가 <b>16.6% ~ 29.5%</b>로 벌어졌습니다. <b>몇 달 앞을 보느냐보다 언제 예측하느냐</b>가 영향이 컸습니다. 그래서 마지막 달은 화면에 "참고"로 명시했습니다.</p>
+  </div>
+</section>
+
+<!-- 19 -->
+<section class="slide center tc" data-title="케이스6">
+  <div><p class="kicker">Case 06 · 고객 행동</p><h2 class="h2">고객은 <span class="gradient-text">어디서 빠지는가</span></h2>
+  <p class="lede mt-l">40만 명의 구매 이력을 회차별로 추적</p></div>
+</section>
+
+<!-- 20 -->
+<section class="slide compact" data-title="퍼널">
+  <p class="kicker">Case 06 · 퍼널</p>
+  <h2 class="h2">1회차 → 2회차에서 <span class="gradient-text">79%가 이탈</span>합니다</h2>
+  <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><p class="eyebrow">전체 구매회원</p><div class="num-mid">402,911</div><p class="dim">100%</p></div>
+    <div class="card"><p class="eyebrow">재구매 (2회+)</p><div class="num-mid" style="color:var(--warn)">84,129</div><p class="dim" style="color:var(--bad)">20.9% · −79.1%p</p></div>
+    <div class="card"><p class="eyebrow">3회+</p><div class="num-mid">29,303</div><p class="dim">7.3% · 유지율 34.8%</p></div>
+    <div class="card"><p class="eyebrow">단골 (5회+)</p><div class="num-mid" style="color:var(--good)">6,115</div><p class="dim">1.5% · 유지율 20.9%</p></div>
+  </div>
+  <div class="how">
+    <p><b>발견</b> — 2회차만 넘기면 <b>3회차 전환율이 34.8%</b>로 뜁니다. 1→2회차(20.9%)의 <b>1.7배</b>입니다. 즉 <b>2회차가 결정적 관문</b>이고, 여기가 가장 큰 레버입니다.</p>
+    <p><b>어떻게 봤나</b> — 단순 재구매율이 아니라 <b>회차별 전환</b>으로 끊어 봤습니다. 평균 재구매율 하나만 보면 "어느 단계를 고쳐야 하는지"를 알 수 없습니다.</p>
+  </div>
+</section>
+
+<!-- 21 -->
+<section class="slide compact" data-title="이탈">
+  <p class="kicker">Case 06 · 이탈 · 코호트</p>
+  <h2 class="h2">매장별 재구매율이 <span class="gradient-text">14.3% ~ 25.3%</span>로 갈립니다</h2>
+  <div class="two-col mt-l">
+    <div class="card"><h4>매장별 재구매율</h4>
+      <table class="t" style="margin-top:6px"><tbody>
+        <tr><td>상위 매장</td><td class="num" style="color:var(--good)"><b>25.3%</b></td></tr>
+        <tr><td>상위 5개 평균</td><td class="num">23.6%</td></tr>
+        <tr><td><b>전사 평균</b></td><td class="num"><b>14.3%</b></td></tr>
+      </tbody></table>
+      <p class="dim" style="margin-top:8px">같은 브랜드·같은 제품인데 <b>11%p</b> 차이</p>
+    </div>
+    <div class="card"><h4>코호트 12개월 잔존율</h4>
+      <table class="t" style="margin-top:6px"><tbody>
+        <tr><td>2023-Q2 유입</td><td class="num">26.3%</td></tr>
+        <tr><td>2023-Q3 유입</td><td class="num">23.4%</td></tr>
+        <tr><td>2023-Q4 유입</td><td class="num" style="color:var(--bad)">21.3%</td></tr>
+      </tbody></table>
+      <p class="dim" style="margin-top:8px">유입 시기가 늦을수록 <b>잔존율 하락</b></p>
+    </div>
+  </div>
+  <div class="how">
+    <p><b>무엇을 읽었나</b> — 매장 편차 11%p는 <b>제품이 아니라 접객·운영 차이</b>일 가능성이 큽니다. 상위 매장의 방식을 이식할 여지가 있다는 뜻입니다.</p>
+    <p><b>경고 신호</b> — 코호트 잔존율이 분기마다 낮아집니다. 신규 유입은 늘어도 <b>고객의 질이 떨어지고</b> 있어, 획득 채널 점검이 필요합니다.</p>
+  </div>
+</section>
+
+<!-- 22 -->
+<section class="slide center tc" data-title="케이스7">
+  <div><p class="kicker">Case 07 · 경쟁 분석</p><h2 class="h2">우리는 <span class="gradient-text">어디쯤</span> 서 있는가</h2></div>
+</section>
+
+<!-- 23 -->
+<section class="slide compact" data-title="경쟁포지션">
+  <p class="kicker">Case 07 · 포지셔닝</p>
+  <h2 class="h2">가격은 중위권인데 <span class="gradient-text">검색 존재감은 0%</span>였습니다</h2>
+  <div class="two-col mt-l">
+    <div class="card"><h4>니치 향수 시장 가격 포지션</h4>
+      <table class="t" style="margin-top:6px">
+        <thead><tr><th>구간</th><th class="num">중앙가</th><th class="num">제품수</th></tr></thead>
+        <tbody>
+          <tr><td>프리미엄 3사</td><td class="num">194K ~ 279K</td><td class="num">57~60</td></tr>
+          <tr><td>상위 2사</td><td class="num">92K ~ 148K</td><td class="num">59~60</td></tr>
+          <tr><td><b>자사</b></td><td class="num"><b>53.5K</b></td><td class="num"><b>56</b></td></tr>
+          <tr><td>하위 3사</td><td class="num">39K ~ 58K</td><td class="num">22~57</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card"><h4>카테고리 키워드 검색 점유율</h4>
+      <table class="t" style="margin-top:6px"><tbody>
+        <tr><td>브랜드명</td><td class="num" style="color:var(--good)">100%</td></tr>
+        <tr><td>오일 퍼퓸</td><td class="num">41%</td></tr>
+        <tr><td>리드디퓨저</td><td class="num" style="color:var(--warn)">11%</td></tr>
+        <tr><td>디퓨저</td><td class="num" style="color:var(--bad)">1%</td></tr>
+        <tr><td>니치 향수 · 향수 선물</td><td class="num" style="color:var(--bad)">0%</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <div class="how">
+    <p><b>무엇을 했나</b> — 경쟁 8개 브랜드의 제품수·가격대를 수집해 포지션을 매핑하고, 카테고리 키워드별 검색 점유율(SOV)을 측정했습니다.</p>
+    <p><b>발견</b> — 브랜드를 <b>이미 아는 사람</b>은 100% 잡지만, <b>카테고리로 탐색하는 신규 고객</b>은 거의 못 잡고 있습니다. 제품력·가격이 아니라 <b>노출의 문제</b>입니다.</p>
+  </div>
+</section>
+
+<!-- 24 -->
+<section class="slide compact" data-title="매출근거">
+  <p class="kicker">Business Impact</p>
+  <h2 class="h2">세 갈래의 <span class="gradient-text">매출 증대 근거</span>를 정량화했습니다</h2>
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card">
+      <p class="eyebrow">01 · 2회차 전환</p>
+      <div class="num-mid" style="color:var(--good)">+2.3만명</div>
+      <p class="dim">재구매율 14.3% → 상위 매장 수준 20%<br>402,911명 × 5.7%p</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">02 · 매장 편차 해소</p>
+      <div class="num-mid" style="color:var(--good)">11%p</div>
+      <p class="dim">상위 25.3% vs 전사 14.3%<br>운영 방식 이식 여지</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">03 · 카테고리 유입</p>
+      <div class="num-mid" style="color:var(--good)">SOV 0~11%</div>
+      <p class="dim">디퓨저·니치 향수·향수 선물<br>미개척 검색 수요</p>
+    </div>
+  </div>
+  <div class="how">
+    <p><b>왜 이 순서인가</b> — 신규 획득보다 <b>2회차 전환이 싸고 확실</b>합니다. 이미 한 번 산 40만 명이 모수이고, 3회차 전환율이 1.7배로 뛰므로 한 번만 넘기면 이후는 자연히 따라옵니다.</p>
+    <p><b>검증 가능한 형태로</b> — 검색량과 매출의 주간 상관은 브랜드 키워드 <b>0.89</b>, "향수 선물"은 <b>4일 선행</b>으로 나왔습니다. 캠페인 효과를 사후에 측정할 <b>선행지표</b>를 함께 확보했습니다.</p>
+  </div>
+</section>
+
+<!-- 25 -->
+<section class="slide" data-title="결과물">
+  <p class="kicker">Deliverables</p>
+  <h2 class="h2">분석으로 끝내지 않고 <span class="gradient-text">쓰이는 도구</span>로 만들었습니다</h2>
+  <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><h4>📦 매장 출고</h4><p class="dim">실사 없이 재고 추적<br>월·수·금 회차별 계획<br>기존 엑셀 양식 그대로 생성</p></div>
+    <div class="card"><h4>🏭 부자재 발주</h4><p class="dim">BOM 전개 → 리드타임 역산<br>구매팀 노션 자동 동기화<br>발주 입력분 Open PO 회수</p></div>
+    <div class="card"><h4>📊 수요예측 검증</h4><p class="dim">품목별 예측 vs 실적<br>ABC×XYZ 등급 분류<br>제외 내역까지 공개</p></div>
+    <div class="card"><h4>👥 고객·경쟁</h4><p class="dim">회차 전환 퍼널<br>코호트 잔존 추적<br>경쟁 포지션·SOV 모니터링</p></div>
+  </div>
+  <div class="how">
+    <p><b>정착시키는 방식</b> — 현장이 쓰던 <b>엑셀 양식의 탭·수식을 그대로 보존</b>하고 데이터만 갈아끼웠습니다. 도구를 바꾸라고 요구하지 않는 것이 정착의 조건이었습니다.</p>
+    <p><b>자동화</b> — GitHub Actions로 매일 03:30 갱신되고, 실패하면 메신저로 알립니다. 이전에 동기화가 <b>5일간 조용히 죽어 있던 사고</b>를 겪은 뒤 넣은 장치입니다.</p>
+  </div>
+</section>
+
+<!-- 26 -->
+<section class="slide" data-title="마무리">
+  <p class="kicker">What I bring</p>
+  <h2 class="h2">지표를 <span class="gradient-text">의심하는 것</span>부터 시작합니다</h2>
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><h4>검증 없는 반영은 하지 않습니다</h4><p class="dim">지평 확장도 롤링 백테스트 5회로 확인한 뒤 결정했고, <b>되돌릴 기준을 먼저 정한 뒤</b> 시작했습니다.</p></div>
+    <div class="card"><h4>한계를 먼저 말합니다</h4><p class="dim">"결품률이 0.3%p 오릅니다", "순소요는 하한값입니다" — 화면과 보고서에 <b>명시</b>했습니다.</p></div>
+    <div class="card"><h4>쓰는 사람 기준으로 만듭니다</h4><p class="dim">기존 지표 정의를 지키고, 쓰던 양식을 유지하고, <b>빠진 항목은 숨기지 않았습니다.</b></p></div>
+  </div>
+  <p class="lede mt-l">Python · SQL · Supabase · XGBoost/LightGBM/ETS · Notion API · GitHub Actions · Tableau</p>
+  <div class="deck-footer"><span class="dim2">모든 고유명사·매출은 익명 처리했습니다</span><span class="slide-number" data-current="26" data-total="26"></span></div>
+</section>
+
+</div>
+<script src="../assets/runtime.js"></script>
+</body></html>

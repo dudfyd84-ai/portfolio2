@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="swiss-grid">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>핵심 요약 · 데이터로 밸류체인을 다시 이은 기록</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/swiss-grid.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+<style>
+  .t td, .t th { font-size: 15px; }
+  .num-big { font-size: 50px; font-weight: 800; line-height: 1.1; }
+  .num-mid { font-size: 34px; font-weight: 800; line-height: 1.15; }
+  .arrow { color: var(--dim); padding: 0 6px; }
+  .tag { display:inline-block; padding:2px 9px; border-radius:999px; font-size:12px; font-weight:700; }
+  .tag-bad { background:#fde8e8; color:#b3261e; }
+  .tag-good { background:#e6f4ea; color:#1a7f4b; }
+  /* 무엇을·왜·어떻게 — 케이스마다 같은 자리에 같은 형식으로 둔다 */
+  .how { border-left: 3px solid var(--accent, #111); padding-left: 14px; margin-top: 18px; }
+  .how p { margin: 3px 0; font-size: 14.5px; line-height: 1.6; }
+  .how b { letter-spacing: -.01em; }
+  .slide.compact .num-big { font-size: 40px; }
+  .slide.compact .t td, .slide.compact .t th { font-size: 14px; }
+  .slide.compact .how p { font-size: 13.5px; }
+  /* 1280x800(노트북)에서도 한 화면에 담기도록 여백을 좁힌다 */
+  @media (max-height: 850px) {
+    .how { margin-top: 12px; }
+    .how p { font-size: 13.5px; line-height: 1.5; }
+    .slide.compact .how p { font-size: 13px; line-height: 1.45; }
+    .num-big { font-size: 44px; }
+    .slide.compact .num-big { font-size: 36px; }
+    .t td, .t th { font-size: 14px; }
+    .slide.compact .t td, .slide.compact .t th { font-size: 13px; }
+    .slide.compact .two-col .card { padding: 16px 20px; }
+    .slide.compact .two-col .card h4 { margin-bottom: 4px; }
+  }
+</style>
+</head>
+<body data-themes="swiss-grid,minimal-white,corporate-clean,academic-paper,editorial-serif" data-theme-base="../assets/themes/">
+<div class="deck">
+<section class="slide" data-title="표지">
+  <p class="kicker">Data Analyst Portfolio · 2026</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">숫자는 맞는데<br><span class="gradient-text">답이 틀렸을 때</span></h1>
+  <p class="lede">수요예측 · SCM 최적화 · 고객 행동 · 경쟁 분석<br>향수 브랜드의 밸류체인을 데이터로 다시 이은 7개 케이스</p>
+  <div class="deck-footer"><span class="dim2">LUMEN SCENT (가명) · 모든 고유명사와 매출은 익명 처리</span><span class="slide-number" data-current="1" data-total="8"></span></div>
+</section>
+
+<section class="slide" data-title="요약">
+  <p class="kicker">TL;DR</p>
+  <h2 class="h2">지표를 고친 게 아니라 <span class="gradient-text">지표가 감추던 것</span>을 찾았습니다</h2>
+  <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><p class="eyebrow">예측 신뢰도</p><div class="num-mid">−61 <span class="arrow">→</span> <span style="color:var(--good)">89</span></div><p class="dim">지표 정의 재설계</p></div>
+    <div class="card"><p class="eyebrow">출고량 최적화</p><div class="num-mid">−50<span style="font-size:20px">%</span></div><p class="dim">결품률은 0.3%p만 증가</p></div>
+    <div class="card"><p class="eyebrow">거짓 발주 경보</p><div class="num-mid">16 <span class="arrow">→</span> <span style="color:var(--good)">3</span></div><p class="dim">13건이 오탐이었음</p></div>
+    <div class="card"><p class="eyebrow">매출 기회 규모</p><div class="num-mid">+2.3<span style="font-size:20px">만명</span></div><p class="dim">재구매 전환 개선 여지</p></div>
+  </div>
+  <p class="dim mt-l">모델을 바꾼 게 아닙니다. <b>데이터가 무엇을 뜻하는지</b> 다시 정의했고, 모든 결론은 과거 시점으로 되돌려 검증한 뒤에만 반영했습니다.</p>
+</section>
+
+<section class="slide" data-title="문제">
+  <p class="kicker">Context</p>
+  <h2 class="h2">예측은 있는데 아무도 그걸로 결정하지 않았습니다</h2>
+  <div class="vs mt-l">
+    <div class="card bad-side side anim-fade-left" data-anim="fade-left">
+      <h3>현장에서 벌어지던 일</h3>
+      <ul>
+        <li>대시보드 <b>예측 신뢰도가 −61</b>로 표시됨</li>
+        <li>매장은 감으로 요청하고 본사는 감으로 출고</li>
+        <li>부자재는 "45일 전 발주" 고정 규칙</li>
+        <li>고객 이탈·경쟁 위치를 볼 지표가 없음</li>
+      </ul>
+    </div>
+    <div class="mid">→</div>
+    <div class="card good-side side anim-fade-right" data-anim="fade-right">
+      <h3>내가 던진 질문</h3>
+      <ul>
+        <li>신뢰도가 음수? <b>계산식이 틀린 건 아닐까</b></li>
+        <li>출고량은 무엇을 근거로 정해야 하나</li>
+        <li>실사 없이 매장 재고를 알 방법은</li>
+        <li>어디서 고객이 빠지고, 우린 어디쯤 있나</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="케이스1-발견">
+  <p class="kicker">Case 01 · 발견</p>
+  <h2 class="h2">단 한 품목이 전체 평균을 <span class="gradient-text">148%p</span> 끌어올리고 있었습니다</h2>
+  <div class="card mt-l" style="padding:4px 12px">
+  <table class="t">
+    <thead><tr><th>품목</th><th class="num">실적</th><th class="num">예측</th><th class="num">오차율</th></tr></thead>
+    <tbody>
+      <tr><td>디퓨저 오일 15ml 문라이트 듀 <span class="tag tag-bad">단종</span></td><td class="num">4</td><td class="num">354</td><td class="num" style="color:var(--bad)"><b>8,746%</b></td></tr>
+      <tr><td>핸드크림 75ml 시그니처 벨벳로즈 <span class="tag tag-bad">일시품절</span></td><td class="num">1,496</td><td class="num">2,870</td><td class="num">92%</td></tr>
+      <tr><td>오일 퍼퓸 10ml 시그니처 벨벳로즈</td><td class="num">21,812</td><td class="num">21,065</td><td class="num" style="color:var(--good)">3.4%</td></tr>
+      <tr><td>디퓨저 오일 15ml 시그니처 벨벳로즈</td><td class="num">3,505</td><td class="num">3,431</td><td class="num" style="color:var(--good)">2.1%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="how">
+    <p><b>무엇을</b> — 신뢰도 −61이 표시되는 걸 보고 지표 산식을 역추적했습니다.</p>
+    <p><b>왜</b> — 신뢰도가 음수인 건 데이터 문제가 아니라 <b>정의 문제</b>일 가능성이 높습니다. <code>100 − 평균오차율</code>인데 평균이 161%면 음수가 됩니다.</p>
+    <p><b>어떻게</b> — 품목별 오차율을 전부 꺼내 분포를 봤습니다. 월 4개 팔리는 단종 품목에 %오차를 매기면 8,746%가 나오고, 이 한 건이 59종 평균을 지배했습니다.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="케이스1-결과">
+  <p class="kicker">Case 01 · 결과</p>
+  <h2 class="h2">산식은 그대로 두고 <span class="gradient-text">판매 중단 품목만 제외</span>했습니다</h2>
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><p class="eyebrow">품목 평균 WAPE</p><div class="num-big">161<span class="arrow">→</span><span style="color:var(--good)">11</span><span style="font-size:20px">%</span></div></div>
+    <div class="card"><p class="eyebrow">예측 신뢰도</p><div class="num-big">−61<span class="arrow">→</span><span style="color:var(--good)">89</span></div></div>
+    <div class="card"><p class="eyebrow">물량 가중 WAPE</p><div class="num-big">7.7<span class="arrow">→</span><span style="color:var(--good)">4.2</span><span style="font-size:20px">%</span></div></div>
+  </div>
+  <div class="how">
+    <p><b>왜 산식을 안 바꿨나</b> — 이미 그 지표로 일하던 사람들이 있었습니다. 정의를 바꾸면 과거와 비교가 끊기고 신뢰를 잃습니다. <b>단종·일시품절 4종을 검증 대상에서 빼는 것만으로</b> 값이 저절로 정상화됐습니다.</p>
+    <p><b>어떻게 신뢰를 지켰나</b> — 제외한 4종의 품목명을 화면에 그대로 노출했습니다. 숨기면 "왜 갑자기 좋아졌지?"라는 의심이 남습니다.</p>
+  </div>
+</section>
+
+<section class="slide compact" data-title="케이스4">
+  <p class="kicker">Case 04 · 출고 최적화</p>
+  <h2 class="h2">출고를 <span class="gradient-text">절반으로 줄여도</span> 결품은 그대로였습니다</h2>
+  <div class="card mt-l" style="padding:4px 12px">
+  <table class="t">
+    <thead><tr><th>안전일수</th><th class="num">권고 출고량</th><th class="num">현행 대비</th><th class="num">결품률</th><th class="num">출고 후 재고일</th></tr></thead>
+    <tbody>
+      <tr><td>0일 (거의 안 보냄)</td><td class="num">285</td><td class="num">0.03배</td><td class="num">2.2%</td><td class="num">19.1일</td></tr>
+      <tr><td><b>5일 (채택)</b></td><td class="num"><b>3,785</b></td><td class="num"><b>0.46배</b></td><td class="num" style="color:var(--good)"><b>1.2%</b></td><td class="num">19.2일</td></tr>
+      <tr><td>8일</td><td class="num">8,860</td><td class="num">1.08배</td><td class="num">0.9%</td><td class="num">19.5일</td></tr>
+      <tr><td>10일</td><td class="num">13,684</td><td class="num">1.66배</td><td class="num">0.9%</td><td class="num">19.8일</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="how">
+    <p><b>발견</b> — 매장은 이미 <b>19일치 적정 재고</b>를 안정적으로 보유하고 있었습니다. 출고를 1.66배로 늘려도 결품률은 0.9%에서 멈춥니다 — 남은 결품은 <b>물량으로 막을 수 없는 종류</b>였습니다.</p>
+    <p><b>어떻게 정했나</b> — 안전일수를 0~10일로 바꿔가며 출고일 4회·조합 3,804건을 시뮬레이션했습니다. <b>결품률과 재고 회전의 교환비</b>를 보고 5일을 택했고, "결품률 0.3%p 증가"라는 대가를 먼저 보고한 뒤 승인받았습니다.</p>
+  </div>
+</section>
+
+<section class="slide compact" data-title="퍼널">
+  <p class="kicker">Case 06 · 퍼널</p>
+  <h2 class="h2">1회차 → 2회차에서 <span class="gradient-text">79%가 이탈</span>합니다</h2>
+  <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+    <div class="card"><p class="eyebrow">전체 구매회원</p><div class="num-mid">402,911</div><p class="dim">100%</p></div>
+    <div class="card"><p class="eyebrow">재구매 (2회+)</p><div class="num-mid" style="color:var(--warn)">84,129</div><p class="dim" style="color:var(--bad)">20.9% · −79.1%p</p></div>
+    <div class="card"><p class="eyebrow">3회+</p><div class="num-mid">29,303</div><p class="dim">7.3% · 유지율 34.8%</p></div>
+    <div class="card"><p class="eyebrow">단골 (5회+)</p><div class="num-mid" style="color:var(--good)">6,115</div><p class="dim">1.5% · 유지율 20.9%</p></div>
+  </div>
+  <div class="how">
+    <p><b>발견</b> — 2회차만 넘기면 <b>3회차 전환율이 34.8%</b>로 뜁니다. 1→2회차(20.9%)의 <b>1.7배</b>입니다. 즉 <b>2회차가 결정적 관문</b>이고, 여기가 가장 큰 레버입니다.</p>
+    <p><b>어떻게 봤나</b> — 단순 재구매율이 아니라 <b>회차별 전환</b>으로 끊어 봤습니다. 평균 재구매율 하나만 보면 "어느 단계를 고쳐야 하는지"를 알 수 없습니다.</p>
+  </div>
+</section>
+
+<section class="slide compact" data-title="매출근거">
+  <p class="kicker">Business Impact</p>
+  <h2 class="h2">세 갈래의 <span class="gradient-text">매출 증대 근거</span>를 정량화했습니다</h2>
+  <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+    <div class="card">
+      <p class="eyebrow">01 · 2회차 전환</p>
+      <div class="num-mid" style="color:var(--good)">+2.3만명</div>
+      <p class="dim">재구매율 14.3% → 상위 매장 수준 20%<br>402,911명 × 5.7%p</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">02 · 매장 편차 해소</p>
+      <div class="num-mid" style="color:var(--good)">11%p</div>
+      <p class="dim">상위 25.3% vs 전사 14.3%<br>운영 방식 이식 여지</p>
+    </div>
+    <div class="card">
+      <p class="eyebrow">03 · 카테고리 유입</p>
+      <div class="num-mid" style="color:var(--good)">SOV 0~11%</div>
+      <p class="dim">디퓨저·니치 향수·향수 선물<br>미개척 검색 수요</p>
+    </div>
+  </div>
+  <div class="how">
+    <p><b>왜 이 순서인가</b> — 신규 획득보다 <b>2회차 전환이 싸고 확실</b>합니다. 이미 한 번 산 40만 명이 모수이고, 3회차 전환율이 1.7배로 뛰므로 한 번만 넘기면 이후는 자연히 따라옵니다.</p>
+    <p><b>검증 가능한 형태로</b> — 검색량과 매출의 주간 상관은 브랜드 키워드 <b>0.89</b>, "향수 선물"은 <b>4일 선행</b>으로 나왔습니다. 캠페인 효과를 사후에 측정할 <b>선행지표</b>를 함께 확보했습니다.</p>
+  </div>
+</section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body></html>

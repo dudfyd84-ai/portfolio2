@@ -1,0 +1,957 @@
+<!-- Sales Analysis & Reports — 루멘 센트 내부 매출 분석(Dashboard+Sales Analytics 핵심 + 오프라인 매장 YoY 급증/급감 + AI 추천), DESIGN1 톤 -->
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LUMEN SCENT - Sales Analysis & Reports</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = { darkMode:"class", theme:{ extend:{
+    "colors": {
+      "on-surface":"#111c2d","on-background":"#111c2d","on-surface-variant":"#41484e",
+      "secondary-container":"#dde0e2","secondary":"#5b5f61","surface":"#f9f9ff",
+      "surface-tint":"#20648c","error-container":"#ffdad6","error":"#ba1a1a",
+      "surface-bright":"#f9f9ff","outline":"#71787f","on-primary":"#ffffff",
+      "on-primary-container":"#95d0fe","surface-container":"#e7eeff","background":"#f9f9ff",
+      "tertiary":"#2f3f54","on-secondary-container":"#5f6365","primary":"#004262",
+      "surface-variant":"#d8e3fb","surface-dim":"#cfdaf2","surface-container-low":"#f0f3ff",
+      "outline-variant":"#c0c7cf","surface-container-high":"#dee8ff","primary-container":"#0f5a82",
+      "inverse-on-surface":"#ecf1ff","surface-container-lowest":"#ffffff","on-error":"#ffffff",
+      "inverse-primary":"#92cdfb","on-secondary":"#ffffff","surface-container-highest":"#d8e3fb",
+      "primary-fixed":"#cae6ff","success":"#1a7f4b","warning":"#b45309"
+    },
+    "borderRadius":{ "DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px" },
+    "fontFamily":{ "headline-md":["Hanken Grotesk"],"headline-lg":["Hanken Grotesk"],"headline-sm":["Hanken Grotesk"],
+      "body-md":["Hanken Grotesk"],"body-lg":["Hanken Grotesk"],"label-md":["Hanken Grotesk"],"label-sm":["Hanken Grotesk"] },
+    "fontSize":{
+      "headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],
+      "headline-lg":["24px",{"lineHeight":"32px","fontWeight":"700"}],
+      "headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],
+      "body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],
+      "body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],
+      "label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],
+      "label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}]
+    }
+  } } }
+</script>
+<style> body{font-family:'Hanken Grotesk',sans-serif;} .num{font-variant-numeric:tabular-nums;} </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-surface-container-lowest border-r border-outline-variant flex flex-col hidden md:flex shrink-0 overflow-y-auto">
+<div class="h-24 flex items-center px-6 border-b border-outline-variant shrink-0">
+<a href="code.html" class="font-headline-md text-headline-md text-primary font-bold tracking-tight hover:opacity-80 transition-opacity cursor-pointer">LUMEN SCENT</a>
+</div>
+<nav class="flex-1 py-8 px-4 space-y-8">
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="code.html"><span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span><span class="font-body-md text-body-md">메인 대시보드</span></a>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">키워드 &amp; SEO</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">경쟁사 모니터링</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">업무 도구 (DT Dashboard)</h3>
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 bg-primary text-on-primary rounded-lg shadow-sm" href="sales_analysis.html"><span class="material-symbols-outlined mr-3 text-[20px]">bar_chart</span><span class="font-body-md text-body-md font-semibold">Sales Analysis &amp; Reports</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_analytics.html"><span class="material-symbols-outlined mr-3 text-[20px]">groups</span><span class="font-body-md text-body-md">Store &amp; Customer Analytics</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="current_inventory.html"><span class="material-symbols-outlined mr-3 text-[20px]">inventory_2</span><span class="font-body-md text-body-md">Current Inventory &amp; Forecast</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_dispatch.html"><span class="material-symbols-outlined mr-3 text-[20px]">local_shipping</span><span class="font-body-md text-body-md">Store Dispatch</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="material_order.html"><span class="material-symbols-outlined mr-3 text-[20px]">package_2</span><span class="font-body-md text-body-md">Material Order</span></a>
+</div>
+</div>
+</nav>
+</aside>
+<!-- Main -->
+<div class="flex-1 flex flex-col overflow-hidden">
+<header class="h-24 bg-surface-container-lowest border-b border-outline-variant hidden md:flex justify-between items-center px-10 shrink-0">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Sales Analysis &amp; Reports <span class="text-on-surface-variant text-headline-sm font-normal ml-3 border-l border-outline-variant pl-3">매출 분석 · 리포트</span></h1>
+<div class="flex items-center space-x-4">
+<span class="text-on-surface-variant font-label-md bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant flex items-center"><span class="w-2 h-2 rounded-full bg-[#1a7f4b] mr-2"></span><span id="dataStamp">Supabase 내부 데이터 · 2026년 1~6월 기준</span></span></div>
+</header>
+<main class="flex-1 overflow-y-auto p-6 md:p-10 bg-background">
+<div class="max-w-7xl mx-auto space-y-8">
+
+<!-- 서브탭 -->
+<div class="inline-flex bg-surface-container-low p-1 rounded-xl border border-outline-variant/40" id="tabStrip">
+<button data-tab="overview" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">매출 개요</button>
+<button data-tab="stores" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">이슈 매장</button>
+<button data-tab="groups" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">그룹별</button>
+<button data-tab="funnel" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">검색↔매출</button>
+<button data-tab="ads" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">광고 성과</button>
+<button data-tab="cfunnel" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">퍼널 분석</button>
+<button data-tab="promo" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">할인·프로모션</button>
+<button data-tab="ai" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">분석 리포트</button>
+</div>
+
+<!-- 기간 필터 (이슈 매장·그룹별 탭 공용) -->
+<div id="periodBar" class="hidden flex-wrap items-center gap-3 mt-4">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">tune</span>
+<span class="font-label-md text-label-md text-on-surface-variant">비교 기간</span>
+<div class="inline-flex bg-surface-container-low p-1 rounded-lg border border-outline-variant/40" id="ptypeStrip">
+<button data-ptype="ytd" class="ptype-btn px-3 py-1.5 rounded-md font-label-md text-label-md transition-colors">전체 (YTD)</button>
+<button data-ptype="month" class="ptype-btn px-3 py-1.5 rounded-md font-label-md text-label-md transition-colors">월별</button>
+<button data-ptype="week" class="ptype-btn px-3 py-1.5 rounded-md font-label-md text-label-md transition-colors">주차별</button>
+</div>
+<select id="periodSel" class="hidden bg-surface-container-lowest border border-outline-variant rounded-lg h-9 px-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary"></select>
+<span id="periodHint" class="font-label-sm text-label-sm text-on-surface-variant"></span>
+</div>
+
+<!-- ============ 매출 개요 ============ -->
+<section data-panel="overview" class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-start justify-between mb-4"><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" id="kpiYtdTitle">YTD 매출 (1~6월)</p><span class="material-symbols-outlined text-primary/40 text-[20px]">leaderboard</span></div>
+<p class="num text-[32px] leading-tight text-primary font-bold"><span id="kpiYtd">185.8</span><span class="text-[15px] text-on-surface-variant font-normal ml-1">억</span></p>
+<p id="kpiYtdSub" class="font-body-md text-body-md mt-2" style="color:#1a7f4b">▲ +5.1% vs 전년동기 (176.8억)</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-start justify-between mb-4"><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">온라인 채널 비중</p><span class="material-symbols-outlined text-primary/40 text-[20px]">donut_small</span></div>
+<p class="num text-[32px] leading-tight text-primary font-bold"><span id="kpiOnline">42.7</span><span class="text-[15px] text-on-surface-variant font-normal ml-1">%</span></p>
+<p id="kpiChSub" class="font-body-md text-body-md text-on-surface-variant mt-2">오프 106.4억 · 온 79.4억</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-start justify-between mb-4"><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">전년 대비 배수</p><span class="material-symbols-outlined text-primary/40 text-[20px]">trending_up</span></div>
+<p class="num text-[32px] leading-tight text-primary font-bold"><span id="kpiYoyX">1.05</span><span class="text-[15px] text-on-surface-variant font-normal ml-1">x</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">누적 매출 성장세 유지</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-start justify-between mb-4"><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">운영 오프라인 매장</p><span class="material-symbols-outlined text-primary/40 text-[20px]">storefront</span></div>
+<p class="num text-[32px] leading-tight text-primary font-bold"><span id="kpiNstore">40</span><span class="text-[15px] text-on-surface-variant font-normal ml-1">개</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">백화점·면세·플래그십</p></div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+<div class="lg:col-span-3 bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-center mb-1"><span class="material-symbols-outlined text-primary mr-3">bar_chart</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold" id="yoyTitle">월별 매출 — 전년 대비 (1~6월)</h3></div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">2026년 누적 +5.1% · 5월 성수기 정점(39.2억)</p>
+<div class="relative" style="height:300px"><canvas id="yoyChart"></canvas></div>
+</div>
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-center mb-1"><span class="material-symbols-outlined text-primary mr-3">donut_small</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">채널 비중</h3></div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">오프라인 우위, 온라인 42.7%</p>
+<div class="relative" style="height:260px"><canvas id="channelChart"></canvas></div>
+</div>
+</div>
+
+<!-- ML 예측 인사이트 -->
+<div class="rounded-2xl border p-6 shadow-sm" style="border-color:#4648d4; background:#f0f0ff">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:#4648d4;color:#fff"><span class="material-symbols-outlined">auto_awesome</span></div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2"><h3 class="font-headline-sm text-headline-sm font-bold" style="color:#2a2b8a">ML 수요예측 연계</h3><span class="px-2 py-0.5 rounded-full text-label-sm" style="background:#e1e0ff;color:#4648d4">신뢰도 78%</span></div>
+<p class="font-body-lg text-body-lg" style="color:#2a2b8a; line-height:1.7">ETS+계절가중 앙상블 예측 결과, 향후 3개월(7~9월) 월 수요는 <b>약 6.2만 개 수준에서 안정</b>적으로 유지될 전망입니다(평균 WAPE 22%). 5월 성수기 패턴이 반복되므로, <b>생산·재고를 7~9월 수요에 맞춰 사전 확보</b>하는 것이 결품·기회손실 방어에 유리합니다. 상세는 <b>Production Planning</b> 탭 참고.</p>
+</div>
+</div>
+</div>
+<div id="ovInsight"></div>
+</section>
+
+<!-- ============ 매장 분석 (오프라인) ============ -->
+<section data-panel="stores" class="space-y-8 hidden">
+<div class="rounded-xl p-4 flex items-center gap-3" style="border-left:4px solid #1a5fb4; background:#dbeafe">
+<span class="material-symbols-outlined text-[20px]" style="color:#1a5fb4">storefront</span>
+<p class="font-body-md text-body-md" style="color:#0c2d5c" id="storeNote">즉시 대응이 필요한 <span class="font-semibold">이슈 매장</span> — 전년 동기(1~6월) 대비 <span class="font-semibold">급감(주의)·급증(주목)</span> 매장. 단위 백만원 · 전년 매출 100만원↑ 매장 대상.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- 급감 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#ba1a1a">trending_down</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">매출 급감 · 주의 매장</h3></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">매장</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">올해</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">전년</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">증감</th>
+</tr></thead><tbody id="dropRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+<!-- 급증 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#1a7f4b">trending_up</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">매출 급증 · 주목 매장</h3></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">매장</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">올해</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">전년</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">증감</th>
+</tr></thead><tbody id="riseRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+</div>
+<div id="isInsight"></div>
+</section>
+
+<!-- ============ 그룹별 ============ -->
+<section data-panel="groups" class="space-y-6 hidden">
+<div class="rounded-xl p-4 flex items-center gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">account_tree</span>
+<p class="font-body-md text-body-md" style="color:#001e2f" id="groupNote">유통 그룹별 매출과 소속 매장 상세. 그룹 카드를 열면 매장별 증감을 볼 수 있습니다. 단위 백만원 · 전년 대비.</p>
+</div>
+<div id="groupCards" class="space-y-4"></div>
+</section>
+
+<!-- ============ 검색↔매출 (마케팅-세일즈 퍼널) ============ -->
+<section data-panel="funnel" class="space-y-6 hidden">
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">query_stats</span>
+<p class="font-body-md text-body-md" style="color:#001e2f" id="funNote">네이버 데이터랩 검색추세와 자사 일별 매출의 상관·시차 분석 — 광고매체·GA4 접근 없이 마케팅↔매출을 연결합니다.</p>
+</div>
+<!-- 통합 퍼널 스트립 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-[20px] text-primary">conversion_path</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">통합 퍼널 · 관심 → 노출 → 클릭 → 전환 → 매출</h3></div>
+<div id="chainRow" class="flex flex-wrap items-stretch gap-1"></div>
+<p class="font-label-sm text-on-surface-variant mt-3" id="chainNote"></p>
+</div>
+<!-- What–So What–Now What -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#5b5f61">database</span><h4 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">What · 데이터</h4></div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed" id="funWhat">–</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5" style="border-color:#4648d4">
+<div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#4648d4">lightbulb</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#4648d4">So What · 인사이트</h4></div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed" id="funSo">–</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#1a7f4b; background:#f2fbf6">
+<div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#1a7f4b">bolt</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#0d3d24">Now What · 추천 액션</h4></div>
+<p class="font-body-md text-body-md leading-relaxed" style="color:#0d3d24" id="funNow">–</p></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+<div class="lg:col-span-3 bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">주간 검색추세 vs 매출</h3>
+<select id="funSel" class="bg-surface-container-lowest border border-outline-variant rounded-lg h-8 px-2 font-label-md text-label-md focus:outline-none focus:border-primary"></select>
+</div>
+<p class="font-label-sm text-on-surface-variant mb-4">각 지표를 0~100으로 정규화해 형태를 비교합니다.</p>
+<div class="relative" style="height:320px"><canvas id="funChart"></canvas></div>
+</div>
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60"><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">그룹별 매출 상관</h3><p class="font-label-sm text-on-surface-variant mt-1">주간 상관계수 · 일별 최적 시차(D+N)</p></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">검색 그룹</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">주간 r</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">선행</th>
+</tr></thead><tbody id="funRows" class="divide-y divide-outline-variant/60"></tbody></table>
+<p class="px-5 py-3 font-label-sm text-on-surface-variant">※ 상관은 인과가 아닙니다 — 캠페인·시즌 등 공통요인이 함께 작용할 수 있습니다. 매출 범위: <span id="funScope">–</span>.</p>
+</div>
+</div>
+<!-- 방법2: 검색 점유율(SOV) ↔ 매출 -->
+<div id="sovCard" class="hidden bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6 space-y-4">
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary">leaderboard</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">검색 점유율(SOV) — 타겟 키워드 상위 노출</h3></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="sovStamp">네이버 쇼핑 상위 100건 중 자사 노출</span>
+</div>
+<div id="sovBars" class="space-y-2"></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="rounded-xl border border-outline-variant/60 p-4"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#5b5f61">database</span><h4 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">What · 데이터</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed" id="sovWhat">–</p></div>
+<div class="rounded-xl border p-4" style="border-color:#4648d4"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#4648d4">lightbulb</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#4648d4">So What · 인사이트</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed" id="sovSo">–</p></div>
+<div class="rounded-xl border p-4" style="border-color:#1a7f4b; background:#f2fbf6"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#1a7f4b">bolt</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#0d3d24">Now What · 추천 액션</h4></div><p class="font-body-md text-body-md leading-relaxed" style="color:#0d3d24" id="sovNow">–</p></div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant" id="sovCorr">–</p>
+</div>
+
+<!-- 방법3: 브랜드 검색 ↔ 신규 고객 -->
+<div id="baCard" class="hidden bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6 space-y-4">
+<div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary">person_add</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">브랜드 검색 ↔ 신규 고객 획득</h3></div>
+<div class="flex flex-wrap gap-3">
+<div class="flex-1 min-w-[140px] rounded-xl border border-outline-variant/60 p-4"><p class="font-label-md text-label-md text-on-surface-variant mb-1">브랜드검색 ↔ 신규고객</p><p class="num font-headline-md text-headline-md font-bold text-primary" id="baNew">–</p></div>
+<div class="flex-1 min-w-[140px] rounded-xl border border-outline-variant/60 p-4"><p class="font-label-md text-label-md text-on-surface-variant mb-1">브랜드검색 ↔ 재방문</p><p class="num font-headline-md text-headline-md font-bold text-on-surface-variant" id="baRet">–</p></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="rounded-xl border border-outline-variant/60 p-4"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#5b5f61">database</span><h4 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">What · 데이터</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed" id="baWhat">–</p></div>
+<div class="rounded-xl border p-4" style="border-color:#4648d4"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#4648d4">lightbulb</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#4648d4">So What · 인사이트</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed" id="baSo">–</p></div>
+<div class="rounded-xl border p-4" style="border-color:#1a7f4b; background:#f2fbf6"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#1a7f4b">bolt</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#0d3d24">Now What · 추천 액션</h4></div><p class="font-body-md text-body-md leading-relaxed" style="color:#0d3d24" id="baNow">–</p></div>
+</div>
+</div>
+</section>
+
+<!-- ============ 광고 성과 (온라인) ============ -->
+<section data-panel="ads" class="space-y-6 hidden">
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">campaign</span>
+<div><p class="font-body-md text-body-md" style="color:#001e2f">월마감 광고 리포트 기반 — 채널별 예산 효율과 광고→온라인 매출 기여를 분석합니다. 광고매출은 플랫폼 귀속(라스트클릭) 기준.</p>
+<p class="font-label-sm text-label-sm mt-1.5" style="color:#0d3d24" id="adsValid"></p></div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1" id="adsSpendTitle">당월 광고비</p><p class="num font-headline-lg text-headline-lg font-bold text-primary"><span id="adsSpend">–</span><span class="text-body-md text-on-surface-variant">백만</span></p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">광고 매출</p><p class="num font-headline-lg text-headline-lg font-bold text-primary"><span id="adsRev">–</span><span class="text-body-md text-on-surface-variant">백만</span></p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">전체 ROAS</p><p class="num font-headline-lg text-headline-lg font-bold text-primary"><span id="adsRoas">–</span><span class="text-body-md text-on-surface-variant">x</span></p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">온라인 매출 기여율</p><p class="num font-headline-lg text-headline-lg font-bold" style="color:#b45309"><span id="adsContrib">–</span><span class="text-body-md text-on-surface-variant">%</span></p><p class="font-label-sm text-on-surface-variant mt-1">광고매출 / 온라인 실매출</p></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">채널별 예산 배분 vs ROAS</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">막대 = 광고비(백만) · 점 = ROAS(우측축)</p>
+<div class="relative" style="height:340px"><canvas id="adsChChart"></canvas></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">월별 광고비 vs ROAS 추이</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">광고비를 늘릴수록 효율이 어떻게 변하는지 (한계 효율)</p>
+<div class="relative" style="height:340px"><canvas id="adsTrChart"></canvas></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">광고 기여율 추이 — 광고매출 vs 온라인 실매출</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">온라인 매출에서 광고 귀속 매출이 차지하는 비중 (귀속 프록시) · 온라인 실매출 확보된 달만 표시</p>
+<div class="relative" style="height:300px"><canvas id="adsCbChart"></canvas></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">온라인 채널 믹스 <span id="cmMonth" class="font-label-sm text-on-surface-variant"></span></h3>
+<p class="font-label-sm text-on-surface-variant mb-4">채널별 실매출 비중(도넛=최근월) · 월별 추이(막대) · 최근 <span id="cmN">–</span>개월(채널 분해가 있는 월만)</p>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="relative" style="height:300px"><canvas id="cmDonut"></canvas></div>
+<div class="relative" style="height:300px"><canvas id="cmTrend"></canvas></div>
+</div>
+</div>
+<div id="cmInsight"></div>
+<div id="adsInsight"></div>
+</section>
+
+<!-- ============ 퍼널 분석 ============ -->
+<section data-panel="cfunnel" class="space-y-6 hidden">
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">filter_alt</span>
+<p class="font-body-md text-body-md" style="color:#001e2f">두 개의 퍼널 — <b>광고 전환 퍼널</b>(노출→클릭→전환, 신규 획득)과 <b>고객 생애 퍼널</b>(첫 구매→단골, 리텐션). 단계 폭은 가독성을 위한 상대 스케일이며 정확한 값은 각 단계 숫자와 전환율로 표기됩니다.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">광고 전환 퍼널 <span id="cfMonth" class="font-label-sm text-on-surface-variant"></span></h3>
+<p class="font-label-sm text-on-surface-variant mb-4">플랫폼 귀속(라스트클릭) 기준 · 노출 → 클릭 → 전환(구매)</p>
+<div id="adFunnel" class="space-y-0"></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+<div class="rounded-xl border border-outline-variant/60 p-3 text-center"><p class="font-label-sm text-on-surface-variant">광고 매출</p><p class="num font-headline-sm font-bold text-primary"><span id="cfRev">–</span>백만</p></div>
+<div class="rounded-xl border border-outline-variant/60 p-3 text-center"><p class="font-label-sm text-on-surface-variant">ROAS</p><p class="num font-headline-sm font-bold text-primary"><span id="cfRoas">–</span>x</p></div>
+</div>
+<p class="font-label-sm text-on-surface-variant mt-3" id="adFunnelNote"></p>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">고객 생애 퍼널 <span class="font-label-sm text-on-surface-variant">· 전체 37개월</span></h3>
+<p class="font-label-sm text-on-surface-variant mb-4">회원 단위 · 구매한 개월 수 기준 충성도 단계 (오프라인 POS)</p>
+<div id="custFunnel" class="space-y-0"></div>
+<p class="font-label-sm text-on-surface-variant mt-3" id="custFunnelNote"></p>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3 text-primary">leaderboard</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">채널별 퍼널 효율 (어디서 새는가)</h3></div>
+<div class="overflow-x-auto"><table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">채널</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">노출</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">CTR</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">CVR</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">전환</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">ROAS</th>
+</tr></thead><tbody id="chFunnelRows" class="divide-y divide-outline-variant/60"></tbody></table></div>
+<p class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant">CTR=클릭÷노출 · CVR=전환÷클릭 · ROAS 내림차순. CTR·CVR이 함께 높은 채널이 효율 채널.</p>
+</div>
+<div id="cfInsight"></div>
+</section>
+
+<!-- ============ 할인·프로모션 ============ -->
+<section data-panel="promo" class="space-y-6 hidden">
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">sell</span>
+<p class="font-body-md text-body-md" style="color:#001e2f">라인별 할인 데이터로 <b>가격 탄력성</b>(할인이 판매를 얼마나 밀어주나)과 <b>할인 낭비</b>(할인해도 안 팔리는 품목)를 진단합니다. ※ 부자재 원가 미보유로 정확한 순이익 ROI가 아니라 <b>매출·판매량 관점</b> 분석입니다.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">할인 적용률</p><p class="num font-headline-lg text-headline-lg font-bold text-primary"><span id="pmLine">–</span><span class="text-body-md text-on-surface-variant">%</span></p><p class="font-label-sm text-on-surface-variant mt-1">할인 걸린 판매 라인</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">실효 할인율</p><p class="num font-headline-lg text-headline-lg font-bold text-primary"><span id="pmEff">–</span><span class="text-body-md text-on-surface-variant">%</span></p><p class="font-label-sm text-on-surface-variant mt-1">할인액/총액</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">총 할인액</p><p class="num font-headline-lg text-headline-lg font-bold" style="color:#b45309"><span id="pmTot">–</span><span class="text-body-md text-on-surface-variant">억</span></p><p class="font-label-sm text-on-surface-variant mt-1">전체 기간</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">할인 민감 품목</p><p class="num font-headline-lg text-headline-lg font-bold" style="color:#1a7f4b"><span id="pmPos">–</span><span class="text-body-md text-on-surface-variant">%</span></p><p class="font-label-sm text-on-surface-variant mt-1">할인↑→판매↑ 품목 비율</p></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">할인 깊이 분포</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">할인 걸린 라인의 할인율 구간별 비중</p>
+<div class="relative" style="height:280px"><canvas id="pmDistChart"></canvas></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6 flex flex-col justify-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">가격 탄력성 요약</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">할인율과 판매량의 관계</p>
+<div class="space-y-4">
+<div><p class="font-body-md text-on-surface-variant">할인율↔판매량 상관 (전체 풀)</p><p class="num font-headline-md text-headline-md font-bold text-primary"><span id="pmR">–</span></p></div>
+<div><p class="font-body-md text-on-surface-variant">할인 깊은 달 vs 얕은 달 판매</p><p class="num font-headline-md text-headline-md font-bold text-primary"><span id="pmLift">–</span></p></div>
+<p class="font-label-sm text-on-surface-variant" id="pmElNote">–</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#1a7f4b">trending_up</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">할인 효과적 품목 (프로모션 집중)</h3></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant"><th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">품목</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">탄력성</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">평균할인</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">판매량</th></tr></thead><tbody id="pmSensRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#ba1a1a">money_off</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">할인 낭비 의심 (할인해도 안 팔림)</h3></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant"><th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">품목</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">탄력성</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">평균할인</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">판매량</th></tr></thead><tbody id="pmWasteRows" class="divide-y divide-outline-variant/60"></tbody></table>
+<p class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant">탄력성 ≤0 = 할인과 판매가 무관 → 할인 줄여 마진 회수 검토.</p>
+</div>
+</div>
+<div id="pmInsight"></div>
+</section>
+
+<!-- ============ AI 추천 리포트 ============ -->
+<section data-panel="ai" class="space-y-6 hidden">
+<div class="rounded-2xl border p-6 shadow-sm" style="border-color:#4648d4; background:#f0f0ff">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:#4648d4;color:#fff"><span class="material-symbols-outlined">smart_toy</span></div>
+<div><div class="flex items-center gap-2 mb-2"><h3 class="font-headline-sm text-headline-sm font-bold" style="color:#2a2b8a">분석 리포트 — 재구매 예측 디시전트리</h3><span class="px-2 py-0.5 rounded-full text-label-sm" style="background:#e1e0ff;color:#4648d4">머신러닝</span></div>
+<p class="font-body-lg text-body-lg" style="color:#2a2b8a;line-height:1.7">회원의 <b>구매 이력(RFM)</b>으로 향후 6개월 재구매 여부를 예측하는 <b>디시전트리</b> 모델입니다. 규칙이 눈에 보여 마케터·임원이 바로 이해·활용할 수 있고, 성능도 복잡한 모델과 대등합니다. 아래에 학습 과정·판단 기준·예측력·실행안을 정리했습니다.</p></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">머신러닝 분석 과정</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">데이터 → 학습 → 검증 → 예측·액션의 흐름</p>
+<div id="mlProcess" class="overflow-x-auto text-center"></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">무엇이 재구매를 가르는가 (피처 중요도)</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">모델이 판단에 쓰는 요인의 비중</p>
+<div class="relative" style="height:280px"><canvas id="dtImpChart"></canvas></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">모델 예측력 (6개 평가지표)</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">1에 가까울수록 우수 · 오차표는 실제 vs 예측</p>
+<div class="relative" style="height:220px"><canvas id="dtMetricChart"></canvas></div>
+<div id="dtConfusion" class="mt-3 text-center font-label-sm text-on-surface-variant"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">재구매 예측 디시전트리</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">위에서부터 질문(◇)에 예/아니오로 따라가면 잎(재방문 확률)에 도달 · 초록=재방문 높음, 빨강=이탈 위험</p>
+<div id="dtTree" class="overflow-x-auto text-center"></div>
+</div>
+<div id="dtReport"></div>
+</section>
+
+</div>
+</main>
+</div>
+
+<script>
+const fmt = n => Number(n).toLocaleString();
+const CFONT={family:'Hanken Grotesk',size:12};
+let STORES=[],MONTHS=[],WEEKS=[],M25=[],M26=[],ML=[],CH=[0,0],YTD=1,MLABEL='',KPI=null;
+// 재사용 3단 카드 — What(데이터) / So What(인사이트) / Now What(추천 액션)
+function insightCards(what,so,now){ return `<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#5b5f61">database</span><h4 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">What · 데이터</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${what}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#4648d4"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#4648d4">lightbulb</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#4648d4">So What · 인사이트</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${so}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#1a7f4b; background:#f2fbf6"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#1a7f4b">bolt</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#0d3d24">Now What · 추천 액션</h4></div><p class="font-body-md text-body-md leading-relaxed" style="color:#0d3d24">${now}</p></div>
+</div>`; }
+let period={type:'ytd',key:null};
+let charts={};
+function draw(id,cfg){ if(charts[id]||typeof Chart==='undefined')return; const el=document.getElementById(id); if(el) charts[id]=new Chart(el,cfg); }
+const sum=a=>a.reduce((x,y)=>x+(y||0),0);
+const rnd=v=>Math.round(v);
+
+// ── 기간 선택 → 매장별 (올해/전년/증감) 계산 ──
+function storeVal(s){
+  if(period.type==='month'){ const i=MONTHS.indexOf(period.key); return {cur:(s.m26[i]||0),prev:(s.m25[i]||0)}; }
+  if(period.type==='week'){ const w=String(period.key); return {cur:(s.w26[w]||0),prev:(s.w25[w]||0)}; }
+  return {cur:sum(s.m26),prev:sum(s.m25)};
+}
+function floorBm(){ return period.type==='ytd'?1.0:period.type==='month'?0.5:0.2; }
+function computeRows(){ const fl=floorBm();
+  return STORES.map(s=>{ const v=storeVal(s);
+    const pct = v.prev>=fl ? rnd((v.cur/v.prev-1)*100) : null;
+    return {name:s.name,g:s.g,cur:v.cur,prev:v.prev,pct}; }); }
+function aggregateGroups(rows){ const map={};
+  rows.forEach(r=>{ (map[r.g]=map[r.g]||[]).push(r); });
+  const groups=Object.entries(map).map(([g,arr])=>{
+    const cur=sum(arr.map(x=>x.cur)), prev=sum(arr.map(x=>x.prev));
+    const pct = prev>=1.0 ? rnd((cur/prev-1)*100) : null;
+    arr.sort((a,b)=>b.cur-a.cur);
+    return {g,cur,prev,pct,n:arr.length,stores:arr}; });
+  groups.sort((a,b)=>b.cur-a.cur); return groups; }
+
+function periodLabel(){
+  if(period.type==='month') return period.key+'월 (전년 '+period.key+'월 대비)';
+  if(period.type==='week'){ const w=WEEKS.find(x=>x.w===period.key); return (w?w.label:'')+' 주 (전년 동기간 대비)'; }
+  return '전년 동기('+MLABEL+') 대비';
+}
+
+// ── 인사이트/액션 (룰 기반) ──
+const TONE={bad:{bg:'#ffdad6',bar:'#ba1a1a',fg:'#3d0a08',ico:'trending_down'},
+  warn:{bg:'#ffe8cc',bar:'#b35900',fg:'#5a2d00',ico:'warning'},
+  good:{bg:'#d3f4e4',bar:'#1a7f4b',fg:'#0d3d24',ico:'trending_up'},
+  neutral:{bg:'#dee8ff',bar:'#004262',fg:'#001e2f',ico:'insights'}};
+function pctTxt(p){ return p===null?'–':(p>0?'+':'')+p+'%'; }
+function groupInsight(gr){
+  const decl=gr.stores.filter(s=>s.pct!==null&&s.pct<=-20);
+  const surg=gr.stores.filter(s=>s.pct!==null&&s.pct>=20);
+  const newst=gr.stores.filter(s=>s.pct===null&&s.cur>0);
+  const p=gr.pct; let tone,insight,action;
+  if(p!==null&&p<=-15){ tone='bad';
+    insight=`그룹 전체가 전년比 ${p}% 부진${decl.length?`, ${decl.length}개 매장 동반 하락`:''}.`;
+    action='공통 원인(리뉴얼·경쟁 입점·판촉 축소) 진단 후 그룹 한정 프로모션·BA/재고 재배치.'; }
+  else if(p!==null&&p>=15){ tone='good';
+    insight=`전년比 +${p}% 성장 견인${surg.length?` — ${surg.slice(0,2).map(s=>s.name).join(', ')} 주도`:''}.`;
+    action='성장 매장에 신제품·인기 SKU 우선 배분, 성공 운영모델을 타 매장으로 확산.'; }
+  else if(decl.length>=2){ tone='warn';
+    insight=`그룹 평균은 보합(${pctTxt(p)})이나 편차 큼 — ${decl.length}개 매장 두 자릿수 하락.`;
+    action=`하위 매장 집중 관리: ${decl.slice(0,3).map(s=>`${s.name}(${s.pct}%)`).join(', ')}.`; }
+  else { tone='neutral';
+    insight=`전년比 ${pctTxt(p)}로 안정적.`;
+    action='현 수준 유지 · 재고·신제품 정상 운영.'; }
+  if(newst.length) action+=` 신규 ${newst.length}개점 안착 모니터링.`;
+  return {tone,insight,action}; }
+function storeTag(p){
+  if(p===null) return null;
+  if(p<=-30) return {t:'이탈 방어',bg:'#ffdad6',c:'#ba1a1a'};
+  if(p<=-15) return {t:'주의',bg:'#ffe8cc',c:'#b35900'};
+  if(p>=30) return {t:'재고 확보',bg:'#d3f4e4',c:'#1a7f4b'};
+  return null; }
+function pctBadge(p){ if(p===null||p===undefined) return '<span class="px-2 py-0.5 rounded-full text-label-sm whitespace-nowrap" style="background:#e8eaed;color:#5f6368">신규</span>';
+  const c=p>=0?'#1a7f4b':'#ba1a1a', bg=p>=0?'#d3f4e4':'#ffdad6';
+  return `<span class="px-2 py-0.5 rounded-full text-label-sm font-bold whitespace-nowrap" style="background:${bg};color:${c}">${p>0?'+':''}${p}%</span>`; }
+function tagBadge(t){ return t?`<span class="px-2 py-0.5 rounded-full text-label-sm font-medium whitespace-nowrap" style="background:${t.bg};color:${t.c}">${t.t}</span>`:''; }
+
+function yoy(){ if(!M26.length)return; draw('yoyChart',{type:'bar',
+  data:{labels:ML,datasets:[
+    {label:'2025',data:M25,backgroundColor:'#c0c7cf',borderRadius:5},
+    {label:'2026',data:M26,backgroundColor:'#004262',borderRadius:5}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:CFONT,boxWidth:12}}},
+    scales:{x:{grid:{display:false},ticks:{font:CFONT}},y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'억'}}}}}); }
+function channel(){ if(!CH[0])return; draw('channelChart',{type:'doughnut',
+  data:{labels:['오프라인','온라인'],datasets:[{data:CH,backgroundColor:['#004262','#5b5f61'],borderColor:'#fff',borderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{font:CFONT,boxWidth:12,padding:14}},
+    tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw}억 (${(c.raw/YTD*100).toFixed(1)}%)`}}}}}); }
+
+// ── 이슈 매장 탭 ──
+function movRow(r,pos){ const c=pos?'#1a7f4b':'#ba1a1a';
+  return `<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md font-semibold text-on-surface">${r.name}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface">${fmt(rnd(r.cur))}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${fmt(rnd(r.prev))}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md font-bold" style="color:${c}">${r.pct>0?'+':''}${r.pct}%</td></tr>`; }
+function renderIssue(){ const rows=computeRows().filter(r=>r.pct!==null);
+  const asc=[...rows].sort((a,b)=>a.pct-b.pct);
+  const drop=asc.slice(0,8), rise=[...asc].reverse().slice(0,8);
+  const dr=document.getElementById('dropRows'), rr=document.getElementById('riseRows');
+  if(dr)dr.innerHTML=drop.map(r=>movRow(r,false)).join("");
+  if(rr)rr.innerHTML=rise.map(r=>movRow(r,true)).join("");
+  const sn=document.getElementById('storeNote');
+  if(sn)sn.innerHTML='즉시 대응이 필요한 <span class="font-semibold">이슈 매장</span> — '+periodLabel()+' <span class="font-semibold">급감(주의)·급증(주목)</span> 매장. 단위 백만원.';
+  renderIsInsight(drop,rise); }
+function renderIsInsight(drop,rise){ const el=document.getElementById('isInsight'); if(!el)return;
+  if(!drop.length&&!rise.length){ el.innerHTML=''; return; }
+  const worst=drop[0], best=rise[0], bigDrop=drop.filter(r=>r.pct<=-20).length;
+  const what=`${periodLabel()} 기준 급감 ${drop.length}곳(최대 <b>${worst?worst.name+' '+worst.pct+'%':'–'}</b>), 급증 ${rise.length}곳(최대 <b>${best?best.name+' +'+best.pct+'%':'–'}</b>). 20% 이상 하락 <b>${bigDrop}곳</b>.`;
+  const so=bigDrop>=3
+    ? `두 자릿수 하락 매장이 다수라 개별 이슈가 아니라 <b>구조적 하락</b>일 가능성이 있습니다. 동일 그룹에 몰려 있는지 확인이 필요합니다.`
+    : `하락이 일부 매장에 국한돼 있습니다. 개별 원인(리뉴얼·경쟁 입점·판촉 축소) 진단이 효과적입니다.`;
+  const now=`급감 상위 매장부터 <b>원인 진단 → BA·테스터·재고 재배치</b>를 실행하고, 급증 매장의 운영 방식을 벤치마킹해 확산하세요.${bigDrop>=3?` 그룹 단위 하락이면 '그룹별' 탭에서 <b>그룹 한정 프로모션</b>을 검토합니다.`:''}`;
+  el.innerHTML=insightCards(what,so,now); }
+function renderOvInsight(){ const el=document.getElementById('ovInsight'); if(!el||!KPI||!M26.length)return;
+  const peakI=M26.indexOf(Math.max(...M26)), peakM=MONTHS[peakI], peakV=M26[peakI];
+  const yoy=KPI.yoy_pct, on=KPI.online_share;
+  const what=`YTD 매출 <b>${KPI.ytd_eok}억</b>, 전년 동기 대비 <b>${yoy>=0?'+':''}${yoy}%</b>. 온라인 ${on}%(${KPI.online_eok}억) · 오프라인 ${KPI.offline_eok}억. 최고 매출 월 <b>${peakM}월(${peakV}억)</b>.`;
+  const so=yoy>=5
+    ? `성장세를 유지하고 있습니다. 온·오프라인 비중이 ${on>=40?'비교적 균형적으로':'오프라인 우위로'} 형성돼 채널 리스크가 ${on>=35?'분산':'집중'}돼 있습니다.`
+    : yoy>=0 ? `완만한 성장입니다. 성장 동력이 약해 채널·매장별 기여도를 점검할 시점입니다.`
+    : `전년 대비 역신장입니다. 채널·매장별로 하락 원인을 분해해야 합니다.`;
+  const now=yoy>=5
+    ? `<b>${peakM}월 성수기</b> 패턴이 반복되므로 생산·재고를 사전 확보하고, 성장 기여가 큰 그룹에 예산을 집중하세요. 부진 그룹은 '그룹별' 탭에서 개별 대응합니다.`
+    : `'그룹별'·'이슈 매장' 탭에서 하락 매장을 특정하고, '검색↔매출' 탭의 선행지표(브랜드 검색)로 수요 회복 시점을 예측해 프로모션을 배치하세요.`;
+  el.innerHTML=insightCards(what,so,now); }
+
+// ── 그룹별 탭 ──
+function renderGroups(){ const wrap=document.getElementById('groupCards'); if(!wrap)return;
+  const groups=aggregateGroups(computeRows());
+  if(!groups.length){ wrap.innerHTML='<p class="font-body-md text-on-surface-variant p-4">데이터를 불러오는 중입니다.</p>'; return; }
+  wrap.innerHTML=groups.map((g,i)=>{
+    const ins=groupInsight(g), tn=TONE[ins.tone];
+    const rows=g.stores.map(s=>{ const tg=storeTag(s.pct);
+      return `<tr class="hover:bg-surface-container-low transition-colors">
+      <td class="px-6 py-2.5 font-body-md text-body-md text-on-surface">${s.name}</td>
+      <td class="px-4 py-2.5 num text-right font-body-md text-body-md text-on-surface">${fmt(rnd(s.cur))}</td>
+      <td class="px-4 py-2.5 num text-right font-body-md text-body-md text-on-surface-variant">${fmt(rnd(s.prev))}</td>
+      <td class="px-4 py-2.5 text-right">${pctBadge(s.pct)}</td>
+      <td class="px-4 py-2.5 text-right">${tagBadge(tg)}</td></tr>`; }).join("");
+    return `<details class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden group"${i===0?' open':''}>
+      <summary class="p-5 flex items-center justify-between cursor-pointer list-none hover:bg-surface-container-low transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-outline transition-transform group-open:rotate-90">chevron_right</span>
+          <div><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">${g.g}</h3>
+          <p class="font-label-md text-label-md text-on-surface-variant">매장 ${g.n}개 · 전년 ${(g.prev/100).toFixed(1)}억</p></div>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="font-headline-md text-headline-md font-bold text-primary">${(g.cur/100).toFixed(1)}<span class="font-body-md text-on-surface-variant">억</span></span>
+          ${pctBadge(g.pct)}
+        </div>
+      </summary>
+      <div class="px-5 py-4 flex gap-3" style="background:${tn.bg}">
+        <span class="material-symbols-outlined text-[20px] shrink-0" style="color:${tn.bar}">${tn.ico}</span>
+        <div>
+          <p class="font-body-md text-body-md font-semibold" style="color:${tn.fg}">${ins.insight}</p>
+          <p class="font-body-md text-body-md mt-1" style="color:${tn.fg}">→ ${ins.action}</p>
+        </div>
+      </div>
+      <table class="w-full text-left border-t border-outline-variant/60"><thead><tr class="bg-surface-container-low text-on-surface-variant">
+        <th class="px-6 py-2.5 font-label-md text-label-md uppercase tracking-wider">매장</th>
+        <th class="px-4 py-2.5 font-label-md text-label-md uppercase tracking-wider text-right">올해</th>
+        <th class="px-4 py-2.5 font-label-md text-label-md uppercase tracking-wider text-right">전년</th>
+        <th class="px-4 py-2.5 font-label-md text-label-md uppercase tracking-wider text-right">증감</th>
+        <th class="px-4 py-2.5 font-label-md text-label-md uppercase tracking-wider text-right">액션</th>
+      </tr></thead><tbody class="divide-y divide-outline-variant/60">${rows}</tbody></table>
+    </details>`; }).join("");
+  const gn=document.getElementById('groupNote');
+  if(gn)gn.innerHTML='유통 그룹별 매출·인사이트와 소속 매장 상세 ('+periodLabel()+'). 카드를 열면 매장별 증감·추천 액션을 볼 수 있습니다. 단위 백만원.'; }
+
+// ── 기간 필터 UI ──
+function renderActive(){ if(curTab==='stores')renderIssue(); if(curTab==='groups')renderGroups(); }
+function setPtype(t){ period.type=t;
+  document.querySelectorAll('.ptype-btn').forEach(b=>{const on=b.dataset.ptype===t;
+    b.classList.toggle('bg-surface-container-lowest',on);b.classList.toggle('shadow-sm',on);
+    b.classList.toggle('text-primary',on);b.classList.toggle('font-bold',on);b.classList.toggle('text-on-surface-variant',!on);});
+  const sel=document.getElementById('periodSel'), hint=document.getElementById('periodHint');
+  if(t==='ytd'){ sel.classList.add('hidden'); period.key=null; hint.textContent=''; }
+  else if(t==='month'){ sel.classList.remove('hidden');
+    sel.innerHTML=MONTHS.map(m=>`<option value="${m}">${m}월</option>`).join('');
+    period.key=MONTHS[MONTHS.length-1]; sel.value=String(period.key); hint.textContent=''; }
+  else { sel.classList.remove('hidden');
+    sel.innerHTML=WEEKS.map(w=>`<option value="${w.w}">${w.label}${w.full===false?' (진행중)':''}</option>`).join('');
+    const lastFull=[...WEEKS].reverse().find(w=>w.full!==false)||WEEKS[WEEKS.length-1];
+    period.key=lastFull.w; sel.value=String(period.key);
+    hint.textContent='※ 주간 비교는 매장별 매출이 작아 변동성이 큽니다.'; }
+  renderActive(); }
+
+let curTab='overview';
+function activate(tab){ curTab=tab;
+  document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
+  document.querySelectorAll('.tab-btn').forEach(b=>{const on=b.dataset.tab===tab;
+    b.classList.toggle('bg-surface-container-lowest',on);b.classList.toggle('shadow-sm',on);
+    b.classList.toggle('text-primary',on);b.classList.toggle('font-bold',on);b.classList.toggle('text-on-surface-variant',!on);});
+  const pb=document.getElementById('periodBar'), show=(tab==='stores'||tab==='groups');
+  if(pb){ pb.classList.toggle('hidden',!show); pb.classList.toggle('flex',show); }
+  if(tab==='overview'){yoy();channel();renderOvInsight();}
+  if(tab==='stores')renderIssue();
+  if(tab==='groups')renderGroups();
+  if(tab==='funnel'){renderFunnel();renderChain();}
+  if(tab==='ads')renderAds();
+  if(tab==='cfunnel')renderCFunnel();
+  if(tab==='promo')renderPromo();
+  if(tab==='ai')renderReport();
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>activate(b.dataset.tab)));
+document.querySelectorAll('.ptype-btn').forEach(b=>b.addEventListener('click',()=>setPtype(b.dataset.ptype)));
+document.getElementById('periodSel').addEventListener('change',e=>{ period.key=parseInt(e.target.value,10); renderActive(); });
+// ── 검색↔매출 (마케팅-세일즈 퍼널) ──
+let FUN=null, funGrp=null;
+function normed(a){ const m=Math.max(...a,1); return a.map(v=>Math.round(v/m*1000)/10); }
+function rBadge(r){ const c=r>=0.6?'#1a7f4b':r>=0.3?'#b45309':'#5b5f61'; return `<span class="font-bold" style="color:${c}">${r>0?'+':''}${r.toFixed(2)}</span>`; }
+function renderFunnel(){ if(!FUN)return;
+  const sel=document.getElementById('funSel');
+  if(!sel.options.length){ sel.innerHTML=FUN.groups.map(g=>`<option value="${g.grp}">${g.grp}</option>`).join(''); funGrp=FUN.groups[0].grp; sel.value=funGrp; }
+  if(charts.funChart){ charts.funChart.destroy(); delete charts.funChart; }
+  const lab=FUN.weeks.map(w=>w.slice(5));
+  draw('funChart',{type:'line',data:{labels:lab,datasets:[
+    {label:funGrp+' 검색',data:normed(FUN.search_weekly[funGrp]),borderColor:'#4648d4',backgroundColor:'#4648d4',tension:.3,pointRadius:0,borderWidth:2},
+    {label:'매출',data:normed(FUN.sales_weekly),borderColor:'#004262',backgroundColor:'#004262',tension:.3,pointRadius:0,borderWidth:2}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:CFONT,boxWidth:12}}},
+    scales:{x:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:10},maxTicksLimit:12}},y:{grid:{color:'#eef'},ticks:{font:CFONT}}}}});
+  document.getElementById('funRows').innerHTML=FUN.groups.map(g=>`<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-5 py-2.5 font-body-md text-body-md ${g.grp===funGrp?'font-bold text-primary':'text-on-surface'}">${g.grp}</td>
+    <td class="px-4 py-2.5 num text-right font-body-md text-body-md">${rBadge(g.weekly_r)}</td>
+    <td class="px-4 py-2.5 num text-right font-body-md text-body-md text-on-surface-variant">${g.daily_lag>0&&g.daily_r>0?'D+'+g.daily_lag:'—'}</td></tr>`).join("");
+  const top=FUN.groups[0], lead=FUN.groups.find(g=>g.daily_lag>=2&&g.daily_r>0);
+  document.getElementById('funWhat').innerHTML=`최근 ${FUN.range.days}일 기준, 검색 그룹 중 <b>${top.grp}</b> 검색이 주간 매출과 상관 <b>r=${top.weekly_r}</b>로 가장 높습니다.`+(lead?` <b>${lead.grp}</b> 검색은 <b>D+${lead.daily_lag}일</b> 뒤 매출과 연동됩니다.`:'');
+  document.getElementById('funSo').textContent=top.weekly_r>=0.6?`${top.grp} 검색량이 매출의 강력한 선행·동행 지표입니다 — 검색이 오르는 주에 매출이 함께 움직입니다.`:`${top.grp} 검색과 매출이 완만하게 연동됩니다. 브랜드 인지 확대가 매출로 이어질 여지가 있습니다.`;
+  document.getElementById('funNow').innerHTML=`<b>${top.grp}</b> 검색이 급등하는 주에는 재고·인력을 선제 배치하세요.`+(lead?` 선물성 검색(<b>${lead.grp}</b>)은 스파이크 <b>D+${lead.daily_lag}일</b>에 맞춰 프로모션·물량을 준비하면 전환을 잡을 수 있습니다.`:'');
+  const sc=document.getElementById('funScope'); if(sc)sc.textContent=FUN.sales_scope||'';
+  const fn=document.getElementById('funNote'); if(fn&&FUN.generated_at)fn.innerHTML='네이버 데이터랩 검색추세 × 자사 일별 매출 상관·시차 (기준 '+FUN.generated_at+'). 광고매체·GA4 접근 없이 마케팅↔매출을 연결합니다.';
+  renderBrandAcq(); renderSov();
+}
+function renderSov(){ const s=FUN&&FUN.sov, card=document.getElementById('sovCard'); if(!card)return;
+  if(!s||!s.keywords||!s.keywords.length){ card.classList.add('hidden'); return; }
+  card.classList.remove('hidden');
+  const setH=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+  document.getElementById('sovBars').innerHTML=s.keywords.map(k=>{
+    const w=Math.max(k.sov,0.8), c=k.sov>=30?'#1a7f4b':k.sov>0?'#b45309':'#ba1a1a';
+    return `<div class="flex items-center gap-3">
+      <span class="font-body-md text-body-md text-on-surface w-32 shrink-0">${k.kw}</span>
+      <div class="flex-1 bg-surface-variant rounded-full h-2.5 overflow-hidden"><div class="h-full rounded-full" style="width:${w}%;background:${c}"></div></div>
+      <span class="num font-body-md text-body-md font-bold w-24 text-right" style="color:${c}">${k.sov}% <span class="font-label-sm text-on-surface-variant">(${k.own}/${k.total})</span></span></div>`;}).join('');
+  const zero=s.keywords.filter(k=>k.sov===0), top=s.keywords[0];
+  const strong=s.keywords.filter(k=>k.sov>=10&&k.kw!=='루멘 센트');
+  setH('sovWhat', `타겟 키워드 ${s.keywords.length}개 중 <b>${strong.map(k=>k.kw+' '+k.sov+'%').join(', ')||'없음'}</b> 노출. 나머지 <b>${zero.length}개 키워드는 SOV 0%</b>(상위 100건 내 자사 제품 없음). 브랜드명 검색은 ${top.sov}%.`);
+  setH('sovSo', `시그니처 카테고리(오일 퍼퓸)는 장악했으나, <b>고수요 카테고리 키워드에서 완전 부재</b>합니다. 브랜드를 아는 사람만 찾아오는 구조라 <b>신규 유입 상한</b>이 걸려 있습니다.`);
+  setH('sovNow', `SOV 0% 키워드에 <b>상품명·태그·카테고리 최적화</b>와 <b>쇼핑 검색광고</b>를 집행하세요. 특히 <b>시트러스 향수는 검색이 급증(주간비교 참조)하는데 노출 0%</b>라 우선순위 최상입니다.`);
+  const cc=document.getElementById('sovCorr');
+  if(cc)cc.innerHTML=s.corr&&s.corr.length
+    ? `SOV↔매출 상관: ${s.corr.slice(0,3).map(c=>`${c.kw} r=${c.r>0?'+':''}${c.r}`).join(' · ')} (누적 ${s.days}일)`
+    : `※ SOV↔매출 상관은 <b>히스토리 14일 이상</b> 쌓이면 자동 계산됩니다 (현재 ${s.days}일 · 매일 09:05 수집).`;
+  const st=document.getElementById('sovStamp'); if(st)st.textContent='네이버 쇼핑 상위 100건 중 자사 노출 · 기준 '+s.date;
+}
+function renderBrandAcq(){ const ba=FUN&&FUN.brand_acq; const card=document.getElementById('baCard'); if(!card)return;
+  if(!ba){ card.classList.add('hidden'); return; }
+  card.classList.remove('hidden');
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const setH=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+  set('baNew','+'+ba.r_new.toFixed(2)); set('baRet','+'+ba.r_ret.toFixed(2));
+  const acq = ba.r_new >= ba.r_ret + 0.1;  // 신규가 재방문보다 뚜렷이 높으면 획득 지표
+  setH('baWhat', `브랜드 검색 ↔ <b>신규 고객</b> 주간 상관 <b>r=${ba.r_new.toFixed(2)}</b>, <b>재방문</b> r=${ba.r_ret.toFixed(2)} — 유사합니다.`+(ba.lag_new>0&&ba.lag_new_r>0?` 신규 유입은 검색 <b>D+${ba.lag_new}일</b> 뒤와 가장 높습니다.`:''));
+  setH('baSo', acq
+    ? `브랜드 검색이 재방문보다 신규 고객과 더 강하게 연동됩니다 — 검색이 <b>획득(acquisition) 선행지표</b>로 작동합니다.`
+    : `브랜드 검색은 신규·재방문을 가리지 않고 <b>전반적 브랜드 모멘텀</b>을 반영합니다(획득 전용 지표는 아님). 다만 신규와도 중간강도(${ba.r_new.toFixed(2)})로 연동됩니다.`);
+  setH('baNow', `브랜드 검색이 급등하는 주에는 <b>신규 온보딩(첫구매 혜택·리텐션 훅)</b>과 재고를 함께 대비하세요. 브랜드 검색을 신규+재방문 공통 선행지표로 모니터링하고, 검색↑ 시점에 유입되는 신규를 재방문으로 전환하는 장치를 미리 준비하는 것이 핵심입니다.`);
+}
+document.getElementById('funSel').addEventListener('change',e=>{ funGrp=e.target.value; renderFunnel(); });
+fetch('data/marketing_sales.json?_='+Date.now()).then(r=>r.json()).then(d=>{ FUN=d; if(curTab==='funnel'){renderFunnel();renderChain();} }).catch(e=>console.error('marketing_sales.json 로드 실패',e));
+
+// ── 광고 성과 (월마감 리포트) ──
+let ADS=null;
+function renderAds(){ if(!ADS)return;
+  const t=ADS.total, mm=ADS.monthly, cur=mm.find(m=>m.ym===ADS.report_month);
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('adsSpendTitle',ADS.report_month.slice(0,4)+'년 '+parseInt(ADS.report_month.slice(5))+'월 광고비');
+  set('adsSpend',Math.round(t.spend/1e6)); set('adsRev',Math.round(t.revenue/1e6));
+  set('adsRoas',t.roas.toFixed(2)); set('adsContrib',cur&&cur.contrib!=null?cur.contrib:'–');
+  const v=ADS.validation, av=document.getElementById('adsValid');
+  if(av)av.innerHTML=v?`✓ 교차검증: 광고 귀속매출 ↔ 온라인 독립 실매출 상관 <b>r=${v.corr>0?'+':''}${v.corr}</b> · 귀속>실매출 이상치 <b>${v.anomalies}건</b> · 겹치는 ${v.months}개월 (기여율 평균 ${v.contrib_mean}%) → 광고 리포트 신뢰 가능`:'';
+  // 채널: 막대(광고비) + 점(ROAS)
+  const ch=ADS.channels;
+  draw('adsChChart',{data:{labels:ch.map(c=>c.ch.replace('네이버','N.')),datasets:[
+    {type:'bar',label:'광고비(백만)',data:ch.map(c=>Math.round(c.spend/1e5)/10),backgroundColor:'#004262',borderRadius:5,yAxisID:'y'},
+    {type:'scatter',label:'ROAS',data:ch.map(c=>c.roas),backgroundColor:'#b45309',pointRadius:6,pointStyle:'rectRot',yAxisID:'y1'}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:CFONT,boxWidth:12}},
+    tooltip:{callbacks:{label:c=>c.datasetIndex===0?` 광고비 ${c.raw}백만 (${ch[c.dataIndex].spend_share}%)`:` ROAS ${c.raw}x · 광고매출 ${Math.round(ch[c.dataIndex].revenue/1e6)}백만`}}},
+    scales:{x:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:10}}},
+      y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'백만'}},
+      y1:{position:'right',grid:{display:false},ticks:{font:CFONT,callback:v=>v+'x'}}}}});
+  // 월별 광고비 vs ROAS
+  const mv=mm.filter(m=>m.spend);
+  draw('adsTrChart',{data:{labels:mv.map(m=>m.ym.slice(2)),datasets:[
+    {type:'bar',label:'광고비(백만)',data:mv.map(m=>Math.round(m.spend/1e6)),backgroundColor:'#c0c7cf',borderRadius:3,yAxisID:'y'},
+    {type:'line',label:'ROAS',data:mv.map(m=>m.roas),borderColor:'#004262',backgroundColor:'#004262',tension:.3,pointRadius:2,yAxisID:'y1',spanGaps:true}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:CFONT,boxWidth:12}}},
+    scales:{x:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:9},maxTicksLimit:16}},
+      y:{grid:{color:'#eef'},ticks:{font:CFONT}},y1:{position:'right',grid:{display:false},ticks:{font:CFONT,callback:v=>v+'x'}}}}});
+  // 기여율 추이
+  const cb=mm.filter(m=>m.contrib!=null);
+  draw('adsCbChart',{type:'line',data:{labels:cb.map(m=>m.ym.slice(2)),datasets:[
+    {label:'광고 기여율(%)',data:cb.map(m=>m.contrib),borderColor:'#b45309',backgroundColor:'rgba(180,83,9,.12)',fill:true,tension:.3,pointRadius:3}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>` 기여율 ${c.raw}%`}}},
+    scales:{x:{grid:{display:false},ticks:{font:CFONT}},y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'%'},min:0}}}});
+  renderAdsInsight();
+  renderChannelMix();
+}
+const CMPAL=['#004262','#b45309','#4648d4','#1a7f4b','#8a5a00','#6d2e46','#5b5f61','#9aa0a6','#c0c7cf'];
+function renderChannelMix(){ if(!ADS||!ADS.channel_mix||!ADS.channel_mix.length)return;
+  const cm=ADS.channel_mix, last=cm[cm.length-1];
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('cmMonth','· '+last.ym); set('cmN',cm.length);
+  const ent=Object.entries(last.channels).sort((a,b)=>b[1]-a[1]);
+  const tot=ent.reduce((s,e)=>s+e[1],0);
+  const top=ent.slice(0,7), rest=ent.slice(7).reduce((s,e)=>s+e[1],0);
+  const dl=top.map(e=>e[0]).concat(rest>0?['기타']:[]), dv=top.map(e=>e[1]).concat(rest>0?[rest]:[]);
+  draw('cmDonut',{type:'doughnut',data:{labels:dl,datasets:[{data:dv,backgroundColor:CMPAL,borderWidth:1,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{family:'Hanken Grotesk',size:10},boxWidth:10}},
+      tooltip:{callbacks:{label:c=>' '+c.label+' '+Math.round(c.raw/tot*100)+'% ('+Math.round(c.raw/1e6)+'백만)'}}}}});
+  const keys=top.map(e=>e[0]);
+  const ds=keys.map((k,i)=>({label:k,data:cm.map(m=>Math.round((m.channels[k]||0)/1e6)),backgroundColor:CMPAL[i],stack:'s'}));
+  ds.push({label:'기타',data:cm.map(m=>Math.round(Object.entries(m.channels).reduce((a,e)=>a+(keys.includes(e[0])?0:e[1]),0)/1e6)),backgroundColor:CMPAL[8],stack:'s'});
+  draw('cmTrend',{type:'bar',data:{labels:cm.map(m=>m.ym.slice(2)),datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{family:'Hanken Grotesk',size:9},boxWidth:9}},tooltip:{callbacks:{label:c=>' '+c.dataset.label+' '+c.raw+'백만'}}},
+      scales:{x:{stacked:true,grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:9}}},y:{stacked:true,grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'백만'}}}}});
+  const t1=ent[0], sh=Math.round(t1[1]/tot*100), top3=Math.round(ent.slice(0,3).reduce((s,e)=>s+e[1],0)/tot*100);
+  const el=document.getElementById('cmInsight'); if(!el)return;
+  const conc=sh>=45;
+  const what=`${last.ym} 온라인 실매출 <b>${Math.round(tot/1e6)}백만</b> 중 <b>${t1[0]} ${sh}%</b>로 최대 채널. 상위 3개(${ent.slice(0,3).map(e=>e[0]).join('·')})가 <b>${top3}%</b>를 차지합니다.`;
+  const so=conc?`특정 채널(<b>${t1[0]}</b>) 의존도가 매우 높습니다 — 이 채널의 수수료 인상·정책 변경·노출 축소가 온라인 매출 전체를 흔들 수 있는 <b>집중 리스크</b>입니다. 자사몰 비중은 ${Math.round((last.channels['자사몰']||0)/tot*100)}%에 그칩니다.`:`채널이 비교적 분산돼 단일 채널 리스크는 낮은 편입니다.`;
+  const now=conc?`<b>${t1[0]} 의존을 관리</b>하세요 — 자사몰 직접 전환(멤버십·리텐션 훅)으로 마진과 고객 데이터 주도권을 확보하고, 2~3순위 채널을 육성해 편중을 완화하는 것을 권장합니다.`:`현 채널 배분을 유지하되 고성장 채널의 재고·프로모션을 우선 배치하세요.`;
+  el.innerHTML=insightCards(what,so,now);
+}
+function renderChain(){ const row=document.getElementById('chainRow'); if(!row||!ADS)return;
+  const t=ADS.total, ctr=t.imps?t.clicks/t.imps*100:null, cvr=t.clicks?t.conv/t.clicks*100:null;
+  let sMetric='–', sSub='선행지표';
+  if(FUN&&FUN.brand_acq){ const bw=FUN.brand_acq.brand_weekly;
+    if(bw&&bw.length>=8){ const a=bw.slice(-4).reduce((s,x)=>s+x,0)/4, b=bw.slice(-8,-4).reduce((s,x)=>s+x,0)/4, mo=b?Math.round((a-b)/b*100):0; sMetric=(mo>=0?'▲':'▼')+Math.abs(mo)+'%'; }
+    sSub='신규고객 r='+FUN.brand_acq.r_new; }
+  const fN=n=>n>=1e8?(n/1e8).toFixed(1)+'억':n>=1e4?Math.round(n/1e4)+'만':Math.round(n).toLocaleString();
+  const st=[
+    {ic:'search',lb:'관심 · 브랜드검색',v:sMetric,sub:sSub,c:'#4648d4'},
+    {ic:'visibility',lb:'광고 노출',v:fN(t.imps),sub:'노출수',c:'#004262'},
+    {ic:'ads_click',lb:'광고 클릭',v:fN(t.clicks),sub:'CTR '+(ctr?ctr.toFixed(1):'–')+'%',c:'#004262'},
+    {ic:'shopping_cart',lb:'전환',v:fN(t.conv)+'건',sub:'CVR '+(cvr?cvr.toFixed(1):'–')+'%',c:'#004262'},
+    {ic:'payments',lb:'광고 매출',v:Math.round(t.revenue/1e6)+'백만',sub:'ROAS '+t.roas.toFixed(1)+'x',c:'#b45309'}];
+  row.innerHTML=st.map((s,i)=>`<div class="flex items-center ${i<st.length-1?'flex-1 min-w-[110px]':'min-w-[110px]'}">
+    <div class="flex-1 rounded-xl border border-outline-variant/60 p-3 text-center">
+      <span class="material-symbols-outlined text-[20px]" style="color:${s.c}">${s.ic}</span>
+      <p class="font-label-sm text-on-surface-variant mt-1">${s.lb}</p>
+      <p class="num font-headline-sm text-headline-sm font-bold" style="color:${s.c}">${s.v}</p>
+      <p class="font-label-sm text-on-surface-variant">${s.sub}</p></div>
+    ${i<st.length-1?'<span class="material-symbols-outlined text-on-surface-variant" style="font-size:18px">chevron_right</span>':''}</div>`).join('');
+  const cur=ADS.monthly.find(m=>m.ym===ADS.report_month);
+  document.getElementById('chainNote').innerHTML=`${ADS.report_month} 기준 · 브랜드 검색(관심)부터 노출→클릭→전환→매출까지. 광고 귀속매출은 온라인 실매출의 <b>${cur&&cur.contrib!=null?cur.contrib:'–'}%</b> (나머지는 검색·직접유입 등 비광고 경로).`;
+}
+function renderAdsInsight(){ const el=document.getElementById('adsInsight'); if(!el||!ADS)return;
+  const ch=ADS.channels, t=ADS.total;
+  const eff=[...ch].sort((a,b)=>b.roas-a.roas);
+  const best=eff[0], big=ch[0];              // big = 최대 예산 채널
+  const misalloc = big.roas < t.roas*0.5;    // 최대 예산 채널의 ROAS가 전체 평균의 절반 미만이면 배분 왜곡
+  const mm=ADS.monthly.filter(m=>m.roas), first12=mm.slice(0,12), last12=mm.slice(-12);
+  const avg=a=>a.reduce((x,m)=>x+m.roas,0)/a.length;
+  const spendAvgL=last12.reduce((x,m)=>x+m.spend,0)/last12.length/1e6, spendAvgF=first12.reduce((x,m)=>x+m.spend,0)/first12.length/1e6;
+  const what=`${parseInt(ADS.report_month.slice(5))}월 광고비 <b>${Math.round(t.spend/1e6)}백만 → 광고매출 ${Math.round(t.revenue/1e6)}백만 (ROAS ${t.roas.toFixed(1)}x)</b>. 최대 예산 채널 <b>${big.ch} ${big.spend_share}%</b>는 ROAS <b>${big.roas}x</b>, 최고 효율 <b>${best.ch}</b>는 예산 ${best.spend_share}%로 ROAS <b>${best.roas}x</b>.`;
+  const so=misalloc
+    ? `<b>예산 배분이 효율과 반대</b>입니다 — 예산 절반 이상이 평균 이하 채널에 들어가고, 최고 효율 채널은 소액만 집행 중입니다. 장기 추이로도 광고비 ${spendAvgF.toFixed(0)}→${spendAvgL.toFixed(0)}백만/월로 늘며 ROAS ${avg(first12).toFixed(1)}→${avg(last12).toFixed(1)}x로 하락(한계 효율 체감).`
+    : `예산 배분이 효율과 대체로 정렬돼 있습니다. 광고비 ${spendAvgF.toFixed(0)}→${spendAvgL.toFixed(0)}백만/월 확대 중 ROAS ${avg(first12).toFixed(1)}→${avg(last12).toFixed(1)}x.`;
+  const now=misalloc
+    ? `<b>${big.ch} 예산 일부를 ${best.ch}·고효율 채널로 단계적 이관</b>을 테스트하세요(효율 채널도 증액 시 ROAS가 떨어질 수 있어 10~20%씩 점진). ${big.ch}는 소재·타겟을 재정비한 뒤 재확대 여부를 판단합니다. 기여율(현재 ${ADS.monthly.find(m=>m.ym===ADS.report_month)?.contrib??'–'}%)이 추세 이탈하면 귀속 문제도 점검하세요.`
+    : `현 배분을 유지하되 저효율 채널의 소재 개선과 고효율 채널의 점진 증액 테스트를 병행하세요.`;
+  el.innerHTML=insightCards(what,so,now);
+}
+fetch('data/ads.json?_='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{ if(d){ADS=d; if(curTab==='ads')renderAds(); if(curTab==='funnel')renderChain(); if(curTab==='cfunnel')renderCFunnel();} }).catch(e=>{});
+
+// ── 퍼널 분석 (광고 전환 + 고객 생애) ──
+let CFUN=null;
+function funnelHTML(stages, colors){
+  const vals=stages.map(s=>s.value), mx=Math.max(...vals), mn=Math.min(...vals);
+  const lw=v=>(mx===mn)?100:Math.round(34+66*(Math.log(v)-Math.log(mn))/(Math.log(mx)-Math.log(mn)));
+  let h='';
+  stages.forEach((s,i)=>{
+    h+=`<div class="mx-auto rounded-lg px-4 py-3 text-center text-on-primary" style="width:${lw(s.value)}%;background:${colors[i]||'#004262'}">
+      <div class="font-label-sm" style="opacity:.9">${s.label}</div>
+      <div class="num font-headline-sm font-bold">${fmt(s.value)}</div>
+      ${s.note?`<div class="font-label-sm" style="opacity:.9">${s.note}</div>`:''}</div>`;
+    if(i<stages.length-1){ const cv=stages[i+1].value/s.value*100;
+      h+=`<div class="text-center font-label-md text-on-surface-variant py-1">▼ ${cv>=1?cv.toFixed(1):cv.toFixed(2)}%</div>`; }
+  });
+  return h;
+}
+function renderCFunnel(){
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  // 광고 전환 퍼널
+  if(ADS&&ADS.total){ const t=ADS.total, ctr=t.clicks/t.imps*100, cvr=t.conv/t.clicks*100;
+    set('cfMonth','· '+ADS.report_month);
+    document.getElementById('adFunnel').innerHTML=funnelHTML([
+      {label:'광고 노출', value:Math.round(t.imps)},
+      {label:'클릭', value:Math.round(t.clicks), note:'CTR '+ctr.toFixed(2)+'%'},
+      {label:'전환 (구매)', value:Math.round(t.conv), note:'CVR '+cvr.toFixed(2)+'%'}
+    ],['#004262','#0f5a82','#b45309']);
+    set('cfRev',Math.round(t.revenue/1e6)); set('cfRoas',t.roas.toFixed(1));
+    document.getElementById('adFunnelNote').innerHTML=`노출 100만당 전환 <b>${Math.round(t.conv/t.imps*1e6)}건</b> · 전환 1건당 광고비 <b>₩${fmt(Math.round(t.spend/t.conv))}</b>. 큰 이탈은 노출→클릭(CTR ${ctr.toFixed(2)}%) 구간입니다.`;
+    // 채널별 퍼널 효율
+    const ch=[...ADS.channels].filter(c=>c.imps>0).map(c=>({...c,ctr:c.clicks/c.imps*100,cvr:c.clicks?c.conv/c.clicks*100:0}))
+      .sort((a,b)=>(b.roas||0)-(a.roas||0));
+    const bestCvr=Math.max(...ch.map(c=>c.cvr));
+    document.getElementById('chFunnelRows').innerHTML=ch.map(c=>{
+      const hot=c.cvr===bestCvr;
+      return `<tr${hot?' style="background:#f2fbf6"':''}><td class="px-5 py-2.5 font-body-md text-body-md text-on-surface">${c.ch}${hot?' 🔥':''}</td>
+      <td class="px-3 py-2.5 text-right num text-on-surface-variant">${fmt(Math.round(c.imps))}</td>
+      <td class="px-3 py-2.5 text-right num">${c.ctr.toFixed(1)}%</td>
+      <td class="px-3 py-2.5 text-right num font-semibold" style="color:${c.cvr>=5?'#1a7f4b':c.cvr>=1?'#004262':'#ba1a1a'}">${c.cvr.toFixed(1)}%</td>
+      <td class="px-3 py-2.5 text-right num text-on-surface-variant">${fmt(Math.round(c.conv))}</td>
+      <td class="px-3 py-2.5 text-right num font-semibold text-primary">${c.roas!=null?c.roas.toFixed(1):'–'}</td></tr>`;
+    }).join('');
+  }
+  // 고객 생애 퍼널
+  if(CFUN&&CFUN.counts){ const L=CFUN.labels, C=CFUN.counts;
+    document.getElementById('custFunnel').innerHTML=funnelHTML(
+      L.map((lb,i)=>({label:lb, value:C[i]})), ['#004262','#1a7f4b','#0f5a82','#b45309']);
+    document.getElementById('custFunnelNote').innerHTML=`전체 구매회원 중 재구매 전환 <b>${(C[1]/C[0]*100).toFixed(1)}%</b>, 단골(5개월+) <b>${(C[3]/C[0]*100).toFixed(1)}%</b>. 첫 구매를 2회차로 잇는 온보딩이 최대 레버리지입니다.`;
+  }
+  // 인사이트
+  const el=document.getElementById('cfInsight');
+  if(el&&ADS&&ADS.total){ const t=ADS.total, ctr=t.clicks/t.imps*100, cvr=t.conv/t.clicks*100;
+    const ch=[...ADS.channels].filter(c=>c.imps>0).map(c=>({...c,cvr:c.clicks?c.conv/c.clicks*100:0}));
+    const best=ch.reduce((a,b)=>b.cvr>a.cvr?b:a), worst=ch.filter(c=>c.spend>0).reduce((a,b)=>b.cvr<a.cvr?b:a);
+    const cf=CFUN&&CFUN.counts;
+    const what=`광고 퍼널: 노출 ${fmt(Math.round(t.imps))} → 클릭 ${(ctr).toFixed(1)}% → 전환 ${cvr.toFixed(1)}% (전환 ${fmt(Math.round(t.conv))}건). 채널 전환율은 <b>${best.ch} ${best.cvr.toFixed(1)}%</b> 최고, <b>${worst.ch} ${worst.cvr.toFixed(1)}%</b> 최저.`+(cf?` 고객 퍼널: 재구매 전환 ${(cf[1]/cf[0]*100).toFixed(1)}%, 단골 ${(cf[3]/cf[0]*100).toFixed(1)}%.`:'');
+    const so=`전환율이 낮은 채널에 노출·예산이 몰리면 클릭은 사도 매출로 안 이어집니다. <b>${worst.ch}</b>가 대표적 누수 구간이고, <b>${best.ch}</b>는 적은 노출로 전환을 많이 만듭니다.`+(cf?` 오프라인은 첫 구매의 ${(100-cf[1]/cf[0]*100).toFixed(1)}%가 재구매로 못 넘어와 획득 효율이 리텐션에서 샙니다.`:'');
+    const now=`<b>${best.ch}·고CVR 채널로 예산을 단계 이관</b>하고 ${worst.ch}는 소재·타겟·랜딩을 점검하세요. 병행해 <b>첫 구매→2회차 온보딩</b>(리마인드·리필 쿠폰)으로 고객 퍼널 상단 누수를 막으면 획득 광고비의 회수율이 올라갑니다.`;
+    el.innerHTML=insightCards(what,so,now);
+  }
+}
+let PROMO=null;
+function renderPromo(){ const P=PROMO; if(!P)return;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('pmLine',P.disc_line_pct); set('pmEff',P.eff_rate); set('pmTot',Math.round(P.disc_total/1e8)); set('pmPos',P.pos_pct);
+  set('pmR',(P.pooled_r>0?'+':'')+P.pooled_r); set('pmLift',P.hi_lo_lift+'배');
+  set('pmElNote', P.pooled_r>0? `할인이 판매를 밀어주는 방향(양의 상관). 다만 상관 ${P.pooled_r}로 강하지 않아, 전 품목 일괄 할인보다 민감 품목 선별 할인이 효율적입니다.` : '할인과 판매의 뚜렷한 연동이 약합니다 — 할인 재검토 여지.');
+  draw('pmDistChart',{type:'bar',data:{labels:(P.dist||[]).map(d=>d.band),datasets:[{data:(P.dist||[]).map(d=>d.pct),backgroundColor:['#c7d7ec','#8fb0d8','#4f7fb3','#b45309','#ba1a1a'],borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{font:CFONT}},y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'%'}}}}});
+  const row=p=>`<tr><td class="px-5 py-2.5 font-body-md text-body-md text-on-surface">${p.prod}</td>
+    <td class="px-3 py-2.5 text-right num font-semibold" style="color:${p.corr>=0.3?'#1a7f4b':p.corr<=0?'#ba1a1a':'#b45309'}">${p.corr>0?'+':''}${p.corr}</td>
+    <td class="px-3 py-2.5 text-right num text-on-surface-variant">${p.avg_disc}%</td>
+    <td class="px-3 py-2.5 text-right num text-on-surface-variant">${fmt(p.qty)}</td></tr>`;
+  document.getElementById('pmSensRows').innerHTML=(P.sensitive||[]).map(row).join('');
+  document.getElementById('pmWasteRows').innerHTML=(P.waste||[]).map(row).join('');
+  const w=(P.waste||[])[0], sName=(P.sensitive||[])[0];
+  document.getElementById('pmInsight').innerHTML=insightCards(
+    `할인 적용률 <b>${P.disc_line_pct}%</b>·실효 할인율 <b>${P.eff_rate}%</b>(누적 ${Math.round(P.disc_total/1e8)}억). 품목의 <b>${P.pos_pct}%</b>가 할인에 양(+)으로 반응하고, 할인 깊은 달이 얕은 달보다 <b>${P.hi_lo_lift}배</b> 팔립니다.`,
+    `할인이 판매를 밀어주긴 하나 상관 <b>${P.pooled_r}</b>로 약해, <b>전 품목 일괄 할인은 비효율</b>입니다. 특히 <b>${w?w.prod:'-'}</b>류는 평균 ${w?w.avg_disc:''}% 할인에도 판매가 안 늘어(탄력성 ${w?w.corr:''}) 마진만 새고 있습니다.`,
+    `<b>할인 민감 품목(${sName?sName.prod:'-'} 등)에 프로모션을 집중</b>하고, <b>할인 낭비 품목은 할인율을 낮춰 마진을 회수</b>하세요. 딥할인(30%+)은 드무니, 민감 품목 한정 기간 할인으로 테스트하면 효율이 오릅니다.`);
+}
+// ── 분석 리포트 (재구매 예측 디시전트리) ──
+let DTREE=null, RML=null;
+if(typeof mermaid!=='undefined')mermaid.initialize({startOnLoad:false,theme:'base',themeVariables:{fontFamily:'Hanken Grotesk',fontSize:'13px',lineColor:'#9aa0a6'},flowchart:{htmlLabels:true,curve:'basis'}});
+async function _mmd(id,def){ const el=document.getElementById(id); if(!el||typeof mermaid==='undefined')return;
+  try{ const {svg}=await mermaid.render(id+'_g',def); el.innerHTML=svg; }catch(e){ el.innerHTML='<p class="font-label-sm text-on-surface-variant">다이어그램 렌더 실패</p>'; } }
+function _procDef(){ return `graph LR
+  A["POS 37개월<br/>회원 39만"]-->B["피처 엔지니어링<br/>RFM 이력 9개"]
+  B-->C["학습·검증 분할<br/>기준일 이전→이후<br/>(미래 누수 방지)"]
+  C-->D["디시전트리 학습<br/>깊이 3"]
+  D-->E["평가<br/>AUC·정밀도·재현율 등 6지표"]
+  E-->F["예측·타겟팅<br/>재구매 확률→윈백·온보딩"]
+  classDef s fill:#eef1fb,stroke:#4648d4,color:#2a2b8a;
+  class A,B,C,D,E,F s;`; }
+function _treeDef(nodes){ let g='graph TD\n';
+  nodes.forEach(n=>{ const f=(n.feat||'').replace(/\(.*?\)/,'');
+    if(n.leaf){ g+=`  N${n.id}["재방문 ${n.prob}%<br/>${fmt(n.samples)}명"]:::${n.prob>=50?'hi':'lo'}\n`; }
+    else { g+=`  N${n.id}{"${f}<br/>≤ ${fmt(n.thr)} ?"}\n  N${n.id} -->|예| N${n.left}\n  N${n.id} -->|아니오| N${n.right}\n`; } });
+  return g+'classDef hi fill:#d3f4e4,stroke:#1a7f4b,color:#0d3d24;\nclassDef lo fill:#ffdad6,stroke:#ba1a1a,color:#93000a;\n'; }
+function _thr(nodes){ const rec=nodes.filter(n=>!n.leaf&&(n.feat||'').includes('최근성')).map(n=>n.thr);
+  const frq=nodes.filter(n=>!n.leaf&&(n.feat||'').includes('개월수')).map(n=>n.thr);
+  return {lapseM: rec.length?Math.max(1,Math.round(Math.min(...rec)/30)):8,
+          freqLo: frq.length?Math.max(1,Math.floor(Math.min(...frq))):1}; }
+function _reportHTML(T){ const m=T.metrics, i0=T.importances[0], i1=T.importances[1], th=_thr(T.nodes);
+  const lift=RML?RML.lift10:3.3, base=RML?RML.base_rate:7, top=RML?RML.top10_rate:23;
+  const nm=x=>x.name.replace(/\(.*?\)/,'');
+  return `<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-6" style="border-color:#4648d4">
+  <div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined" style="color:#4648d4">description</span><h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">비즈니스 리포트 — 마케팅·경영진용</h3></div>
+  <div class="font-body-md text-body-md text-on-surface space-y-3" style="line-height:1.75">
+  <p><b>■ 한눈에.</b> 회원 ${fmt(RML?RML.n_scored:392349)}명의 구매 이력만으로 "앞으로 6개월 안에 다시 살 고객"을 가려내는 예측 모델을 만들었습니다. 예측력은 <b>AUC ${m.AUC}</b>로 무작위(0.5)를 크게 웃돌아 실무 활용이 가능한 수준이며, 복잡한 블랙박스 모델과 성능이 대등하면서 <b>판단 규칙이 눈에 보이는</b> 것이 강점입니다.</p>
+  <p><b>■ 무엇이 재구매를 가르나.</b> 단 두 가지 — <b>${nm(i0)}(${Math.round(i0.imp*100)}%)</b>와 <b>${nm(i1)}(${Math.round(i1.imp*100)}%)</b>가 재구매의 <b>약 ${Math.round((i0.imp+i1.imp)*100)}%</b>를 설명합니다. 즉 "얼마나 자주, 얼마나 최근에 샀는가"가 사실상 전부입니다. 값비싼 개인정보·설문 없이 거래 기록만으로 충분합니다.</p>
+  <p><b>■ 디시전트리가 말하는 규칙.</b> ① 구매한 개월 수가 <b>${th.freqLo}개월(사실상 1회성)</b>인 고객은 대부분 재방문하지 않습니다. ② <b>${th.freqLo+1}개월 이상</b> 구매한 고객은 대부분 <b>단골로 이어지되</b>, 마지막 구매 후 <b>약 ${th.lapseM}개월</b>이 지나면 재방문 확률이 크게 떨어집니다. 결국 <b>첫 구매를 '2회차'로 넘기는 순간</b> 고객 가치가 급등한다는 뜻입니다.</p>
+  <p><b>■ 액션 플랜.</b> <b>①&nbsp;신규 온보딩</b> — 첫 구매 직후가 골든타임. 리필·미니 제품·리마인드로 <b>빠른 2회차</b>를 유도해 단골 전환율을 끌어올립니다. <b>②&nbsp;윈백</b> — 2회+ 구매했지만 <b>${th.lapseM}개월 넘게</b> 뜸해져 모델이 <b>이탈 위험</b>으로 표시한 고객에게 개인화 복귀 혜택을 우선 발송합니다. <b>③&nbsp;자원 배분</b> — 재방문 확률 <b>상위 10%에 집중</b>하면 같은 예산으로 약 <b>${lift}배 효율</b>(전체 재구매율 ${base}% → 상위 ${top}%)이 나옵니다. 세 가지를 함께 돌리면 신규의 단골 전환과 이탈 고객 회수가 동시에 오르고, 뿌리는 마케팅에서 <b>맞춤형 마케팅</b>으로 전환돼 비용 대비 회수율(ROI)이 개선됩니다.</p>
+  <p><b>■ 유의점.</b> 재구매는 구매 후 경험·외부 요인에도 좌우돼 개별 예측이 완벽하진 않습니다(정밀도는 낮음). 따라서 "이 사람은 산다/안 산다"의 확정이 아니라 <b>한정된 마케팅 자원을 어디에 먼저 쓸지 정하는 우선순위 도구</b>로 활용하는 것이 올바른 사용법입니다.</p>
+  </div></div>`; }
+function renderReport(){ const T=DTREE; if(!T)return;
+  _mmd('mlProcess',_procDef()); _mmd('dtTree',_treeDef(T.nodes));
+  const imp=T.importances;
+  draw('dtImpChart',{type:'bar',data:{labels:imp.map(i=>i.name.replace(/\(.*?\)/,'')),datasets:[{data:imp.map(i=>Math.round(i.imp*100)),backgroundColor:'#4648d4',borderRadius:5}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw+'%'}}},
+      scales:{x:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:11}}}}}});
+  const m=T.metrics;
+  draw('dtMetricChart',{type:'radar',data:{labels:Object.keys(m),datasets:[{data:Object.values(m),backgroundColor:'rgba(70,72,212,.15)',borderColor:'#4648d4',pointBackgroundColor:'#4648d4',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.raw}}},
+      scales:{r:{min:0,max:1,ticks:{stepSize:0.2,font:{size:9},backdropColor:'transparent'},pointLabels:{font:{family:'Hanken Grotesk',size:11}},grid:{color:'#eef'}}}}});
+  const c=T.confusion;
+  document.getElementById('dtConfusion').innerHTML=`테스트 ${fmt(T.n_test)}명 · 재방문 <b style="color:#1a7f4b">맞힘 ${fmt(c[1][1])}</b>/놓침 ${fmt(c[1][0])} · 이탈 <b>맞힘 ${fmt(c[0][0])}</b>/오탐 ${fmt(c[0][1])}`;
+  document.getElementById('dtReport').innerHTML=_reportHTML(T);
+}
+fetch('data/pos.json?_='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{ if(d){ if(d.cust_funnel){CFUN=d.cust_funnel; if(curTab==='cfunnel')renderCFunnel();} if(d.promo){PROMO=d.promo; if(curTab==='promo')renderPromo();} if(d.repeat_ml)RML=d.repeat_ml; if(d.dtree){DTREE=d.dtree; if(curTab==='ai')renderReport();} } }).catch(e=>{});
+
+activate('overview');
+
+fetch('data/sales.json?_='+Date.now()).then(r=>r.json()).then(D=>{
+  const k=D.kpi, set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  KPI=k;
+  set('kpiYtd',k.ytd_eok); set('kpiOnline',k.online_share); set('kpiYoyX',k.yoy_x.toFixed(2)); set('kpiNstore',k.nstore_offline);
+  const sub=document.getElementById('kpiYtdSub');
+  if(sub){ sub.innerHTML=(k.yoy_pct>=0?'▲ +':'▼ ')+k.yoy_pct+'% vs 전년동기'; sub.style.color=k.yoy_pct>=0?'#1a7f4b':'#ba1a1a'; }
+  set('kpiChSub','오프 '+k.offline_eok+'억 · 온 '+k.online_eok+'억');
+  STORES=D.STORES||[]; MONTHS=(D.meta.months||[]); WEEKS=(D.meta.weeks||[]); M25=D.M25; M26=D.M26;
+  ML=MONTHS.map(m=>m+'월'); CH=[k.offline_eok,k.online_eok]; YTD=k.ytd_eok; MLABEL=D.meta.month_label||'';
+  const st=document.getElementById('dataStamp'); if(st&&D.generated_at)st.textContent='데이터 기준 '+D.generated_at;
+  set('kpiYtdTitle','YTD 매출 ('+MLABEL+')');
+  const yt=document.getElementById('yoyTitle'); if(yt)yt.textContent='월별 매출 — 전년 대비 ('+MLABEL+')';
+  setPtype('ytd');
+  Object.values(charts).forEach(c=>c&&c.destroy()); charts={}; activate(curTab);
+}).catch(e=>console.error('sales.json 로드 실패',e));
+</script>
+</body></html>

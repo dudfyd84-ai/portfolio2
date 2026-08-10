@@ -1,0 +1,671 @@
+<!-- Store & Customer Analytics — 루멘 센트 오프라인 POS 기반 고객·품목·리셀러 분석(리텐션/신규/Top10/AOV/히트맵/Waterfall/리셀러), DESIGN1 톤 -->
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LUMEN SCENT - Store & Customer Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = { darkMode:"class", theme:{ extend:{
+    "colors": {
+      "on-surface":"#111c2d","on-background":"#111c2d","on-surface-variant":"#41484e",
+      "secondary-container":"#dde0e2","secondary":"#5b5f61","surface":"#f9f9ff",
+      "surface-tint":"#20648c","error-container":"#ffdad6","error":"#ba1a1a",
+      "surface-bright":"#f9f9ff","outline":"#71787f","on-primary":"#ffffff",
+      "on-primary-container":"#95d0fe","surface-container":"#e7eeff","background":"#f9f9ff",
+      "tertiary":"#2f3f54","on-secondary-container":"#5f6365","primary":"#004262",
+      "surface-variant":"#d8e3fb","surface-dim":"#cfdaf2","surface-container-low":"#f0f3ff",
+      "outline-variant":"#c0c7cf","surface-container-high":"#dee8ff","primary-container":"#0f5a82",
+      "inverse-on-surface":"#ecf1ff","surface-container-lowest":"#ffffff","on-error":"#ffffff",
+      "inverse-primary":"#92cdfb","on-secondary":"#ffffff","surface-container-highest":"#d8e3fb",
+      "primary-fixed":"#cae6ff","success":"#1a7f4b","warning":"#b45309"
+    },
+    "borderRadius":{ "DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px" },
+    "fontFamily":{ "headline-md":["Hanken Grotesk"],"headline-lg":["Hanken Grotesk"],"headline-sm":["Hanken Grotesk"],
+      "body-md":["Hanken Grotesk"],"body-lg":["Hanken Grotesk"],"label-md":["Hanken Grotesk"],"label-sm":["Hanken Grotesk"] },
+    "fontSize":{
+      "headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],
+      "headline-lg":["24px",{"lineHeight":"32px","fontWeight":"700"}],
+      "headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],
+      "body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],
+      "body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],
+      "label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],
+      "label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}]
+    }
+  } } }
+</script>
+<style> body{font-family:'Hanken Grotesk',sans-serif;} .num{font-variant-numeric:tabular-nums;} </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden">
+<aside class="w-64 bg-surface-container-lowest border-r border-outline-variant flex flex-col hidden md:flex shrink-0 overflow-y-auto">
+<div class="h-24 flex items-center px-6 border-b border-outline-variant shrink-0">
+<a href="code.html" class="font-headline-md text-headline-md text-primary font-bold tracking-tight hover:opacity-80 transition-opacity cursor-pointer">LUMEN SCENT</a>
+</div>
+<nav class="flex-1 py-8 px-4 space-y-8">
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="code.html"><span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span><span class="font-body-md text-body-md">메인 대시보드</span></a>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">키워드 &amp; SEO</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">경쟁사 모니터링</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">업무 도구 (DT Dashboard)</h3>
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="sales_analysis.html"><span class="material-symbols-outlined mr-3 text-[20px]">bar_chart</span><span class="font-body-md text-body-md">Sales Analysis &amp; Reports</span></a>
+<a class="flex items-center px-4 py-2.5 bg-primary text-on-primary rounded-lg shadow-sm" href="store_analytics.html"><span class="material-symbols-outlined mr-3 text-[20px]">groups</span><span class="font-body-md text-body-md font-semibold">Store &amp; Customer Analytics</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="current_inventory.html"><span class="material-symbols-outlined mr-3 text-[20px]">inventory_2</span><span class="font-body-md text-body-md">Current Inventory &amp; Forecast</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_dispatch.html"><span class="material-symbols-outlined mr-3 text-[20px]">local_shipping</span><span class="font-body-md text-body-md">Store Dispatch</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="material_order.html"><span class="material-symbols-outlined mr-3 text-[20px]">package_2</span><span class="font-body-md text-body-md">Material Order</span></a>
+</div>
+</div>
+</nav>
+</aside>
+<div class="flex-1 flex flex-col overflow-hidden">
+<header class="h-24 bg-surface-container-lowest border-b border-outline-variant hidden md:flex justify-between items-center px-10 shrink-0">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Store &amp; Customer Analytics <span class="text-on-surface-variant text-headline-sm font-normal ml-3 border-l border-outline-variant pl-3">매장 · 고객 분석 (POS)</span></h1>
+<div class="flex items-center space-x-4">
+<span class="text-on-surface-variant font-label-md bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant flex items-center"><span class="w-2 h-2 rounded-full bg-[#1a7f4b] mr-2"></span><span id="dataStamp">POS 내부 데이터</span></span></div>
+</header>
+<main class="flex-1 overflow-y-auto p-6 md:p-10 bg-background">
+<div class="max-w-7xl mx-auto space-y-8">
+
+<!-- 서브탭 -->
+<div class="inline-flex bg-surface-container-low p-1 rounded-xl border border-outline-variant/40">
+<button data-tab="overview" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">개요</button>
+<button data-tab="loyalty" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">리텐션 · 신규</button>
+<button data-tab="timing" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">시간 패턴</button>
+<button data-tab="basket" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">함께 사는 품목</button>
+<button data-tab="rfm" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">고객 세분화</button>
+<button data-tab="cluster" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">매장 유형</button>
+<button data-tab="reseller" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">리셀러 의심</button>
+</div>
+
+<!-- 매장 그룹 필터 (품목·리텐션·리셀러 탭 적용) -->
+<div id="grpBar" class="hidden flex-wrap items-center gap-3 mt-4">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">store</span>
+<span class="font-label-md text-label-md text-on-surface-variant">매장 그룹</span>
+<select id="grpSel" class="bg-surface-container-lowest border border-outline-variant rounded-lg h-9 px-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary"></select>
+<span class="font-label-sm text-label-sm text-on-surface-variant">※ 객단가·히트맵·신규·Waterfall은 전체 기준</span>
+</div>
+
+<!-- ============ 개요 ============ -->
+<section data-panel="overview" class="space-y-8">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">재구매율 (생애)</p>
+<p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="kRetention">–</span><span class="text-body-md text-on-surface-variant">%</span></p>
+<p class="font-label-sm text-on-surface-variant mt-1">전체 기간 2개월+ 구매 회원 비율</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">신규 고객 비율</p>
+<p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="kNew">–</span><span class="text-body-md text-on-surface-variant">%</span></p>
+<p class="font-label-sm text-on-surface-variant mt-1" id="kNewSub">최근 월</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">객단가 (AOV)</p>
+<p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="kAov">–</span><span class="text-body-md text-on-surface-variant">원</span></p>
+<p class="font-label-sm text-on-surface-variant mt-1"><span id="kUpt">–</span>개/영수증</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">리셀러 의심</p>
+<p class="font-headline-lg text-headline-lg font-bold" style="color:#b45309"><span id="kReseller">–</span><span class="text-body-md text-on-surface-variant">명</span></p>
+<p class="font-label-sm text-on-surface-variant mt-1">관찰 <span id="kResellerWatch">–</span>명</p></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Top 10 판매 품목</h3>
+<select id="topSel" class="bg-surface-container-lowest border border-outline-variant rounded-lg h-8 px-2 font-label-md text-label-md focus:outline-none focus:border-primary max-w-[200px]"></select>
+</div>
+<p class="font-label-sm text-on-surface-variant mb-4">최근 12개월 · 판매 수량 기준 (샘플·전시 제외) · 전체/그룹/개별 매장 선택</p>
+<div class="relative" style="height:360px"><canvas id="topChart"></canvas></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">유통 그룹별 성장 기여</h3>
+<p class="font-label-sm text-on-surface-variant mb-4" id="wfNote">전년 동기 대비 매출 증감 (억)</p>
+<div class="relative" style="height:360px"><canvas id="wfChart"></canvas></div>
+</div>
+</div>
+</section>
+
+<!-- ============ 리텐션 · 신규 ============ -->
+<section data-panel="loyalty" class="space-y-8 hidden">
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #b45309; background:#fff4e5">
+<span class="material-symbols-outlined text-[20px]" style="color:#b45309">water_drop</span>
+<p class="font-body-md text-body-md" style="color:#5a2d00" id="leakNote">–</p>
+</div>
+
+<!-- 회차 전환 퍼널 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center justify-between">
+<div class="flex items-center"><span class="material-symbols-outlined mr-3 text-primary">stairs</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">구매 회차 전환 퍼널</h3></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="funnelNote"></span></div>
+<div class="p-6"><div id="funnelBars" class="space-y-3"></div></div>
+<div class="px-6 pb-2"><table class="w-full text-left"><thead><tr class="text-on-surface-variant border-b border-outline-variant/60">
+<th class="py-2 font-label-md text-label-md uppercase tracking-wider">전환</th>
+<th class="py-2 font-label-md text-label-md uppercase tracking-wider text-right">도달 인원</th>
+<th class="py-2 font-label-md text-label-md uppercase tracking-wider text-right">다음 회차</th>
+<th class="py-2 font-label-md text-label-md uppercase tracking-wider text-right">전환율</th>
+<th class="py-2 font-label-md text-label-md uppercase tracking-wider text-right">이탈 인원</th>
+</tr></thead><tbody id="funnelRows" class="divide-y divide-outline-variant/40"></tbody></table></div>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant">같은 날 여러 건은 1회 방문으로 묶었습니다. 이 브랜드는 재구매 간격이 길어(중앙 <span id="funnelGap">–</span>일) 일정 기간 무구매를 '이탈'로 보면 실제로 돌아올 고객까지 제외됩니다. 회차별 전환율이 리텐션의 실제 병목을 보여줍니다.</p>
+</div>
+<div id="funnelInsight"></div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">매장별 재구매율 Top 12</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">회원 100명+ 매장 · 전체 기간 2개월+ 구매 (생애 재구매율)</p>
+<div class="relative" style="height:420px"><canvas id="retChart"></canvas></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">월별 신규 vs 재방문 고객</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">활성 회원 중 신규(최초 구매) 비율 추이</p>
+<div class="relative" style="height:420px"><canvas id="newChart"></canvas></div>
+</div>
+</div>
+
+<!-- 코호트 & LTV -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">12개월 LTV</p>
+<p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="cLtv12">–</span></p>
+<p class="font-label-sm text-on-surface-variant mt-1">첫 구매 후 12개월 누적 지출</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">평균 재구매 주기</p>
+<p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="cCycle">–</span><span class="text-body-md text-on-surface-variant">개월</span></p>
+<p class="font-label-sm text-on-surface-variant mt-1">연속 구매월 간격 중앙값</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">6개월 내 재방문율</p>
+<p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="cM6">–</span><span class="text-body-md text-on-surface-variant">%</span></p>
+<p class="font-label-sm text-on-surface-variant mt-1">첫 구매 후 6개월 내 1회+ 재방문</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">추적 회원</p>
+<p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="cMem">–</span><span class="text-body-md text-on-surface-variant">명</span></p>
+<p class="font-label-sm text-on-surface-variant mt-1">전체 기간 구매 회원</p></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">코호트 리텐션 (분기 가입 코호트 × 경과 개월)</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">각 셀 = 가입 코호트 중 해당 개월차까지 1번이라도 재방문한 누적 비율 · 색이 진할수록 높음 · 회색은 아직 관측 불가</p>
+<div id="cohortHeat" class="overflow-x-auto"></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">회원 1인당 누적 지출 (LTV 곡선)</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">첫 구매 후 경과 개월별 누적 순매출 평균 (관측 가능 회원 기준)</p>
+<div class="relative" style="height:340px"><canvas id="ltvChart"></canvas></div>
+</div>
+<div class="rounded-xl p-5 flex items-start gap-3 self-start" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">insights</span>
+<p class="font-body-md text-body-md" style="color:#001e2f" id="cohortNote">–</p>
+</div>
+</div>
+</section>
+
+<!-- ============ 시간 패턴 ============ -->
+<section data-panel="timing" class="space-y-8 hidden">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">요일 × 시간대 매출 히트맵</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">전체 기간 · 색이 진할수록 매출 집중 (단위 백만원)</p>
+<div id="heatmap" class="overflow-x-auto"></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">객단가(AOV) · 장바구니(UPT) 추이</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">월별 · 영수증 단위</p>
+<div class="relative" style="height:340px"><canvas id="aovChart"></canvas></div>
+</div>
+</section>
+
+<!-- ============ 함께 사는 품목 ============ -->
+<section data-panel="basket" class="space-y-8 hidden">
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">shopping_basket</span>
+<p class="font-body-md text-body-md" style="color:#001e2f">한 영수증에 <b>어떤 상품들이 같이 담기는지</b> 분석합니다(최근 12개월). 카 디퓨저 오일·홀더·필터처럼 원래 세트로 파는 조합은 당연하므로, <b>같은 종류(카테고리)끼리는 묶어서 제외</b>하고 <b>서로 다른 종류가 함께 팔리는 조합</b>만 봅니다. 표의 <b>lift</b>는 "우연히 함께 살 확률 대비 몇 배로 함께 사는가"로, 1이면 우연 수준·1보다 크면 실제로 자주 함께 삽니다. (단종·행사성 오일 퍼퓸 20ml 제외)</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">동시구매율</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="bkAttach">–</span><span class="text-body-md text-on-surface-variant">%</span></p><p class="font-label-sm text-on-surface-variant mt-1">2품목+ 영수증 비율</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">평균 품목수</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="bkAvg">–</span><span class="text-body-md text-on-surface-variant">개</span></p><p class="font-label-sm text-on-surface-variant mt-1">영수증당 (본품 기준)</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">교차 카테고리 조합</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="bkRules">–</span><span class="text-body-md text-on-surface-variant">쌍</span></p><p class="font-label-sm text-on-surface-variant mt-1">다른 타입·동시 50건+</p></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60"><div class="flex items-center"><span class="material-symbols-outlined mr-3 text-primary">category</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">어떤 종류끼리 함께 사나</h3></div>
+<p class="font-label-sm text-on-surface-variant mt-1">서로 다른 상품 종류가 한 영수증에 같이 담긴 횟수 (예: 디퓨저와 향수를 같이 산 영수증 수)</p></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant"><th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider">종류 조합</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">함께 산 영수증</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">lift</th></tr></thead><tbody id="bkTypeRows" class="divide-y divide-outline-variant/60"></tbody></table>
+<p class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant">lift 1 = 우연 수준 · 1보다 작으면 오히려 따로 사는 편(향수는 대개 단품 구매).</p>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#b45309">auto_awesome</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">다른 카테고리 숨은 조합</h3></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant"><th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider">조합 (다른 타입)</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">lift</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">동반율</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">동시</th></tr></thead><tbody id="bkLiftRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+</div>
+<div class="rounded-xl p-5 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">insights</span>
+<p class="font-body-md text-body-md" style="color:#001e2f" id="basketNote">–</p>
+</div>
+</section>
+
+<!-- ============ 고객 세분화 (RFM) ============ -->
+<section data-panel="rfm" class="space-y-8 hidden">
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">groups_2</span>
+<p class="font-body-md text-body-md" style="color:#001e2f">회원을 <b>최근성(R)·구매빈도(F)·누적금액(M)</b>으로 세분화(전체 기간, 기준 <span id="rfmRef">–</span>). 세그먼트별로 다른 마케팅이 필요합니다 — VIP는 유지, <b>이탈위험은 윈백</b>, 활성은 충성 전환.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">총 회원</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="rfmTot">–</span></p><p class="font-label-sm text-on-surface-variant mt-1">누적 매출 <span id="rfmRev">–</span>억</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">VIP·충성 매출</p><p class="font-headline-lg text-headline-lg font-bold" style="color:#1a7f4b"><span id="rfmVip">–</span><span class="text-body-md text-on-surface-variant">%</span></p><p class="font-label-sm text-on-surface-variant mt-1">회원 <span id="rfmVipN">–</span>명</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">이탈위험 (윈백)</p><p class="font-headline-lg text-headline-lg font-bold" style="color:#b45309"><span id="rfmAr">–</span><span class="text-body-md text-on-surface-variant">명</span></p><p class="font-label-sm text-on-surface-variant mt-1">매출 <span id="rfmArRev">–</span>억 기여</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">외국인 매출</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="rfmFor">–</span><span class="text-body-md text-on-surface-variant">%</span></p><p class="font-label-sm text-on-surface-variant mt-1">VIP 전환은 저조</p></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">세그먼트별 매출 · 회원</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">막대=매출(억) · 점=회원수(우측축)</p>
+<div class="relative" style="height:320px"><canvas id="rfmChart"></canvas></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#b45309">campaign</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">이탈위험 윈백 리스트 (고가치 순)</h3></div>
+<div class="max-h-[280px] overflow-y-auto"><table class="w-full text-left"><thead class="sticky top-0"><tr class="bg-surface-container-low text-on-surface-variant"><th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">회원</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-center">마지막</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">구매월</th><th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">누적</th></tr></thead><tbody id="arRows" class="divide-y divide-outline-variant/60"></tbody></table></div>
+<p class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant">회원명 마스킹 · 재구매 이력(F≥2) 있는데 7~12개월 미구매 = 윈백 타겟.</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3 text-primary">table_chart</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">세그먼트 요약</h3></div>
+<div class="overflow-x-auto"><table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant"><th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">세그먼트</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">회원</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">매출비중</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">평균 F</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">평균 R(개월)</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">평균구매</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">외국인</th></tr></thead><tbody id="segRows" class="divide-y divide-outline-variant/60"></tbody></table></div>
+</div>
+<div class="rounded-xl p-5 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">insights</span>
+<p class="font-body-md text-body-md" style="color:#001e2f" id="rfmNote">–</p>
+</div>
+
+<!-- AI 재구매 예측 -->
+<div id="mlWrap" class="space-y-6">
+<div class="flex items-center gap-2 pt-2"><span class="material-symbols-outlined text-primary">smart_toy</span><h3 class="font-headline-md text-headline-md text-on-surface font-bold">AI 재구매 예측</h3></div>
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #4648d4; background:#f0f0ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#4648d4">model_training</span>
+<p class="font-body-md text-body-md" style="color:#1a1a4e">회원의 <b>누적 행동(RFM 이력)</b>으로 향후 6개월 재구매 확률을 예측하는 머신러닝 분류 모델(XGBoost 계열). 기준일까지 학습→이후 재구매로 검증(누수 방지), 현재 시점 스코어링으로 <b>고가치인데 재구매 확률 낮은</b> 윈백 우선 타겟을 뽑습니다.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">모델 성능 (AUC)</p><p class="font-headline-lg text-headline-lg font-bold" style="color:#4648d4"><span id="mlAuc">–</span></p><p class="font-label-sm text-on-surface-variant mt-1">0.5=랜덤·1=완벽</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">상위 10% 리프트</p><p class="font-headline-lg text-headline-lg font-bold" style="color:#4648d4"><span id="mlLift">–</span><span class="text-body-md text-on-surface-variant">배</span></p><p class="font-label-sm text-on-surface-variant mt-1">타겟팅 효율</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">상위 10% 재구매율</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="mlTop">–</span><span class="text-body-md text-on-surface-variant">%</span></p><p class="font-label-sm text-on-surface-variant mt-1">전체 <span id="mlBase">–</span>%</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">스코어링 회원</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="mlN">–</span></p><p class="font-label-sm text-on-surface-variant mt-1">현재 시점 예측</p></div>
+</div>
+<div class="rounded-xl p-4" style="background:#f7f7fc; border:1px solid #e0e0ef">
+<p class="font-body-md text-body-md" style="color:#1a1a4e"><b>AUC란?</b> 재구매한 고객과 안 한 고객을 무작위로 한 명씩 뽑았을 때, 모델이 <b>재구매한 쪽에 더 높은 점수</b>를 줄 확률입니다. 0.5=동전던지기, 1.0=완벽. <b>0.7 이상이면 실무에 쓸 만한 수준</b>이며, 우리 모델은 <b>0.72</b>입니다. "상위 10% 리프트 3.3배"는 모델이 점수 높게 준 상위 10% 고객의 실제 재구매율이 전체 평균의 3.3배라는 뜻 — <b>같은 예산으로 3배 효율적인 타겟팅</b>이 가능합니다.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">고객 이탈위험 포트폴리오</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">재구매 확률 구간별 회원 수 · 막대 위 = 묶인 매출(억)</p>
+<div class="relative" style="height:300px"><canvas id="mlDistChart"></canvas></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">모델 검증 — 예측 순위별 실제 재구매율</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">점수 상위→하위 10분위 · 왼쪽이 높을수록 모델이 잘 맞춘 것</p>
+<div class="relative" style="height:300px"><canvas id="mlGainsChart"></canvas></div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">재구매를 가르는 요인</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">순열 중요도 (AUC 기여)</p>
+<div id="mlFeats" class="space-y-2"></div>
+</div>
+<div class="lg:col-span-3 bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-5 border-b border-outline-variant/60 flex items-center"><span class="material-symbols-outlined mr-3" style="color:#b45309">priority_high</span><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">윈백 우선 타겟 (고가치 × 낮은 재구매확률)</h3></div>
+<div class="max-h-[300px] overflow-y-auto"><table class="w-full text-left"><thead class="sticky top-0"><tr class="bg-surface-container-low text-on-surface-variant"><th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">회원</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">누적</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-center">최근구매</th><th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">재구매확률</th></tr></thead><tbody id="mlRows" class="divide-y divide-outline-variant/60"></tbody></table></div>
+<p class="px-5 py-3 font-label-sm text-label-sm text-on-surface-variant">회원명 마스킹 · 재구매 확률이 낮을수록 이탈 임박 → 개인화 윈백 우선.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============ 매장 유형 (클러스터링) ============ -->
+<section data-panel="cluster" class="space-y-8 hidden">
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">hub</span>
+<p class="font-body-md text-body-md" style="color:#001e2f">매장을 <b>판매 패턴</b>(카테고리 믹스·객단가·장바구니·재구매율)으로 군집화해 조직상 그룹(한빛·새별…)을 넘는 <b>행동 유형</b>을 찾습니다(최근 12개월, 영수증 300건+ 매장). 같은 브랜드라 경계는 부드러우며, 주 구분축은 <b>향수 vs 디퓨저 믹스와 재구매율</b>입니다.</p>
+</div>
+<div id="clCards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1">매장 지도 — 향수 집중도 × 재구매율</h3>
+<p class="font-label-sm text-on-surface-variant mb-4">가로=향수 매출 비중 · 세로=재구매율 · 버블 크기=매출 · 색=유형</p>
+<div class="relative" style="height:420px"><canvas id="clChart"></canvas></div>
+</div>
+<div class="rounded-xl p-5 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">insights</span>
+<p class="font-body-md text-body-md" style="color:#001e2f" id="clNote">–</p>
+</div>
+</section>
+
+<!-- ============ 리셀러 의심 ============ -->
+<section data-panel="reseller" class="space-y-8 hidden">
+<div id="resAlert" class="hidden rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #ba1a1a; background:#ffdad6">
+<span class="material-symbols-outlined text-[22px]" style="color:#ba1a1a">notification_important</span>
+<p class="font-body-md text-body-md font-semibold" style="color:#3d0a08" id="resAlertTxt">–</p>
+</div>
+<div class="rounded-xl p-4 flex items-start gap-3" style="border-left:4px solid #004262; background:#dee8ff">
+<span class="material-symbols-outlined text-[20px]" style="color:#004262">policy</span>
+<p class="font-body-md text-body-md" style="color:#001e2f" id="resNote">–</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">의심 회원</p><p class="font-headline-lg text-headline-lg font-bold" style="color:#b45309"><span id="rSuspect">–</span>명</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">관찰 (대량 1회+)</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="rWatch">–</span>명</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">의심 회원 총 구매</p><p class="font-headline-lg text-headline-lg font-bold text-primary"><span id="rQty">–</span>개</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><p class="font-label-md text-label-md text-on-surface-variant mb-1">집중 매장</p><p class="font-headline-sm text-headline-sm font-bold text-on-surface mt-1" id="rTopStore">–</p></div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60"><h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">리셀러 의심 워치리스트</h3><p class="font-label-sm text-on-surface-variant mt-1">동일 카테고리 9개+ 대량구매를 2회 이상 반복 · 반복횟수 순</p></div>
+<div class="overflow-x-auto"><table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-5 py-3 font-label-md text-label-md uppercase tracking-wider">회원</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider">주력 매장</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">반복</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">개월</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">대량수량</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">총 구매</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider">주력 카테고리</th>
+</tr></thead><tbody id="wlRows" class="divide-y divide-outline-variant/60"></tbody></table></div>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+
+<script>
+const fmt=n=>Number(n).toLocaleString();
+const CFONT={family:'Hanken Grotesk',size:12};
+const DOW=['월','화','수','목','금','토','일'];
+let D={}, charts={};
+function draw(id,cfg){ if(charts[id])charts[id].destroy(); const el=document.getElementById(id); if(el&&typeof Chart!=='undefined')charts[id]=new Chart(el,cfg); }
+
+let gsel='전체';
+let topScope='전체';   // Top10 전용 스코프: 전체 / 그룹명 / 개별 매장명
+const curTop=()=> topScope==='전체' ? D.top10
+  : ((D.top10_by_group&&D.top10_by_group[topScope]) || (D.top10_by_store&&D.top10_by_store[topScope]) || []);
+
+let curTab='overview';
+function activate(tab){ curTab=tab;
+  document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
+  document.querySelectorAll('.tab-btn').forEach(b=>{const on=b.dataset.tab===tab;
+    b.classList.toggle('bg-surface-container-lowest',on);b.classList.toggle('shadow-sm',on);
+    b.classList.toggle('text-primary',on);b.classList.toggle('font-bold',on);b.classList.toggle('text-on-surface-variant',!on);});
+  const gb=document.getElementById('grpBar'), show=(tab==='loyalty'||tab==='reseller');
+  if(gb){ gb.classList.toggle('hidden',!show); gb.classList.toggle('flex',show); }
+  if(tab==='overview'){renderTop();renderWaterfall();}
+  if(tab==='loyalty'){renderFunnel();renderRetention();renderNew();renderCohort();renderLtv();}
+  if(tab==='timing'){renderHeatmap();renderAov();}
+  if(tab==='basket')renderBasket();
+  if(tab==='rfm')renderRfm();
+  if(tab==='cluster')renderCluster();
+  if(tab==='reseller')renderReseller();
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>activate(b.dataset.tab)));
+
+function renderTop(){ const src=curTop(); const t=[...src].reverse();
+  draw('topChart',{type:'bar',data:{labels:t.map(x=>x[0]),datasets:[{data:t.map(x=>x[1]),backgroundColor:'#0f5a82',borderRadius:5}]},
+   options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>{const f=curTop().find(x=>x[0]===c.label);return ` ${fmt(c.raw)}개 · ${fmt(f?f[2]:0)}백만`;}}}},
+    scales:{x:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>fmt(v)}},y:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:11}}}}}}); }
+function renderWaterfall(){ const g=D.waterfall.groups; document.getElementById('wfNote').textContent=D.waterfall.prev_year+' → '+D.waterfall.cur_year+'년 동기('+D.waterfall.months+'개월) 그룹별 매출 증감 (억)';
+  draw('wfChart',{type:'bar',data:{labels:g.map(x=>x[0]),datasets:[{data:g.map(x=>x[3]),
+     backgroundColor:g.map(x=>x[3]>=0?'#1a7f4b':'#ba1a1a'),borderRadius:5}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>` ${c.raw>=0?'+':''}${c.raw}억 (${D.waterfall.prev_year} ${g[c.dataIndex][2]}억 → ${D.waterfall.cur_year} ${g[c.dataIndex][1]}억)`}}},
+    scales:{x:{grid:{display:false},ticks:{font:CFONT}},y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'억'}}}}}); }
+// 재사용 3단 카드 — What(데이터) / So What(인사이트) / Now What(추천 액션)
+function insightCards(what,so,now){ return `<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#5b5f61">database</span><h4 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">What · 데이터</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${what}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#4648d4"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#4648d4">lightbulb</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#4648d4">So What · 인사이트</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${so}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#1a7f4b; background:#f2fbf6"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#1a7f4b">bolt</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#0d3d24">Now What · 추천 액션</h4></div><p class="font-body-md text-body-md leading-relaxed" style="color:#0d3d24">${now}</p></div>
+</div>`; }
+
+// 회차 전환 퍼널 — '이탈'이 정의되지 않는 브랜드라, 회차별 전환율로 병목을 본다
+function renderFunnel(){
+  const f=D.seq_funnel; if(!f||!f.steps||!f.steps.length)return;
+  const S=f.steps, top=S[0][1];
+  document.getElementById('funnelNote').textContent='회원 '+fmt(f.total_members)+'명 · 재구매 간격 중앙 '+f.median_gap+'일';
+  const g=document.getElementById('funnelGap'); if(g)g.textContent=f.median_gap;
+  document.getElementById('funnelBars').innerHTML=S.map(s=>{
+    const w=Math.max(s[1]/top*100,0.6);
+    const c=s[3]<30?'#ba1a1a':s[3]<50?'#b45309':'#1a7f4b';
+    return `<div class="flex items-center gap-3">
+      <span class="font-label-md text-label-md text-on-surface-variant w-12">${s[0]}회차</span>
+      <div class="flex-1 bg-surface-container-low rounded h-7 relative overflow-hidden">
+        <div class="h-full rounded" style="width:${w}%;background:${c}22;border-left:3px solid ${c}"></div>
+        <span class="absolute left-2 top-0 h-7 flex items-center num font-body-md text-body-md text-on-surface">${fmt(s[1])}명</span>
+      </div>
+      <span class="num font-body-md text-body-md font-semibold w-16 text-right" style="color:${c}">${s[3]}%</span></div>`;}).join('');
+  document.getElementById('funnelRows').innerHTML=S.map(s=>`<tr>
+    <td class="py-2 font-body-md text-body-md text-on-surface">${s[0]}회 → ${s[0]+1}회</td>
+    <td class="py-2 num text-right font-body-md text-body-md text-on-surface">${fmt(s[1])}</td>
+    <td class="py-2 num text-right font-body-md text-body-md text-on-surface-variant">${fmt(s[2])}</td>
+    <td class="py-2 num text-right font-body-md text-body-md font-semibold" style="color:${s[3]<30?'#ba1a1a':s[3]<50?'#b45309':'#1a7f4b'}">${s[3]}%</td>
+    <td class="py-2 num text-right font-body-md text-body-md" style="color:#ba1a1a">−${fmt(s[1]-s[2])}</td></tr>`).join('');
+  const el=document.getElementById('funnelInsight'); if(!el)return;
+  const s1=S[0], last=S[S.length-1];
+  const what=`회원 <b>${fmt(f.total_members)}명</b> 중 2회차 도달 <b>${fmt(s1[2])}명(${s1[3]}%)</b>. 회차가 쌓일수록 전환율이 <b>${s1[3]}% → ${last[3]}%</b>로 올라갑니다. 재구매 간격은 중앙 ${f.median_gap}일·75% ${f.p75_gap}일로 깁니다.`;
+  const so=`병목은 <b>1회 → 2회</b> 한 곳입니다. 여기서 <b>${fmt(s1[1]-s1[2])}명</b>이 빠지고, 한 번 넘긴 고객은 이후 전환율이 계속 상승합니다. 신규 획득보다 <b>첫 재구매를 만드는 쪽</b>의 레버가 훨씬 큽니다.`;
+  const now=`1회 구매 고객 <b>${fmt(s1[1]-s1[2])}명</b>을 대상으로 첫 재구매 유도를 설계하세요. 간격 중앙값이 ${f.median_gap}일이므로 구매 직후가 아니라 <b>소진 시점(약 ${Math.round(f.median_gap/30)}개월 후)</b>에 맞춘 접점이 유효합니다. 3회차 이상 고객은 이미 안정적이라 별도 방어가 덜 필요합니다.`;
+  el.innerHTML=insightCards(what,so,now);
+}
+function renderRetention(){ let st=D.retention.stores; if(gsel!=='전체')st=st.filter(x=>x[3]===gsel);
+  const s=[...st].slice(0,12).reverse();
+  draw('retChart',{type:'bar',data:{labels:s.map(x=>x[0]),datasets:[{data:s.map(x=>x[2]),backgroundColor:'#004262',borderRadius:5}]},
+   options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>` 재구매율 ${c.raw}% · 회원 ${fmt(s[c.dataIndex][1])}명`}}},
+    scales:{x:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:11}}}}}}); }
+function renderNew(){ const n=D.newcust; const lab=n.map(x=>x[0].slice(2));
+  draw('newChart',{type:'bar',data:{labels:lab,datasets:[
+    {label:'신규',data:n.map(x=>x[2]),backgroundColor:'#004262',stack:'s',borderRadius:3},
+    {label:'재방문',data:n.map(x=>x[1]-x[2]),backgroundColor:'#c0c7cf',stack:'s',borderRadius:3},
+    {type:'line',label:'신규 비율(%)',data:n.map(x=>x[3]),yAxisID:'y1',borderColor:'#b45309',backgroundColor:'#b45309',tension:.3,pointRadius:2}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:CFONT,boxWidth:12}}},
+    scales:{x:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:9},maxTicksLimit:13,autoSkip:true}},y:{stacked:true,grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>fmt(v)}},
+      y1:{position:'right',min:0,max:100,grid:{display:false},ticks:{font:CFONT,callback:v=>v+'%'}}}}}); }
+function renderCohort(){ const c=D.cohort; if(!c)return;
+  document.getElementById('cLtv12').textContent='₩'+fmt(c.ltv12);
+  document.getElementById('cCycle').textContent=c.cycle;
+  document.getElementById('cM6').textContent=(c.avg[6]!=null?c.avg[6]:'–');
+  document.getElementById('cMem').textContent=fmt(c.members);
+  const A=c.max_age;
+  let mx=1; c.rows.forEach(r=>r.cells.forEach(v=>{if(v!=null&&v<100&&v>mx)mx=v;}));
+  const cs=v=>{ if(v==null)return 'background:#eef1f4;color:#c0c7cf'; if(v>=100)return 'background:rgba(0,66,98,1);color:#fff'; const a=0.12+0.83*Math.pow(v/mx,.7); return `background:rgba(0,66,98,${a.toFixed(3)});color:${a>0.55?'#fff':'#111c2d'}`; };
+  const row=(label,size,cells,bold)=>{ let r=`<tr><td class="font-label-md ${bold?'text-on-surface font-bold':'text-on-surface-variant'}" style="padding-right:8px;font-weight:600;white-space:nowrap">${label}</td><td style="text-align:center;color:#5f6b7a;font-size:11px">${size!=null?fmt(size):''}</td>`;
+    cells.forEach((v,i)=>{ r+=`<td title="${label} · M${i}${v!=null?' · '+v+'%':' · 관측 전'}" style="text-align:center;min-width:30px;height:26px;border-radius:5px;font-size:10px;${cs(v)}">${v!=null?v:''}</td>`; }); return r+'</tr>'; };
+  let html='<table class="num" style="border-collapse:separate;border-spacing:3px"><thead><tr><th></th><th class="font-label-sm text-on-surface-variant" style="padding:2px 6px">회원수</th>';
+  for(let a=0;a<=A;a++)html+=`<th class="font-label-sm text-on-surface-variant" style="font-weight:600;padding:2px 4px">M${a}</th>`;
+  html+='</tr></thead><tbody>';
+  c.rows.forEach(r=>html+=row(r.cohort,r.size,r.cells,false));
+  html+=row('전체 평균',null,c.avg,true);
+  html+='</tbody></table>'; document.getElementById('cohortHeat').innerHTML=html;
+  const m6=c.avg[6]!=null?c.avg[6]+'%':'–', m12=c.avg[12]!=null?c.avg[12]+'%':'–';
+  document.getElementById('cohortNote').innerHTML='<b>코호트 인사이트</b> — 첫 구매 후 회원 1인당 12개월 누적 지출은 <b>₩'+fmt(c.ltv12)+'</b>, 평균 재구매 주기는 <b>'+c.cycle+'개월</b>입니다. 첫 구매 후 6개월 내 재방문은 <b>'+m6+'</b>, 12개월 내 <b>'+m12+'</b>에 그쳐 대부분이 1회성 구매입니다. 재구매 주기(<b>'+Math.round(c.cycle)+'개월</b>) 직전에 리필·신제품 리마인드를 집중하면 재방문을 끌어올릴 여지가 큽니다. ※ '+c.rows[0].cohort+' 코호트는 데이터 시작 이전 기존 고객이 신규로 잡혀(좌측절단) 초기 재방문율이 과대평가될 수 있습니다.';
+}
+function renderLtv(){ const c=D.cohort; if(!c)return; const lab=c.ltv_curve.map((_,i)=>'M'+i);
+  draw('ltvChart',{data:{labels:lab,datasets:[{type:'line',label:'누적 지출(원)',data:c.ltv_curve,borderColor:'#004262',backgroundColor:'rgba(0,66,98,.08)',fill:true,tension:.3,pointRadius:2}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>' ₩'+fmt(x.raw)}}},
+    scales:{x:{grid:{display:false},ticks:{font:CFONT}},y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>fmt(v)}}}}}); }
+function renderHeatmap(){ const h=D.heatmap, hours=h.hours; const wrap=document.getElementById('heatmap');
+  let max=1; h.rows.forEach(r=>r.slice(1).forEach(v=>{if(v>max)max=v;}));
+  const cell=v=>{ const a=v<=0?0:0.12+0.88*Math.pow(v/max,.6); return `background:rgba(0,66,98,${a.toFixed(3)});color:${a>0.55?'#fff':'#111c2d'}`; };
+  let html='<table class="num" style="border-collapse:separate;border-spacing:3px"><thead><tr><th></th>';
+  hours.forEach(hh=>html+=`<th class="font-label-sm text-on-surface-variant" style="font-weight:600;padding:2px 4px">${hh}</th>`);
+  html+='</tr></thead><tbody>';
+  h.rows.forEach(r=>{ html+=`<tr><td class="font-label-md text-on-surface-variant" style="padding-right:8px;font-weight:600">${DOW[r[0]]}</td>`;
+    hours.forEach((hh,i)=>{ const v=r[i+1]; html+=`<td title="${DOW[r[0]]}요일 ${hh}시 · ${fmt(v)}백만" style="text-align:center;min-width:30px;height:26px;border-radius:5px;font-size:10px;${cell(v)}">${v>0?v:''}</td>`; });
+    html+='</tr>'; });
+  html+='</tbody></table>'; wrap.innerHTML=html; }
+function renderAov(){ const a=D.aov; const lab=a.map(x=>x[0].slice(2));
+  draw('aovChart',{data:{labels:lab,datasets:[
+    {type:'line',label:'AOV(원)',data:a.map(x=>x[1]),borderColor:'#004262',backgroundColor:'#004262',tension:.3,pointRadius:2,yAxisID:'y'},
+    {type:'line',label:'UPT(개)',data:a.map(x=>x[2]),borderColor:'#b45309',backgroundColor:'#b45309',tension:.3,pointRadius:2,yAxisID:'y1'}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:CFONT,boxWidth:12}}},
+    scales:{x:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:9},maxTicksLimit:13,autoSkip:true}},y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>fmt(v)}},
+      y1:{position:'right',grid:{display:false},ticks:{font:CFONT}}}}}); }
+function renderBasket(){ const b=D.basket; if(!b)return;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('bkAttach',b.attach_rate); set('bkAvg',b.avg_items); set('bkRules',fmt(b.n_cross));
+  const lc=l=>l>=3?'#1a7f4b':l>=1.5?'#b45309':'#5f6b7a';
+  const tag=t=>`<span class="text-label-sm px-1.5 py-0.5 rounded" style="background:#e5ecf6;color:#004262">${t}</span>`;
+  // 카테고리 간 동시구매
+  document.getElementById('bkTypeRows').innerHTML=(b.type_pairs||[]).map(r=>`<tr>
+    <td class="px-4 py-2.5 font-body-md text-body-md text-on-surface">${r.a} <span class="text-on-surface-variant">↔</span> ${r.b}</td>
+    <td class="px-3 py-2.5 text-right num font-semibold text-on-surface">${fmt(r.cnt)}</td>
+    <td class="px-3 py-2.5 text-right num" style="color:${lc(r.lift)}">${r.lift}</td></tr>`).join('');
+  // 다른 카테고리 숨은 조합
+  document.getElementById('bkLiftRows').innerHTML=(b.cross_rules||[]).map(r=>`<tr>
+    <td class="px-4 py-2.5"><div class="font-body-md text-body-md text-on-surface leading-tight">${tag(r.ta)} ${r.a}</div><div class="font-label-sm text-on-surface-variant leading-tight">↳ ${tag(r.tb)} ${r.b}</div></td>
+    <td class="px-3 py-2.5 text-right num font-semibold" style="color:${lc(r.lift)}">${r.lift}</td>
+    <td class="px-3 py-2.5 text-right num text-on-surface">${r.conf}%</td>
+    <td class="px-3 py-2.5 text-right num text-on-surface-variant">${fmt(r.cnt)}</td></tr>`).join('');
+  const tp=(b.type_pairs||[])[0], gem=(b.cross_rules||[])[0];
+  document.getElementById('basketNote').innerHTML=`<b>장바구니 인사이트</b> — 영수증의 <b>${b.attach_rate}%</b>가 2품목+ 동시구매지만, 대부분 <b>같은 향수 단품 또는 같은 키트(카디퓨저 부품 등)</b>입니다. 카테고리 간으로 보면 <b>${tp?tp.a+'↔'+tp.b+' '+fmt(tp.cnt)+'건':'-'}</b>이 가장 많지만 lift가 낮아(${tp?tp.lift:'–'}) 자연 발생은 약합니다. 진짜 교차 조합은 <b>${gem?gem.a+' + '+gem.b+' (lift '+gem.lift+'배)':''}</b>처럼 <b>같은 향의 다른 타입</b>에 있습니다 → 룸디퓨저+같은 향 태그/미니향수 같은 <b>크로스 카테고리 번들을 기획</b>하면, 자연 발생이 적은 만큼 새 매출 여지가 큽니다.`;
+}
+const SEGC={'VIP·충성':'#1a7f4b','활성':'#004262','이탈위험':'#b45309','일회성 관망':'#9aa0a6','휴면·이탈':'#c0c7cf'};
+function renderRfm(){ const R=D.rfm; if(!R)return;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const vip=R.segments.find(s=>s.name==='VIP·충성');
+  set('rfmRef',R.ref); set('rfmTot',fmt(R.total_members)); set('rfmRev',Math.round(R.total_rev/1e8));
+  set('rfmVip',vip?vip.rev_pct:'–'); set('rfmVipN',vip?fmt(vip.members):'–');
+  set('rfmAr',fmt(R.atrisk_n)); set('rfmArRev',(R.atrisk_rev/1e8).toFixed(1)); set('rfmFor',R.foreign.rev_pct);
+  const seg=R.segments;
+  draw('rfmChart',{data:{labels:seg.map(s=>s.name),datasets:[
+    {type:'bar',label:'매출(억)',data:seg.map(s=>Math.round(s.rev/1e8)),backgroundColor:seg.map(s=>SEGC[s.name]||'#004262'),borderRadius:5,yAxisID:'y'},
+    {type:'scatter',label:'회원수',data:seg.map(s=>s.members),backgroundColor:'#001e2f',pointRadius:5,yAxisID:'y1'}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:CFONT,boxWidth:12}},
+     tooltip:{callbacks:{label:c=>c.datasetIndex===0?' 매출 '+c.raw+'억':' 회원 '+fmt(c.raw)+'명'}}},
+     scales:{x:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:10}}},
+       y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'억'}},
+       y1:{position:'right',grid:{display:false},ticks:{font:CFONT,callback:v=>fmt(v)}}}}});
+  document.getElementById('segRows').innerHTML=seg.map(s=>`<tr>
+    <td class="px-5 py-2.5"><span class="inline-block w-2.5 h-2.5 rounded-full mr-2" style="background:${SEGC[s.name]}"></span>${s.name}</td>
+    <td class="px-3 py-2.5 text-right num">${fmt(s.members)}</td>
+    <td class="px-3 py-2.5 text-right num font-semibold">${s.rev_pct}%</td>
+    <td class="px-3 py-2.5 text-right num">${s.avg_f}</td>
+    <td class="px-3 py-2.5 text-right num">${s.avg_r}</td>
+    <td class="px-3 py-2.5 text-right num">${fmt(Math.round(s.avg_m/1e4))}만</td>
+    <td class="px-3 py-2.5 text-right num text-on-surface-variant">${fmt(s.foreign)}</td></tr>`).join('');
+  document.getElementById('arRows').innerHTML=(R.atrisk||[]).map(a=>`<tr>
+    <td class="px-5 py-2.5 font-body-md text-body-md">${a.name}</td>
+    <td class="px-3 py-2.5 text-center num text-on-surface-variant">${a.last}</td>
+    <td class="px-3 py-2.5 text-right num">${a.f}</td>
+    <td class="px-4 py-2.5 text-right num font-semibold">${fmt(Math.round(a.m/1e4))}만</td></tr>`).join('');
+  const ar=seg.find(s=>s.name==='이탈위험');
+  document.getElementById('rfmNote').innerHTML=`<b>RFM 인사이트</b> — VIP·충성 <b>${vip?fmt(vip.members):''}명(${vip?vip.rev_pct:''}%)</b>이 매출을 지탱합니다. 핵심 기회는 <b>이탈위험 ${fmt(R.atrisk_n)}명</b>(매출 ${(R.atrisk_rev/1e8).toFixed(1)}억·평균 ${ar?Math.round(ar.avg_m/1e4):''}만) — 재구매 이력 있는 고가치인데 뜸해졌으니 <b>개인화 윈백(리마인드·복귀 쿠폰)</b>으로 되살릴 여지가 큽니다. 외국인 회원은 매출 ${R.foreign.rev_pct}%지만 <b>VIP 전환 ${vip&&vip.members?(vip.foreign/vip.members*100).toFixed(1):''}%</b>로 거의 일회성이라, 관광객 온라인 재주문 유도가 별도 과제입니다.`;
+  const M=D.repeat_ml, wrap=document.getElementById('mlWrap');
+  if(!M){ if(wrap)wrap.style.display='none'; return; }
+  if(wrap)wrap.style.display='';
+  set('mlAuc',M.auc); set('mlLift',M.lift10); set('mlTop',M.top10_rate); set('mlBase',M.base_rate); set('mlN',fmt(M.n_scored));
+  const mx=Math.max(...M.features.map(f=>f.imp),0.001);
+  document.getElementById('mlFeats').innerHTML=M.features.map(f=>`<div>
+    <div class="flex justify-between font-label-md text-label-md text-on-surface"><span>${f.name}</span><span class="num text-on-surface-variant">${f.imp}</span></div>
+    <div class="h-2 rounded-full bg-surface-container-high mt-0.5"><div class="h-2 rounded-full" style="width:${Math.round(f.imp/mx*100)}%;background:#4648d4"></div></div></div>`).join('');
+  document.getElementById('mlRows').innerHTML=(M.winback||[]).map(w=>`<tr>
+    <td class="px-5 py-2.5 font-body-md text-body-md">${w.name}</td>
+    <td class="px-3 py-2.5 text-right num font-semibold">${fmt(Math.round(w.m/1e4))}만</td>
+    <td class="px-3 py-2.5 text-center num text-on-surface-variant">${w.recency}일 전</td>
+    <td class="px-3 py-2.5 text-right num font-bold" style="color:${w.prob<20?'#ba1a1a':w.prob<40?'#b45309':'#1a7f4b'}">${w.prob}%</td></tr>`).join('');
+  const DB={'위험':'#ba1a1a','주의':'#b45309','보통':'#c0c7cf','안전':'#1a7f4b'}, dist=M.dist||[];
+  draw('mlDistChart',{type:'bar',data:{labels:dist.map(d=>`${d.band} ${d.lo}-${d.hi}%`),datasets:[{data:dist.map(d=>d.members),backgroundColor:dist.map(d=>DB[d.band]||'#004262'),borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>` 회원 ${fmt(c.raw)}명 · 매출 ${Math.round(dist[c.dataIndex].rev/1e8)}억`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:10}}},y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>fmt(v)}}}}});
+  const gains=M.gains||[];
+  draw('mlGainsChart',{type:'bar',data:{labels:gains.map(g=>g.decile+'분위'),datasets:[{data:gains.map(g=>g.actual),backgroundColor:'#4648d4',borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>` 실제 재구매율 ${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{family:'Hanken Grotesk',size:9}}},y:{grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'%'},beginAtZero:true}}}});
+}
+const CLC={'향수 특화점':'#6d2e46','디퓨저 단골점':'#1a7f4b','신규·유동점':'#b45309','종합 주력점':'#004262'};
+function renderCluster(){ const C=D.clusters;
+  const cc=document.getElementById('clCards');
+  if(!C){ if(cc)cc.innerHTML='<p class="font-body-md text-on-surface-variant">클러스터 데이터가 없습니다.</p>'; return; }
+  cc.innerHTML=C.profiles.map(p=>{ const c=CLC[p.name]||'#004262';
+    const mix=Object.entries(p.mix).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`${k} ${v}%`).join(' · ');
+    return `<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5" style="border-top:3px solid ${c}">
+      <div class="flex items-center gap-2 mb-2"><span class="w-2.5 h-2.5 rounded-full" style="background:${c}"></span><h4 class="font-headline-sm text-headline-sm font-bold text-on-surface">${p.name}</h4></div>
+      <p class="font-label-md text-label-md text-on-surface-variant mb-2">${p.n}개 매장 · 매출 ${Math.round(p.net/1e8)}억</p>
+      <div class="space-y-1 font-body-md text-body-md text-on-surface"><div>객단가 <b>${fmt(Math.round(p.aov/1e4))}만</b> · 장바구니 <b>${p.upt}</b> · 재구매 <b>${p.repeat}%</b></div>
+      <div class="text-on-surface-variant font-label-md">${mix}</div></div>
+      <p class="font-label-sm text-on-surface-variant mt-2 leading-tight">예: ${p.stores.join(', ')}</p></div>`;
+  }).join('');
+  const byName={}; C.stores.forEach(s=>{(byName[s.name]=byName[s.name]||[]).push(s);});
+  const ds=Object.entries(byName).map(([nm,arr])=>({label:nm,
+    data:arr.map(s=>({x:s.perfume,y:s.repeat,r:Math.max(4,Math.sqrt(s.net/1e8)*3),nm:s.store,net:s.net})),
+    backgroundColor:(CLC[nm]||'#004262')+'cc',borderColor:CLC[nm]||'#004262',borderWidth:1}));
+  draw('clChart',{type:'bubble',data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:CFONT,boxWidth:10}},tooltip:{callbacks:{label:c=>{const d=c.raw;return ` ${d.nm}: 향수 ${d.x}% · 재구매 ${d.y}% · 매출 ${Math.round(d.net/1e8)}억`;}}}},
+    scales:{x:{title:{display:true,text:'향수 매출 비중(%)',font:CFONT},grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'%'}},
+      y:{title:{display:true,text:'재구매율(%)',font:CFONT},grid:{color:'#eef'},ticks:{font:CFONT,callback:v=>v+'%'}}}}});
+  const big=C.profiles[0], loyal=C.profiles.find(p=>p.name.includes('단골')), churn=C.profiles.find(p=>p.name.includes('유동'));
+  document.getElementById('clNote').innerHTML=`<b>매장 유형 인사이트</b> — 매출 핵심은 <b>${big.name}</b>(${big.n}개·${Math.round(big.net/1e8)}억). `+(loyal?`<b>${loyal.name}</b>(재구매 ${loyal.repeat}%)의 디퓨저·다양구매 운영을 다른 유형에 이식하면 리텐션 여지가 큽니다. `:'')+(churn?`반면 <b>${churn.name}</b>(재구매 ${churn.repeat}%)은 유동·신규 위주라 첫 구매→재방문 전환(멤버십·리마인드)이 시급합니다. `:'')+`유형이 조직 그룹과 무관하게 섞여 있어, 그룹이 아닌 <b>유형별 상품·프로모션 전략</b>이 효과적입니다.`;
+}
+function renderReseller(){ const r=D.reseller;
+  let wl=r.watchlist; if(gsel!=='전체')wl=wl.filter(w=>w[9]===gsel);
+  const suspect=wl.length, high=wl.filter(w=>w[10]).length, qty=wl.reduce((a,w)=>a+w[5],0);
+  document.getElementById('rSuspect').textContent=fmt(suspect);
+  document.getElementById('rWatch').textContent=fmt(r.watch_once);
+  document.getElementById('rQty').textContent=fmt(qty);
+  document.getElementById('rTopStore').textContent=r.store_dist.length?r.store_dist[0][0]+' 외':'-';
+  const alert=document.getElementById('resAlert');
+  if(high>0){ alert.classList.remove('hidden'); alert.classList.add('flex');
+    document.getElementById('resAlertTxt').innerHTML='고위험 리셀러 <b>'+high+'명</b> 감지 — 반복 3회+ 또는 대량 100개+. 아래 🚩 표시 회원을 우선 확인하세요'+(gsel!=='전체'?' ('+gsel+')':'')+'.';
+  } else { alert.classList.add('hidden'); alert.classList.remove('flex'); }
+  const scope=gsel==='전체'?('회원 '+fmt(r.total_members)+'명 중 '):('['+gsel+'] ');
+  document.getElementById('resNote').innerHTML='정의: <b>한 영수증에서 동일 카테고리 9개+ 대량구매를 2회 이상 주기적으로 반복</b>하는 회원 (외국인 여부 무관). 최근 12개월 · '+scope+'<b>'+fmt(suspect)+'명</b> 의심'+(gsel==='전체'?'('+r.suspect_pct+'%)':'')+'. 동일인 복수계정(연락처 기준) <b>'+(r.dup_persons||0)+'건</b> — 표시명 뒤 숫자는 연락처 끝 4자리(동명이인 구분). 행을 클릭하면 구매 상세가 열립니다.';
+  document.getElementById('wlRows').innerHTML=wl.map((w,i)=>{
+    const det=w[11]||[];
+    const detHtml = det.length ? `<div class="max-h-72 overflow-y-auto"><table class="w-full text-left">
+      <thead><tr class="text-on-surface-variant"><th class="px-5 py-1.5 font-label-sm text-label-sm uppercase tracking-wider">구매일</th><th class="px-4 py-1.5 font-label-sm text-label-sm uppercase tracking-wider">품목</th><th class="px-4 py-1.5 font-label-sm text-label-sm uppercase tracking-wider text-right">수량</th></tr></thead>
+      <tbody>${det.map(d=>{const q=d[2],ret=q<0;return `<tr class="border-t border-outline-variant/40${ret?' opacity-70':''}"><td class="px-5 py-1.5 num font-body-md text-body-md text-on-surface-variant whitespace-nowrap">${d[0]}</td><td class="px-4 py-1.5 font-body-md text-body-md ${ret?'text-on-surface-variant':'text-on-surface'}">${d[1]}${ret?' <span class="font-label-sm">(반품)</span>':''}</td><td class="px-4 py-1.5 num text-right font-body-md text-body-md font-bold ${ret?'text-on-surface-variant':(q>=9?'text-error':'text-on-surface')}">${ret?'−'+fmt(-q):fmt(q)}개</td></tr>`;}).join('')}</tbody></table></div>` : '<p class="px-5 py-3 font-body-md text-body-md text-on-surface-variant">상세 없음</p>';
+    return `<tr class="cursor-pointer hover:bg-surface-container-low transition-colors" onclick="toggleWl(${i})"${w[10]?' style="background:#fff4f2"':''}>
+    <td class="px-5 py-2.5 font-body-md text-body-md font-semibold text-on-surface"><span class="material-symbols-outlined text-[16px] align-middle text-outline mr-1" id="wlChev${i}">chevron_right</span>${w[10]?'🚩 ':''}${w[0]}</td>
+    <td class="px-4 py-2.5 font-body-md text-body-md text-on-surface-variant">${w[1]}</td>
+    <td class="px-4 py-2.5 num text-right font-body-md text-body-md font-bold ${w[10]?'text-error':'text-primary'}">${w[2]}회</td>
+    <td class="px-4 py-2.5 num text-right font-body-md text-body-md text-on-surface-variant">${w[3]}</td>
+    <td class="px-4 py-2.5 num text-right font-body-md text-body-md text-on-surface">${fmt(w[4])}</td>
+    <td class="px-4 py-2.5 num text-right font-body-md text-body-md text-on-surface">${fmt(w[5])}</td>
+    <td class="px-4 py-2.5 font-body-md text-body-md text-on-surface-variant">${w[6]}</td></tr>
+    <tr id="wlDet${i}" class="hidden"><td colspan="7" class="p-0 bg-surface-container-low">${detHtml}</td></tr>`;
+  }).join("")
+    ||'<tr><td colspan="7" class="px-5 py-6 text-center font-body-md text-on-surface-variant">해당 그룹에 의심 회원이 없습니다.</td></tr>'; }
+function toggleWl(i){ const d=document.getElementById('wlDet'+i), c=document.getElementById('wlChev'+i);
+  if(!d)return; const hidden=d.classList.toggle('hidden'); if(c)c.textContent=hidden?'chevron_right':'expand_more'; }
+
+fetch('data/pos.json?_='+Date.now()).then(r=>r.json()).then(d=>{
+  D=d;
+  const ret=d.retention.overall, nc=d.newcust[d.newcust.length-1], av=d.aov[d.aov.length-1], rs=d.reseller;
+  document.getElementById('kRetention').textContent=ret;
+  document.getElementById('kNew').textContent=nc[3]; document.getElementById('kNewSub').textContent=nc[0]+' 기준';
+  document.getElementById('kAov').textContent=fmt(av[1]); document.getElementById('kUpt').textContent=av[2];
+  document.getElementById('kReseller').textContent=fmt(rs.suspect); document.getElementById('kResellerWatch').textContent=fmt(rs.watch_once);
+  const leak=document.getElementById('leakNote');
+  if(leak)leak.innerHTML='<b>"새는 바구니" 주의</b> — 최근 월 신규 고객 비율 <b>'+nc[3]+'%</b>인데 생애 재구매율(전체 기간 2개월+ 구매)은 <b>'+ret+'%</b>. 신규 유입은 많으나 재방문이 낮습니다. 재구매율 상위 매장의 운영 방식을 벤치마킹해 리텐션을 끌어올릴 여지가 큽니다.';
+  const st=document.getElementById('dataStamp'); if(st&&d.meta)st.textContent='POS 내부 데이터 · '+d.meta.win_start+'~'+d.meta.max_ym;
+  // 매장 그룹 필터 채우기 (매출 큰 순 = Waterfall 순서)
+  const gsel_el=document.getElementById('grpSel');
+  const order=(d.waterfall.groups||[]).map(g=>g[0]).filter(g=>d.top10_by_group&&d.top10_by_group[g]);
+  gsel_el.innerHTML='<option value="전체">전체</option>'+order.map(g=>`<option value="${g}">${g}</option>`).join('');
+  gsel_el.addEventListener('change',e=>{ gsel=e.target.value;
+    if(curTab==='loyalty')renderRetention();
+    if(curTab==='reseller')renderReseller(); });
+  // Top10 전용 셀렉터 (전체 → 그룹 → 개별 매장 optgroup)
+  const tsel=document.getElementById('topSel'), sbg=d.stores_by_group||{};
+  let topts='<option value="전체">전체</option>';
+  (d.waterfall.groups||[]).forEach(g=>{ const gn=g[0]; if(!sbg[gn])return;
+    topts+=`<optgroup label="${gn}"><option value="${gn}">${gn} 전체</option>`
+      +sbg[gn].map(s=>`<option value="${s}">${s}</option>`).join('')+'</optgroup>'; });
+  tsel.innerHTML=topts;
+  tsel.addEventListener('change',e=>{ topScope=e.target.value; if(curTab==='overview')renderTop(); });
+  activate('overview');
+}).catch(e=>console.error('pos.json 로드 실패',e));
+</script>
+</body></html>

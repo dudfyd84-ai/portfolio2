@@ -1,0 +1,264 @@
+<!-- Current Inventory & Forecast — 완제품 소진 예측 + 악성재고 + AI 수요예측 핵심 + 카테고리별 상품 예측, DESIGN1 톤 -->
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LUMEN SCENT - Material Order</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = { darkMode:"class", theme:{ extend:{
+    "colors": {
+      "on-surface":"#111c2d","on-background":"#111c2d","on-surface-variant":"#41484e",
+      "secondary-container":"#dde0e2","secondary":"#5b5f61","surface":"#f9f9ff",
+      "surface-tint":"#20648c","error-container":"#ffdad6","error":"#ba1a1a",
+      "surface-bright":"#f9f9ff","outline":"#71787f","on-primary":"#ffffff",
+      "on-primary-container":"#95d0fe","surface-container":"#e7eeff","background":"#f9f9ff",
+      "tertiary":"#2f3f54","on-secondary-container":"#5f6365","primary":"#004262",
+      "surface-variant":"#d8e3fb","surface-dim":"#cfdaf2","surface-container-low":"#f0f3ff",
+      "outline-variant":"#c0c7cf","surface-container-high":"#dee8ff","primary-container":"#0f5a82",
+      "inverse-on-surface":"#ecf1ff","surface-container-lowest":"#ffffff","on-error":"#ffffff",
+      "inverse-primary":"#92cdfb","on-secondary":"#ffffff","surface-container-highest":"#d8e3fb",
+      "primary-fixed":"#cae6ff","success":"#1a7f4b","warning":"#b45309"
+    },
+    "borderRadius":{ "DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px" },
+    "fontFamily":{ "headline-md":["Hanken Grotesk"],"headline-lg":["Hanken Grotesk"],"headline-sm":["Hanken Grotesk"],
+      "body-md":["Hanken Grotesk"],"body-lg":["Hanken Grotesk"],"label-md":["Hanken Grotesk"],"label-sm":["Hanken Grotesk"] },
+    "fontSize":{
+      "headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],
+      "headline-lg":["24px",{"lineHeight":"32px","fontWeight":"700"}],
+      "headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],
+      "body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],
+      "body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],
+      "label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],
+      "label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}]
+    }
+  } } }
+</script>
+<style> body{font-family:'Hanken Grotesk',sans-serif;} .num{font-variant-numeric:tabular-nums;} </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden">
+<aside class="w-64 bg-surface-container-lowest border-r border-outline-variant flex flex-col hidden md:flex shrink-0 overflow-y-auto">
+<div class="h-24 flex items-center px-6 border-b border-outline-variant shrink-0">
+<a href="code.html" class="font-headline-md text-headline-md text-primary font-bold tracking-tight hover:opacity-80 transition-opacity cursor-pointer">LUMEN SCENT</a>
+</div>
+<nav class="flex-1 py-8 px-4 space-y-8">
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="code.html"><span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span><span class="font-body-md text-body-md">메인 대시보드</span></a>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">키워드 &amp; SEO</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">경쟁사 모니터링</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">업무 도구 (DT Dashboard)</h3>
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="sales_analysis.html"><span class="material-symbols-outlined mr-3 text-[20px]">bar_chart</span><span class="font-body-md text-body-md">Sales Analysis &amp; Reports</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_analytics.html"><span class="material-symbols-outlined mr-3 text-[20px]">groups</span><span class="font-body-md text-body-md">Store &amp; Customer Analytics</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="current_inventory.html"><span class="material-symbols-outlined mr-3 text-[20px]">inventory_2</span><span class="font-body-md text-body-md">Current Inventory &amp; Forecast</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_dispatch.html"><span class="material-symbols-outlined mr-3 text-[20px]">local_shipping</span><span class="font-body-md text-body-md font-semibold">Store Dispatch</span></a>
+<a class="flex items-center px-4 py-2.5 bg-primary text-on-primary rounded-lg shadow-sm" href="material_order.html"><span class="material-symbols-outlined mr-3 text-[20px]">package_2</span><span class="font-body-md text-body-md font-semibold">Material Order</span></a>
+</div>
+</div>
+</nav>
+</aside>
+<div class="flex-1 flex flex-col overflow-hidden">
+<header class="h-24 bg-surface-container-lowest border-b border-outline-variant hidden md:flex justify-between items-center px-10 shrink-0">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Material Order <span class="text-on-surface-variant text-headline-sm font-normal ml-3 border-l border-outline-variant pl-3">매장 재고 · 출고 계획</span></h1>
+<div class="flex items-center space-x-4">
+<span class="text-on-surface-variant font-label-md bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant flex items-center"><span class="w-2 h-2 rounded-full bg-[#1a7f4b] mr-2"></span><span id="dataStamp">–</span></span></div>
+</header>
+<main class="flex-1 overflow-y-auto p-6 md:p-10 bg-background">
+<div class="max-w-7xl mx-auto space-y-8">
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">발주 시점 초과</p>
+<p class="num text-[28px] leading-tight font-bold" id="kpiOver" style="color:#ba1a1a">–</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">리드타임 역산 결과 이미 늦음</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">30일 내 발주</p>
+<p class="num text-[28px] leading-tight font-bold" id="kpiSoon" style="color:#b45309">–</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">이달 안에 결정 필요</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">순소요 합계</p>
+<p class="num text-[28px] leading-tight font-bold text-primary" id="kpiNeed">–</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">현재고 차감 후 부족분</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">예측 지평</p>
+<p class="num text-[28px] leading-tight font-bold text-on-surface" id="kpiSpan">–</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2" id="kpiSpanSub">–</p></div>
+</div>
+
+<div id="matInsight"></div>
+
+<div class="inline-flex bg-surface-container-low p-1 rounded-xl border border-outline-variant/40" id="tabStrip">
+<button data-tab="order" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">발주 계획</button>
+<button data-tab="month" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">월별 소요</button>
+<button data-tab="gap" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">계산 제외</button>
+</div>
+
+<section data-panel="order" class="space-y-6">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center justify-between flex-wrap gap-3">
+<div class="flex items-center"><span class="material-symbols-outlined mr-3 text-primary">inventory</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">부자재 발주 데드라인</h3></div>
+<div class="flex items-center gap-3">
+<label class="flex items-center gap-1 font-body-md text-body-md text-on-surface-variant"><input type="checkbox" id="onlyUrgent" class="rounded" checked> 발주 필요만</label>
+<a id="notionLink" href="#" data-demo="notion" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3 h-10 rounded-lg border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary font-body-md text-body-md transition-colors whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[18px]">open_in_new</span>노션에서 보기</a>
+</div>
+</div>
+<div class="max-h-[620px] overflow-y-auto">
+<table class="w-full text-left min-w-[900px]"><thead class="sticky top-0 z-10"><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">자재</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">현재고</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">리드타임</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">지평 소요</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">순소요</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider">소진 예정</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider">발주 데드라인</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">D-Day</th>
+</tr></thead><tbody id="ordRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant"><b>발주 데드라인</b> = 소진예정일 − 품목별 리드타임 − 버퍼 <span id="capBuf">7</span>일. <b>지평 소요</b>는 수요예측을 BOM으로 전개한 값이며, 월차별 <b>과대예측 편향을 보정</b>했습니다(<span id="capBias">–</span>). MOQ·미입고 발주(Open PO)는 아직 반영되지 않아 <b>순소요는 하한</b>으로 보세요.</p>
+</div>
+</section>
+
+<section data-panel="month" class="space-y-6 hidden">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center">
+<span class="material-symbols-outlined mr-3 text-primary">calendar_month</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">월별 소요 전개</h3></div>
+<div class="max-h-[620px] overflow-y-auto">
+<table class="w-full text-left min-w-[760px]"><thead class="sticky top-0 z-10"><tr class="bg-surface-container-low text-on-surface-variant" id="monHead">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">자재</th>
+</tr></thead><tbody id="monRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant">당월은 <b>잔여 일수</b>만 소요로 잡습니다. 뒤쪽 월일수록 예측 오차가 커지므로(<span id="capWape">–</span>) 마지막 달은 <b>참고값</b>으로 쓰세요.</p>
+</div>
+</section>
+
+<section data-panel="gap" class="space-y-6 hidden">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center">
+<span class="material-symbols-outlined mr-3" style="color:#b45309">report</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">계산에서 빠진 항목</h3></div>
+<div class="p-6 space-y-6">
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold mb-2">BOM에 없는 완제품 <span id="gapN1" class="num">–</span>종</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-3">이 제품들의 수요는 부자재 소요에 반영되지 않았습니다. 사입품이면 정상이고, 자사 생산품이면 BOM 등록이 필요합니다.</p>
+<div id="gapList1" class="flex flex-wrap gap-2"></div>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold mb-2">수요가 잡히지 않은 부자재 <span id="gapN2" class="num">–</span>종</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">재고는 있으나 BOM 수요가 0입니다. 단종 제품 전용 자재이거나 자재명이 BOM과 어긋난 경우입니다.</p>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+<script>
+const fmt=n=>Number(n).toLocaleString();
+const f1=n=>Number(n).toLocaleString(undefined,{maximumFractionDigits:1});
+let D=null, ROWS=[], curTab='order';
+
+function insightCards(what,so,now){ return `<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#5b5f61">database</span><h4 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">What · 데이터</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${what}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#4648d4"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#4648d4">lightbulb</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#4648d4">So What · 인사이트</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${so}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#1a7f4b; background:#f2fbf6"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#1a7f4b">bolt</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#0d3d24">Now What · 추천 액션</h4></div><p class="font-body-md text-body-md leading-relaxed" style="color:#0d3d24">${now}</p></div>
+</div>`; }
+
+// ROW = [자재,코드,재고,리드타임,지평소요,보정전소요,소진예정,데드라인,D-Day,순소요,상태,uom,월별]
+function ddBadge(d){
+  if(d===null||d===undefined) return '<span class="font-label-sm text-on-surface-variant">—</span>';
+  const c = d<0 ? 'bg-[#ffe4e6] text-[#be123c]' : d<=30 ? 'bg-[#fef3c7] text-[#b45309]' : 'bg-surface-container-low text-on-surface-variant';
+  return `<span class="num inline-flex items-center justify-center px-2.5 h-7 rounded-lg font-label-sm ${c}">${d<0?d+'일 지남':'D-'+d}</span>`;
+}
+
+function renderOrder(){
+  const only=document.getElementById('onlyUrgent').checked;
+  let rows=ROWS.filter(r=>r[8]!==null);
+  if(only) rows=rows.filter(r=>r[8]<=30);
+  rows=rows.slice().sort((a,b)=>a[8]-b[8]);
+  document.getElementById('ordRows').innerHTML=rows.map(r=>`<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md font-semibold text-on-surface">${r[0]}${r[11]?`<span class="ml-1.5 font-label-sm text-on-surface-variant">(${r[11]})</span>`:''}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface">${r[2]===null?'—':f1(r[2])}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${r[3]===null?'—':r[3]+'일'}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${f1(r[4])}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md font-bold" style="color:#004262">${r[9]===null?'—':f1(r[9])}</td>
+    <td class="px-3 py-3 font-body-md text-body-md text-on-surface-variant">${r[6]||'—'}</td>
+    <td class="px-3 py-3 font-body-md text-body-md text-on-surface">${r[7]||'—'}</td>
+    <td class="px-4 py-3 text-right">${ddBadge(r[8])}</td></tr>`).join('')
+    || '<tr><td colspan="8" class="px-6 py-6 text-center font-body-md text-on-surface-variant">해당 조건의 자재가 없습니다.</td></tr>';
+}
+
+function renderMonth(){
+  const ms=D.meta.months;
+  document.getElementById('monHead').innerHTML='<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">자재</th>'
+    + ms.map((m,i)=>`<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">${m}${i===ms.length-1?' <span style="color:#b45309">참고</span>':''}</th>`).join('')
+    + '<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">합계</th>';
+  const rows=ROWS.filter(r=>r[4]>0).slice().sort((a,b)=>b[4]-a[4]);
+  document.getElementById('monRows').innerHTML=rows.map(r=>{
+    const mo=r[12]||{};
+    return `<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md font-semibold text-on-surface">${r[0]}${r[11]?`<span class="ml-1.5 font-label-sm text-on-surface-variant">(${r[11]})</span>`:''}</td>`
+    + ms.map(m=>`<td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${mo[m]?f1(mo[m]):'—'}</td>`).join('')
+    + `<td class="px-4 py-3 num text-right font-body-md text-body-md font-bold" style="color:#004262">${f1(r[4])}</td></tr>`;
+  }).join('');
+}
+
+function renderGap(){
+  const u=D.UNMATCHED||[];
+  document.getElementById('gapN1').textContent=u.length;
+  document.getElementById('gapList1').innerHTML=u.map(x=>`<span class="inline-flex items-center px-3 h-7 rounded-lg font-label-sm bg-surface-container-low text-on-surface-variant">${x}</span>`).join('');
+  document.getElementById('gapN2').textContent=ROWS.filter(r=>r[10]==='수요없음').length;
+}
+
+function activate(tab){ curTab=tab;
+  document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
+  document.querySelectorAll('.tab-btn').forEach(b=>{const on=b.dataset.tab===tab;
+    b.classList.toggle('bg-surface-container-lowest',on);b.classList.toggle('shadow-sm',on);
+    b.classList.toggle('text-primary',on);b.classList.toggle('font-bold',on);b.classList.toggle('text-on-surface-variant',!on);});
+  if(tab==='month')renderMonth();
+  if(tab==='gap')renderGap();
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>activate(b.dataset.tab)));
+document.getElementById('onlyUrgent').addEventListener('change',renderOrder);
+activate('order');
+
+fetch('data/material_order.json?_='+Date.now()).then(r=>r.json()).then(d=>{
+  D=d; ROWS=d.ROWS||[];
+  const m=d.meta, set=(id,v)=>{const e=document.getElementById(id); if(e)e.textContent=v;};
+  set('kpiOver',m.n_over); set('kpiSoon',m.n_soon);
+  set('kpiNeed',fmt(Math.round(m.need_total)));
+  set('kpiSpan',m.months.length+'개월');
+  set('kpiSpanSub',m.months[0]+' ~ '+m.months[m.months.length-1]);
+  set('capBuf',m.buffer_days);
+  const n=m.months.length;
+  const bias=Object.entries(m.bias).filter(([k])=>+k>=1&&+k<=n).map(([k,v])=>'M+'+k+' ÷'+v).join(' · ');
+  set('capBias',bias||'보정 없음');
+  set('capWape','M+1 ±'+Math.round(m.wape['1']*100)+'% → M+'+n+' ±'+Math.round((m.wape[String(n)]||0.22)*100)+'%');
+  set('dataStamp','기준 '+m.today+' · 예측 '+m.months.length+'개월');
+  renderOrder();
+  const over=ROWS.filter(r=>r[8]!==null&&r[8]<0);
+  const top=over.slice().sort((a,b)=>a[8]-b[8])[0];
+  const frag=over.filter(r=>r[3]>=90).length;
+  document.getElementById('matInsight').innerHTML=insightCards(
+    `수요예측 <b>${m.matched_products}종</b>(전체 ${m.fc_products}종 중)을 BOM으로 전개해 부자재 <b>${m.n_demand}종</b>의 소요를 산출했습니다. 발주 데드라인이 잡힌 <b>${m.n_deadline}종</b> 중 <b>${m.n_over}종</b>이 이미 시점을 넘겼고, ${m.n_soon}종이 30일 내입니다.`,
+    over.length
+      ? `<b>${m.n_over}종의 발주 시점이 지났습니다.</b>${top?` 가장 급한 <b>${top[0]}</b>은 ${Math.abs(top[8])}일 초과입니다.`:''} 이 중 리드타임 90일 이상 향료가 <b>${frag}종</b>이라, 지금 발주해도 3개월 뒤 입고됩니다.`
+      : `현재 발주 시점을 넘긴 자재가 없습니다. 30일 내 결정이 필요한 ${m.n_soon}종만 관리하면 됩니다.`,
+    `<b>초과분부터 즉시 발주</b>하고, 리드타임이 긴 향료를 우선하세요. MOQ·미입고 발주가 아직 반영되지 않아 <b>순소요는 하한</b>입니다 — 실제 발주량은 MOQ 확정 후 재계산됩니다.`);
+}).catch(e=>console.error('material_order.json 로드 실패',e));
+</script>
+</body></html>

@@ -1,0 +1,314 @@
+<!-- Current Inventory & Forecast — 완제품 소진 예측 + 악성재고 + AI 수요예측 핵심 + 카테고리별 상품 예측, DESIGN1 톤 -->
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LUMEN SCENT - Store Dispatch</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = { darkMode:"class", theme:{ extend:{
+    "colors": {
+      "on-surface":"#111c2d","on-background":"#111c2d","on-surface-variant":"#41484e",
+      "secondary-container":"#dde0e2","secondary":"#5b5f61","surface":"#f9f9ff",
+      "surface-tint":"#20648c","error-container":"#ffdad6","error":"#ba1a1a",
+      "surface-bright":"#f9f9ff","outline":"#71787f","on-primary":"#ffffff",
+      "on-primary-container":"#95d0fe","surface-container":"#e7eeff","background":"#f9f9ff",
+      "tertiary":"#2f3f54","on-secondary-container":"#5f6365","primary":"#004262",
+      "surface-variant":"#d8e3fb","surface-dim":"#cfdaf2","surface-container-low":"#f0f3ff",
+      "outline-variant":"#c0c7cf","surface-container-high":"#dee8ff","primary-container":"#0f5a82",
+      "inverse-on-surface":"#ecf1ff","surface-container-lowest":"#ffffff","on-error":"#ffffff",
+      "inverse-primary":"#92cdfb","on-secondary":"#ffffff","surface-container-highest":"#d8e3fb",
+      "primary-fixed":"#cae6ff","success":"#1a7f4b","warning":"#b45309"
+    },
+    "borderRadius":{ "DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px" },
+    "fontFamily":{ "headline-md":["Hanken Grotesk"],"headline-lg":["Hanken Grotesk"],"headline-sm":["Hanken Grotesk"],
+      "body-md":["Hanken Grotesk"],"body-lg":["Hanken Grotesk"],"label-md":["Hanken Grotesk"],"label-sm":["Hanken Grotesk"] },
+    "fontSize":{
+      "headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],
+      "headline-lg":["24px",{"lineHeight":"32px","fontWeight":"700"}],
+      "headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],
+      "body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],
+      "body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],
+      "label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],
+      "label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}]
+    }
+  } } }
+</script>
+<style> body{font-family:'Hanken Grotesk',sans-serif;} .num{font-variant-numeric:tabular-nums;} </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden">
+<aside class="w-64 bg-surface-container-lowest border-r border-outline-variant flex flex-col hidden md:flex shrink-0 overflow-y-auto">
+<div class="h-24 flex items-center px-6 border-b border-outline-variant shrink-0">
+<a href="code.html" class="font-headline-md text-headline-md text-primary font-bold tracking-tight hover:opacity-80 transition-opacity cursor-pointer">LUMEN SCENT</a>
+</div>
+<nav class="flex-1 py-8 px-4 space-y-8">
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="code.html"><span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span><span class="font-body-md text-body-md">메인 대시보드</span></a>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">키워드 &amp; SEO</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">경쟁사 모니터링</h3>
+<div class="space-y-1">
+</div>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3 px-4">업무 도구 (DT Dashboard)</h3>
+<div class="space-y-1">
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="sales_analysis.html"><span class="material-symbols-outlined mr-3 text-[20px]">bar_chart</span><span class="font-body-md text-body-md">Sales Analysis &amp; Reports</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="store_analytics.html"><span class="material-symbols-outlined mr-3 text-[20px]">groups</span><span class="font-body-md text-body-md">Store &amp; Customer Analytics</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="current_inventory.html"><span class="material-symbols-outlined mr-3 text-[20px]">inventory_2</span><span class="font-body-md text-body-md">Current Inventory &amp; Forecast</span></a>
+<a class="flex items-center px-4 py-2.5 bg-primary text-on-primary rounded-lg shadow-sm" href="store_dispatch.html"><span class="material-symbols-outlined mr-3 text-[20px]">local_shipping</span><span class="font-body-md text-body-md font-semibold">Store Dispatch</span></a>
+<a class="flex items-center px-4 py-2.5 text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg transition-colors" href="material_order.html"><span class="material-symbols-outlined mr-3 text-[20px]">package_2</span><span class="font-body-md text-body-md">Material Order</span></a>
+</div>
+</div>
+</nav>
+</aside>
+<div class="flex-1 flex flex-col overflow-hidden">
+<header class="h-24 bg-surface-container-lowest border-b border-outline-variant hidden md:flex justify-between items-center px-10 shrink-0">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Store Dispatch <span class="text-on-surface-variant text-headline-sm font-normal ml-3 border-l border-outline-variant pl-3">매장 재고 · 출고 계획</span></h1>
+<div class="flex items-center space-x-4">
+<span class="text-on-surface-variant font-label-md bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant flex items-center"><span class="w-2 h-2 rounded-full bg-[#1a7f4b] mr-2"></span><span id="dataStamp">–</span></span></div>
+</header>
+<main class="flex-1 overflow-y-auto p-6 md:p-10 bg-background">
+<div class="max-w-7xl mx-auto space-y-8">
+
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">출고 계획</p>
+<p class="num text-[30px] leading-tight font-bold text-primary"><span id="kpiPlan">–</span><span class="text-[14px] font-normal ml-1">개</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2"><span id="kpiLines">–</span>개 라인 · <span id="kpiStores">–</span>개 매장</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">창고 부족</p>
+<p class="num text-[30px] leading-tight font-bold" id="kpiShortBox" style="color:#1a7f4b"><span id="kpiShort">–</span><span class="text-[14px] font-normal ml-1">개</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">보내야 하는데 본사에 없음</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">결품 매장·품목</p>
+<p class="num text-[30px] leading-tight font-bold" style="color:#ba1a1a"><span id="kpiOut">–</span><span class="text-[14px] font-normal ml-1">건</span></p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">재고 0 이하 · 판매 중</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-3">재고 기준일</p>
+<p class="num text-[24px] leading-tight font-bold text-on-surface" id="kpiAsof">–</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">POS 최종일 기준</p></div>
+</div>
+
+<div class="inline-flex bg-surface-container-low p-1 rounded-xl border border-outline-variant/40" id="tabStrip">
+<button data-tab="plan" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">출고 계획</button>
+<button data-tab="stock" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">매장 재고</button>
+<button data-tab="short" class="tab-btn px-5 py-2 rounded-lg font-body-md text-body-md transition-colors">창고 부족</button>
+</div>
+
+<section data-panel="plan" class="space-y-6">
+<div id="planInsight"></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center justify-between flex-wrap gap-3">
+<div class="flex items-center"><span class="material-symbols-outlined mr-3 text-primary">local_shipping</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">출고 계획</h3></div>
+<div class="flex items-center gap-2">
+<select id="planSlot" class="rounded-lg border-outline-variant font-body-md text-body-md bg-surface-container-lowest"></select>
+<select id="planStore" class="rounded-lg border-outline-variant font-body-md text-body-md bg-surface-container-lowest"></select>
+<button id="btnCsv" class="px-4 py-2 rounded-lg font-body-md text-body-md text-on-primary" style="background:#004262">출고 파일 받기</button>
+</div></div>
+<div id="slotBar" class="px-6 pt-4 grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+<div class="max-h-[560px] overflow-y-auto">
+<table class="w-full text-left min-w-[820px]"><thead class="sticky top-0 z-10"><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">매장</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider">상품</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">현재고</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">일판매</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">소진</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">단위</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">출고량</th>
+</tr></thead><tbody id="planRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant">선택 회차 합계 <b id="planSum">–</b>. 매장 선택은 <b>표 보기 전용</b>이며, 내려받는 파일은 매장에 보내는 원본과 같은 <b>전 매장 통합 xlsx</b>(시트 <b>출고수량</b>)입니다. <b>현재고</b> = 기초 재고(<span id="capBase">–</span>) + 이후 출고 − POS 판매이며, 수·금 회차는 월요일 재고에서 요일별 판매를 추정해 이어붙인 값입니다. <b>출고량</b>은 목표 <span id="capCover">–</span>일치에서 부족분을 품목별 출고 단위로 올린 뒤 <b>본사 창고 가용량 안에서만</b> 배분합니다. 실제 출고는 매장 요청과 본사 판단으로 정해지므로 <b>참고 제안</b>으로 쓰세요.</p>
+</div>
+</section>
+
+<section data-panel="stock" class="space-y-6 hidden">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center justify-between flex-wrap gap-3">
+<div class="flex items-center"><span class="material-symbols-outlined mr-3 text-primary">inventory</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">매장 재고 현황</h3></div>
+<div class="flex items-center gap-2">
+<select id="invStore" class="rounded-lg border-outline-variant font-body-md text-body-md bg-surface-container-lowest"></select>
+<label class="flex items-center gap-1 font-body-md text-body-md text-on-surface-variant"><input type="checkbox" id="invOnlyLow" class="rounded"> 소진 임박만</label>
+</div></div>
+<div class="max-h-[600px] overflow-y-auto">
+<table class="w-full text-left min-w-[760px]"><thead class="sticky top-0 z-10"><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">매장</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider">상품</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">매장 재고</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">일판매</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">소진 예상</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">본사 재고</th>
+</tr></thead><tbody id="invRows" class="divide-y divide-outline-variant/60"></tbody></table>
+</div>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant">계산 재고입니다. 반품·파손·매장 간 이동은 반영되지 않아 실물과 서서히 벌어지므로 <b>주기적 실사로 기준을 다시 잡아야</b> 합니다. 기초 스냅샷 대비 오차는 현재 3.6% 수준입니다.</p>
+</div>
+</section>
+
+<section data-panel="short" class="space-y-6 hidden">
+<div id="shortInsight"></div>
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-outline-variant/60 flex items-center">
+<span class="material-symbols-outlined mr-3" style="color:#ba1a1a">production_quantity_limits</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">본사 재고 부족 — 생산 우선순위</h3></div>
+<table class="w-full text-left"><thead><tr class="bg-surface-container-low text-on-surface-variant">
+<th class="px-6 py-3 font-label-md text-label-md uppercase tracking-wider">상품</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">부족 수량</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">본사 재고</th>
+<th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">해당 매장</th>
+</tr></thead><tbody id="shortRows" class="divide-y divide-outline-variant/60"></tbody></table>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant">매장이 필요로 하는데 <b>본사 창고에 없어 보낼 수 없는</b> 물량입니다. 생산 착수 판단에 바로 쓰입니다. 비어 있으면 현재 필요분을 전부 커버할 수 있다는 뜻입니다.</p>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+
+<script>
+const fmt=n=>Number(n).toLocaleString();
+let D=null, PLAN=[], INV=[], SHORT=[], curTab='plan';
+
+function insightCards(what,so,now){ return `<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm p-5"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#5b5f61">database</span><h4 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">What · 데이터</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${what}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#4648d4"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#4648d4">lightbulb</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#4648d4">So What · 인사이트</h4></div><p class="font-body-md text-body-md text-on-surface leading-relaxed">${so}</p></div>
+<div class="bg-surface-container-lowest rounded-2xl border shadow-sm p-5" style="border-color:#1a7f4b; background:#f2fbf6"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-[20px]" style="color:#1a7f4b">bolt</span><h4 class="font-label-md text-label-md uppercase tracking-wider" style="color:#0d3d24">Now What · 추천 액션</h4></div><p class="font-body-md text-body-md leading-relaxed" style="color:#0d3d24">${now}</p></div>
+</div>`; }
+
+// 소진일수 배지 — 음수(이미 결품)와 임박을 구분해 보여준다
+function daysBadge(d){
+  if(d===null||d===undefined) return '<span class="font-label-sm text-on-surface-variant">—</span>';
+  const c = d<3 ? 'bg-[#ffe4e6] text-[#be123c]' : d<7 ? 'bg-[#fef3c7] text-[#b45309]' : 'bg-surface-container-low text-on-surface-variant';
+  return `<span class="num inline-flex items-center justify-center px-2.5 h-7 rounded-lg font-label-sm ${c}">${d<0?'결품':d+'일'}</span>`;
+}
+
+// PLAN 행 = [회차, 매장, 상품, 바코드, 계획, 필요, 창고부족, 재고, 일판매, 소진일, 단위]
+function planRows(){
+  const sl=document.getElementById('planSlot').value;
+  const st=document.getElementById('planStore').value;
+  return PLAN.filter(r=>r[0]===sl && (st==='전체'||r[1]===st));
+}
+
+function renderPlan(){
+  const rows=planRows();
+  document.getElementById('planRows').innerHTML=rows.map(r=>`<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md text-on-surface">${r[1]}</td>
+    <td class="px-4 py-3 font-body-md text-body-md font-semibold text-on-surface">${r[2]}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface">${fmt(r[7])}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${r[8]}</td>
+    <td class="px-3 py-3 text-right">${daysBadge(r[9])}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${r[10]}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md font-bold" style="color:#004262">${fmt(r[4])}</td></tr>`).join('')
+    || '<tr><td colspan="7" class="px-6 py-6 text-center font-body-md text-on-surface-variant">이 회차에 출고 권고가 없습니다.</td></tr>';
+  const n=rows.reduce((s,r)=>s+r[4],0);
+  document.getElementById('planSum').textContent=fmt(n)+'개 · '+rows.length+'라인';
+  const s=(D.meta.slots||[]).find(x=>x.slot===document.getElementById('planSlot').value);
+  document.getElementById('btnCsv').textContent=s?s.slot+'요일 출고 파일':'출고 파일 받기';
+}
+
+// 회차 요약 — 어느 날 얼마나 나가는지 한눈에
+function renderSlotBar(){
+  const cur=document.getElementById('planSlot').value;
+  document.getElementById('slotBar').innerHTML=(D.meta.slots||[]).map(s=>{
+    const on=s.slot===cur;
+    return `<div class="rounded-xl border p-4 ${on?'':'opacity-60'}" style="border-color:${on?'#004262':'#c0c7cf'};${on?'background:#f0f6fb':''}">
+      <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">${s.slot}요일 출고</p>
+      <p class="num text-[22px] font-bold mt-1" style="color:#004262">${fmt(s.qty)}<span class="text-[13px] text-on-surface-variant font-normal ml-1">개 · ${s.lines}라인</span></p>
+      <p class="font-label-sm text-label-sm text-on-surface-variant mt-1">직전 구간 소진 ${s.cover.toFixed(2)}일치 보충</p></div>`;
+  }).join('');
+}
+
+function renderInv(){
+  const sel=document.getElementById('invStore').value;
+  const low=document.getElementById('invOnlyLow').checked;
+  let rows=INV.filter(r=>sel==='전체'||r[0]===sel);
+  if(low) rows=rows.filter(r=>r[4]!==null&&r[4]<7);
+  rows=rows.slice().sort((a,b)=>((a[4]===null)-(b[4]===null))||((a[4]??0)-(b[4]??0)));
+  document.getElementById('invRows').innerHTML=rows.slice(0,600).map(r=>`<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md text-on-surface">${r[0]}</td>
+    <td class="px-4 py-3 font-body-md text-body-md font-semibold text-on-surface">${r[1]}${r[6]?`<span class="ml-2 inline-flex items-center px-2 h-5 rounded font-label-sm bg-[#fff3e0] text-[#b45309]">${r[6]}</span>`:''}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md ${r[2]<=0?'font-bold':''}" style="${r[2]<=0?'color:#ba1a1a':''}">${fmt(r[2])}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${r[3]}</td>
+    <td class="px-3 py-3 text-right">${daysBadge(r[4])}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${fmt(r[5])}</td></tr>`).join('');
+}
+
+function renderShort(){
+  const el=document.getElementById('shortInsight');
+  document.getElementById('shortRows').innerHTML=SHORT.map(r=>`<tr class="hover:bg-surface-container-low transition-colors">
+    <td class="px-6 py-3 font-body-md text-body-md font-semibold text-on-surface">${r[0]}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md font-bold" style="color:#ba1a1a">${fmt(r[1])}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${fmt(r[2])}</td>
+    <td class="px-4 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${r[3]}곳</td></tr>`).join('')
+    || '<tr><td colspan="4" class="px-6 py-6 text-center font-body-md text-on-surface-variant">본사 재고로 현재 필요분을 모두 커버할 수 있습니다.</td></tr>';
+  if(el) el.innerHTML = SHORT.length
+    ? insightCards('매장 필요분 중 <b>'+fmt(D.meta.short_qty)+'개</b>를 본사 재고가 없어 보낼 수 없습니다. '+SHORT.length+'개 품목이 해당합니다.',
+        '출고가 안 되는 원인이 <b>매장이 아니라 본사</b>에 있습니다. 매장 재고만 보면 원인을 못 찾습니다.',
+        '부족 상위 품목을 <b>생산 계획에 즉시 반영</b>하세요. 자재 리드타임(향료 90일·부자재 45일)을 감안하면 지금 착수해도 시간이 걸립니다.')
+    : insightCards('현재 매장 필요분 <b>'+fmt(D.meta.need_qty)+'개</b>를 본사 재고로 <b>전량 커버</b>할 수 있습니다.',
+        '출고 제약이 없는 상태입니다. 결품이 생긴다면 재고 부족이 아니라 <b>출고 타이밍</b> 문제입니다.',
+        '현 수준을 유지하되, 소진 임박 매장에 우선 배분하세요.');
+}
+
+// 매장에 보내는 출고 파일과 같은 xlsx(시트 '출고수량')를 그대로 내려받는다.
+// 파일은 export_dispatch.py가 미리 만들어 두므로 전 매장 통합본이다.
+function downloadXlsx(){
+  const sl=document.getElementById('planSlot').value;
+  const s=(D.meta.slots||[]).find(x=>x.slot===sl);
+  if(!s||!s.file){ alert('출고 파일이 아직 생성되지 않았습니다.'); return; }
+  const a=document.createElement('a');
+  a.href='data/'+s.file;
+  a.download=D.meta.asof+' 매장 출고('+sl+').xlsx';
+  a.click();
+}
+
+function activate(tab){ curTab=tab;
+  document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==tab));
+  document.querySelectorAll('.tab-btn').forEach(b=>{const on=b.dataset.tab===tab;
+    b.classList.toggle('bg-surface-container-lowest',on);b.classList.toggle('shadow-sm',on);
+    b.classList.toggle('text-primary',on);b.classList.toggle('font-bold',on);b.classList.toggle('text-on-surface-variant',!on);});
+  if(tab==='stock')renderInv();
+  if(tab==='short')renderShort();
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>activate(b.dataset.tab)));
+document.getElementById('btnCsv').addEventListener('click',downloadXlsx);
+document.getElementById('planSlot').addEventListener('change',()=>{renderPlan();renderSlotBar();});
+document.getElementById('planStore').addEventListener('change',renderPlan);
+document.getElementById('invStore').addEventListener('change',renderInv);
+document.getElementById('invOnlyLow').addEventListener('change',renderInv);
+activate('plan');
+
+fetch('data/dispatch.json?_='+Date.now()).then(r=>r.json()).then(d=>{
+  D=d; PLAN=d.PLAN||[]; INV=d.INV||[]; SHORT=d.SHORT||[];
+  const m=d.meta, set=(id,v)=>{const e=document.getElementById(id); if(e)e.textContent=v;};
+  set('kpiPlan',fmt(m.plan_qty)); set('kpiLines',PLAN.length); set('kpiStores',m.n_store);
+  set('kpiShort',fmt(m.short_qty)); set('kpiAsof',m.asof);
+  set('kpiOut',INV.filter(r=>r[2]<=0&&r[3]>0).length);
+  set('capBase',m.base_date); set('capCover',m.target_days);
+  set('dataStamp','재고 기준 '+m.asof+' · 출고 반영 '+(m.ship_last||'-'));
+  document.getElementById('kpiShortBox').style.color = m.short_qty>0 ? '#ba1a1a' : '#1a7f4b';
+  const slots=(m.slots||[]).map(s=>s.slot);
+  document.getElementById('planSlot').innerHTML=slots.map(s=>'<option>'+s+'</option>').join('');
+  const stores=[...new Set(PLAN.map(r=>r[1]))].sort();
+  const istores=[...new Set(INV.map(r=>r[0]))].sort();
+  document.getElementById('planStore').innerHTML=['전체'].concat(stores).map(s=>'<option>'+s+'</option>').join('');
+  document.getElementById('invStore').innerHTML=['전체'].concat(istores).map(s=>'<option>'+s+'</option>').join('');
+  renderSlotBar(); renderPlan();
+  const el=document.getElementById('planInsight');
+  const out=INV.filter(r=>r[2]<=0&&r[3]>0).length;
+  const sent=m.sent_after ? ' 기준일 이후 이미 나간 <b>'+fmt(m.sent_after)+'개</b>('+m.sent_after_last+')는 권고량에서 뺐습니다.' : '';
+  if(el) el.innerHTML=insightCards(
+    '<b>'+m.asof+'</b> 기준 매장 '+m.n_store+'곳 · 품목 '+m.n_product+'종. 월·수·금 3회차 합계 <b>'+fmt(m.plan_qty)+'개</b>('+PLAN.length+'라인), 이미 결품인 조합 <b>'+out+'건</b>입니다.'+sent,
+    '회차마다 <b>직전 구간에 팔린 만큼</b>만 채웁니다. 토요일 판매가 월요일의 2.5배라 금→월 구간은 3일이 아니라 <b>'+(m.cover&&m.cover['금']||0)+'일치</b>로 계산합니다.',
+    '<b>월요일에 3개 회차를 미리 받아두세요.</b> 목표는 '+m.target_days+'일치 재고이며, 실제 수량은 매장 요청과 본사 판단으로 조정하세요.');
+}).catch(e=>console.error('dispatch.json 로드 실패',e));
+</script>
+</body></html>
