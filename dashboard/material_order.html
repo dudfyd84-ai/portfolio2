@@ -1,4 +1,4 @@
-<!-- Current Inventory & Forecast — 완제품 소진 예측 + 악성재고 + AI 수요예측 핵심 + 카테고리별 상품 예측, DESIGN1 톤 -->
+<!-- Material Order — 수요예측 × BOM 전개로 부자재 소요·발주 데드라인 산출, DESIGN1 톤 -->
 <!DOCTYPE html><html lang="ko"><head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -71,7 +71,7 @@
 </aside>
 <div class="flex-1 flex flex-col overflow-hidden">
 <header class="h-24 bg-surface-container-lowest border-b border-outline-variant hidden md:flex justify-between items-center px-10 shrink-0">
-<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Material Order <span class="text-on-surface-variant text-headline-sm font-normal ml-3 border-l border-outline-variant pl-3">매장 재고 · 출고 계획</span></h1>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Material Order <span class="text-on-surface-variant text-headline-sm font-normal ml-3 border-l border-outline-variant pl-3">부자재 발주 계획</span></h1>
 <div class="flex items-center space-x-4">
 <span class="text-on-surface-variant font-label-md bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant flex items-center"><span class="w-2 h-2 rounded-full bg-[#1a7f4b] mr-2"></span><span id="dataStamp">–</span></span></div>
 </header>
@@ -122,12 +122,14 @@
 <th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">리드타임</th>
 <th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">지평 소요</th>
 <th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">순소요</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">MOQ</th>
+<th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider text-right">발주량</th>
 <th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider">소진 예정</th>
 <th class="px-3 py-3 font-label-md text-label-md uppercase tracking-wider">발주 데드라인</th>
 <th class="px-4 py-3 font-label-md text-label-md uppercase tracking-wider text-right">D-Day</th>
 </tr></thead><tbody id="ordRows" class="divide-y divide-outline-variant/60"></tbody></table>
 </div>
-<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant"><b>발주 데드라인</b> = 소진예정일 − 품목별 리드타임 − 버퍼 <span id="capBuf">7</span>일. <b>지평 소요</b>는 수요예측을 BOM으로 전개한 값이며, 월차별 <b>과대예측 편향을 보정</b>했습니다(<span id="capBias">–</span>). MOQ·미입고 발주(Open PO)는 아직 반영되지 않아 <b>순소요는 하한</b>으로 보세요.</p>
+<p class="px-6 py-3 font-label-sm text-label-sm text-on-surface-variant"><b>발주 데드라인</b> = 소진예정일 − 품목별 리드타임 − 버퍼 <span id="capBuf">7</span>일. <b>지평 소요</b>는 수요예측을 BOM으로 전개한 값이며, 월차별 <b>과대예측 편향을 보정</b>했습니다(<span id="capBias">–</span>). <b>발주량</b>은 순소요를 MOQ 배수로 올린 값입니다. MOQ가 <b>미입력</b>인 자재는 순소요를 그대로 표시하므로, 실제 발주 시 최소 수량을 확인하세요. 미입고 발주(Open PO)도 아직 반영되지 않았습니다.</p>
 </div>
 </section>
 
@@ -195,11 +197,13 @@ function renderOrder(){
     <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface">${r[2]===null?'—':f1(r[2])}</td>
     <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${r[3]===null?'—':r[3]+'일'}</td>
     <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface-variant">${f1(r[4])}</td>
-    <td class="px-3 py-3 num text-right font-body-md text-body-md font-bold" style="color:#004262">${r[9]===null?'—':f1(r[9])}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md text-on-surface">${r[9]===null?'—':f1(r[9])}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md ${r[13]?'text-on-surface-variant':''}">${r[13]?f1(r[13]):'<span class="font-label-sm" style="color:#b45309">미입력</span>'}</td>
+    <td class="px-3 py-3 num text-right font-body-md text-body-md font-bold" style="color:#004262">${r[14]===null||r[14]===undefined?'—':f1(r[14])}</td>
     <td class="px-3 py-3 font-body-md text-body-md text-on-surface-variant">${r[6]||'—'}</td>
     <td class="px-3 py-3 font-body-md text-body-md text-on-surface">${r[7]||'—'}</td>
     <td class="px-4 py-3 text-right">${ddBadge(r[8])}</td></tr>`).join('')
-    || '<tr><td colspan="8" class="px-6 py-6 text-center font-body-md text-on-surface-variant">해당 조건의 자재가 없습니다.</td></tr>';
+    || '<tr><td colspan="10" class="px-6 py-6 text-center font-body-md text-on-surface-variant">해당 조건의 자재가 없습니다.</td></tr>';
 }
 
 function renderMonth(){
