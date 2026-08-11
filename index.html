@@ -96,23 +96,38 @@
   <p class="sub">시간이 얼마나 있는지에 따라 골라 보세요.</p>
   <div class="cards">
     <a class="card" href="deck/core.html">
-      <span class="tag">3분 · 8장</span>
+      <span class="tag">4분 · 9장</span>
       <h3>핵심 요약</h3>
       <p>지표가 감추던 것을 찾아낸 대표 사례와 성과만 추렸습니다.</p>
       <p class="go">먼저 보기 →</p>
     </a>
     <a class="card" href="deck/index.html">
-      <span class="tag">20분 · 26장</span>
+      <span class="tag">20분 · 30장</span>
       <h3>전체 케이스</h3>
-      <p>7개 케이스의 문제·발견·검증·결과를 무엇을 왜 어떻게 했는지까지 담았습니다.</p>
+      <p>파이프라인 구축 4장과 7개 분석 케이스를 무엇을 왜 어떻게 했는지까지 담았습니다.</p>
       <p class="go">자세히 보기 →</p>
     </a>
     <a class="card" href="dashboard/code.html">
       <span class="tag">실물</span>
       <h3>대시보드</h3>
-      <p>매출·고객·재고·출고·부자재 6개 화면이 실제로 동작합니다.</p>
+      <p>매출·고객·재고·출고·부자재 6개 화면이 같은 DB를 보고 동작합니다.</p>
       <p class="go">열어 보기 →</p>
     </a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>분석 이전에 데이터가 모이는 길부터 놓았습니다</h2>
+  <p class="sub">엑셀·구글시트에 흩어져 있던 원천을 한 곳에 모으고 계층을 나눴습니다.</p>
+  <div class="list">
+    <div class="row"><b>스키마 설계</b>
+      <p>원천 <em>13개</em>는 <em>raw_</em> 접두어로 묶어 손대지 않고, 집계·예측·발주 산출물 <em>6개</em>는 배치가 언제든 다시 만들 수 있게 분리했습니다. 예측 로직을 바꿔도 원천은 그대로 두고 재생성만 합니다</p></div>
+    <div class="row"><b>적재 전략</b>
+      <p>마감된 월은 건드리지 않고 최근 구간만 교체하는 증분 적재를 씁니다. 과거 데이터가 이미 있는지 확인한 뒤에만 부분 교체하고 아니면 전체 적재로 되돌립니다. POS 원본 <em>192만 행</em>은 2만 행 단위 배치로 넣습니다</p></div>
+    <div class="row"><b>운영 안정화</b>
+      <p>원격 DB가 느려질 때 집계 쿼리가 끊기던 문제를 연결 단위 타임아웃과 커넥션 사전 점검으로 해결했습니다. DB 실패 시 낡은 파일로 조용히 대체되던 경로는 배치가 실패하도록 바꿨습니다</p></div>
+    <div class="row"><b>무인 운영</b>
+      <p>수집 → 재학습 → 배포 → 감시를 스케줄러와 GitHub Actions로 엮었습니다. 동기화가 <em>5일간 조용히 죽어</em> 있던 사고를 겪은 뒤 모든 단계에 실패 알림을 붙였습니다</p></div>
   </div>
 </div></section>
 
@@ -151,8 +166,10 @@
   </div>
   <div class="stack" style="margin-top:22px">
     <span class="chip">Python · pandas · numpy</span>
-    <span class="chip">SQL · Supabase</span>
-    <span class="chip">XGBoost · LightGBM · ETS</span>
+    <span class="chip">PostgreSQL · Supabase</span>
+    <span class="chip">스키마 설계 · 증분 적재</span>
+    <span class="chip">XGBoost · LightGBM · ETS · SWMA</span>
+    <span class="chip">시계열 백테스트</span>
     <span class="chip">Notion API</span>
     <span class="chip">GitHub Actions</span>
     <span class="chip">Tableau</span>
