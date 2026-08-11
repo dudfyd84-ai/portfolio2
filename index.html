@@ -59,6 +59,16 @@
 
   .note-box{background:var(--wash); border-radius:12px; padding:18px 22px;
             font-size:13.5px; color:var(--dim)}
+  .foot{margin-top:18px; font-size:12.5px; line-height:1.7; color:var(--dim);
+        padding-top:14px; border-top:1px dashed var(--line)}
+  .foot b{color:var(--ink)}
+  .dl{margin-top:18px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+      font-size:13.5px; color:var(--dim)}
+  .dl a{display:inline-flex; align-items:center; gap:6px; padding:8px 15px; border-radius:999px;
+        border:1px solid var(--line); background:var(--card); color:var(--accent);
+        text-decoration:none; font-weight:600; transition:.15s}
+  .dl a:hover{border-color:var(--accent); background:var(--wash)}
+  .dl a::before{content:"⤓"; font-size:15px}
   footer{padding:40px 0 64px; font-size:13px; color:var(--dim)}
   @media (max-width:640px){ .row{grid-template-columns:1fr; gap:4px} }
 </style>
@@ -89,6 +99,13 @@
       <p class="val num up">+2.3만명</p>
       <p class="note">재구매 전환 개선 여지</p></div>
   </div>
+  <p class="foot">
+    <b>지표 정의</b> · 신뢰도 = 100 − 품목 평균 WAPE.
+    품목 WAPE = Σ|실적−예측| ÷ Σ실적 × 100이며, 품목별로 구한 값을 단순평균합니다.
+    물량 가중 WAPE는 전 품목을 통합해 한 번에 계산합니다(주력 품목의 비중이 그대로 반영).
+    검증은 예측 시작일 직전 30일을 홀드아웃으로 두고, 지평 비교는 예측 시점을 5회 옮긴
+    롤링 백테스트로 측정했습니다.
+  </p>
 </div></section>
 
 <section><div class="wrap">
@@ -113,6 +130,11 @@
       <p>매출·고객·재고·출고·부자재 6개 화면이 같은 DB를 보고 동작합니다.</p>
       <p class="go">열어 보기 →</p>
     </a>
+  </div>
+  <div class="dl">
+    <span>슬라이드가 열리지 않는 환경이라면</span>
+    <a href="pdf/portfolio-summary.pdf" download="핵심요약_수요예측SCM.pdf">핵심 요약 PDF (9장)</a>
+    <a href="pdf/portfolio-full.pdf" download="전체케이스_수요예측SCM.pdf">전체 케이스 PDF (30장)</a>
   </div>
 </div></section>
 
@@ -153,6 +175,28 @@
 </div></section>
 
 <section><div class="wrap">
+  <h2>업무에 미친 효과</h2>
+  <p class="sub">단가·인건비 정보를 갖고 있지 않아 금액 환산은 하지 않았습니다. 수량과 판단 건수로만 적었습니다.</p>
+  <div class="list">
+    <div class="row"><b>물류 부하</b>
+      <p>주간 출고량이 <em>절반</em>으로 줄었습니다. 매장 재고는 19일치를 그대로 유지하고 결품률은 0.3%p만 올랐으므로, 줄어든 만큼이 <em>운송·보관에서 덜어낸 몫</em>입니다</p></div>
+    <div class="row"><b>과잉 발주 방지</b>
+      <p>부자재 순소요가 <em>94K → 35K</em>로 정정됐습니다. 완제품 재고가 흡수하는 몫을 빼지 않아 <em>1.5배 부풀려</em> 사고 있던 물량입니다</p></div>
+    <div class="row"><b>판단 대상 축소</b>
+      <p>부자재 <em>385종</em> 중 지금 결정이 필요한 <em>25종</em>만 남깁니다. 거짓 경보 13건을 걷어내자 재고 0인 자재가 목록 맨 위로 올라왔습니다</p></div>
+    <div class="row"><b>수작업 제거</b>
+      <p>매장 39곳 × 주 3회 = <em>주 117건</em>의 출고 판단을 자동 산출합니다. 현장이 쓰던 엑셀 양식 그대로 나오므로 옮겨 적을 일이 없습니다</p></div>
+    <div class="row"><b>대응 시점 확보</b>
+      <p>예측 지평을 4개월로 늘려 향료 조달 <em>90일</em>을 덮습니다. 발주 데드라인이 지난 자재를 <em>즉시</em> 식별합니다</p></div>
+  </div>
+  <p class="foot">
+    <b>환산 기준</b> · 단가·물류비·인건비는 보유하지 않은 정보라 비용 절감액을 추정하지 않았습니다.
+    수량·건수는 시스템이 실제로 산출한 값이며, 출고량 감소는 안전일수 0~10일을 놓고
+    출고일 4회·조합 3,804건을 시뮬레이션해 결품률과의 교환비를 확인한 뒤 정한 결과입니다.
+  </p>
+</div></section>
+
+<section><div class="wrap">
   <h2>일하는 방식</h2>
   <div class="list">
     <div class="row"><b>검증 우선</b>
@@ -178,9 +222,14 @@
 
 <section><div class="wrap">
   <div class="note-box">
-    <b style="color:var(--ink)">데이터 처리 안내</b><br>
-    실제 업무 데이터를 기반으로 하되, 브랜드·제품·자재·매장·거래처명은 모두 <b>가명</b>으로 바꾸었습니다.
-    매출과 고객 수는 <b>지수화</b>했고, 재구매율·전환율·예측 오차 같은 비율 지표는 분석 논리를 보이기 위해 원본 그대로 두었습니다.
+    <b style="color:var(--ink)">운영 환경과 이 페이지의 관계</b><br>
+    여기 실린 시스템은 <b>실제 회사 운영 환경에서 매일 돌고 있는 파이프라인</b>입니다.
+    Supabase(PostgreSQL)에 원천을 적재하고, 로컬 스케줄러와 GitHub Actions가 수집·재학습·배포·알림을 무인으로 수행하며,
+    구매팀은 Notion에서 발주를 기록하고 대시보드는 사내에 배포되어 실무에 쓰입니다.
+    <br><br>
+    이 페이지는 그 시스템의 <b>산출물을 가명 처리해 공개용으로 재구성한 사본</b>입니다.
+    브랜드·제품·자재·매장·거래처명은 모두 가명이고 매출과 고객 수는 지수화했습니다.
+    재구매율·전환율·예측 오차 같은 비율 지표는 분석 논리를 보이기 위해 원본 값을 그대로 두었습니다.
   </div>
 </div></section>
 

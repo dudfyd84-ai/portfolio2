@@ -22,6 +22,15 @@
   .slide.compact .num-big { font-size: 40px; }
   .slide.compact .t td, .slide.compact .t th { font-size: 14px; }
   .slide.compact .how p { font-size: 13.5px; }
+  /* PDF 저장용 — base.css의 print 규칙만으로는 .deck의 height:100vh·overflow:hidden이
+     첫 장 이후를 잘라낸다. 컨테이너를 풀어줘야 전 슬라이드가 페이지마다 나온다. */
+  @media print {
+    html, body { height: auto !important; overflow: visible !important; }
+    .deck { height: auto !important; overflow: visible !important; }
+    .slide { display: flex !important; break-after: page; }
+    .slide:last-child { break-after: auto; }
+    .how { break-inside: avoid; }
+  }
   /* 1280x800(노트북)에서도 한 화면에 담기도록 여백을 좁힌다 */
   @media (max-height: 850px) {
     .how { margin-top: 12px; }
