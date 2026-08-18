@@ -24,12 +24,28 @@
   .slide.compact .how p { font-size: 13.5px; }
   /* PDF 저장용 — base.css의 print 규칙만으로는 .deck의 height:100vh·overflow:hidden이
      첫 장 이후를 잘라낸다. 컨테이너를 풀어줘야 전 슬라이드가 페이지마다 나온다. */
+
+  /* 표지 CTA — 인쇄본에서도 주소가 보이도록 링크 옆에 도메인을 함께 둔다 */
+  .cta { margin-top: 22px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .cta a { display: inline-block; padding: 11px 22px; border-radius: 999px;
+           background: var(--accent); color: #fff; text-decoration: none;
+           font-size: 16px; font-weight: 700; }
+  .cta span { font-size: 14px; color: var(--text-2, #666); letter-spacing: .01em; }
+  /* 덱은 가로 16:9로 설계됐는데 기본 인쇄는 세로 Letter라 내용이 잘렸다(요약본 6·8쪽).
+     페이지 자체를 슬라이드 크기로 맞추면 화면에서 보던 그대로 인쇄된다. */
+  @page { size: 1280px 720px; margin: 0; }
   @media print {
     html, body { height: auto !important; overflow: visible !important; }
     .deck { height: auto !important; overflow: visible !important; }
     .slide { display: flex !important; break-after: page; }
     .slide:last-child { break-after: auto; }
     .how { break-inside: avoid; }
+    /* base.css의 print 규칙이 .slide를 height:100vh로 고정하는데 .slide는 overflow:hidden이라
+       내용이 길면 조용히 잘린다(요약본 6·8쪽에서 실제로 잘렸다). 높이를 풀고 넘침을 보이게 한다. */
+    .slide { height: 720px !important; min-height: 0 !important; overflow: visible !important; }
+    /* 100vh는 인쇄에서 페이지 높이와 다르게 잡혀 매 장이 다음 쪽으로 넘쳤다.
+       @page와 같은 값을 직접 준다. overflow는 visible로 둬 잘림이 생기면 눈에 띄게 한다. */
+
   }
   /* 1280x800(노트북)에서도 한 화면에 담기도록 여백을 좁힌다 */
   @media (max-height: 850px) {
@@ -43,6 +59,20 @@
     .slide.compact .two-col .card { padding: 16px 20px; }
     .slide.compact .two-col .card h4 { margin-bottom: 4px; }
   }
+
+  /* 720px(인쇄 페이지 높이)에서 몇 장이 10~30px씩 넘쳤다. 글자를 줄이기보다
+     상하 여백을 먼저 줄인다 — 가독성 손실 없이 32px를 회수한다. */
+  @media (max-height: 760px) {
+    .slide { padding: 56px 96px; }
+    .how { margin-top: 10px; }
+    .how p { font-size: 13px; line-height: 1.45; }
+    .t td, .t th { font-size: 13.5px; }
+    .cta { margin-top: 16px; }
+    /* 남은 7~14px은 카드 안쪽 여백과 목록 줄간격에서 회수한다 */
+    .vs .card, .two-col .card, .grid .card { padding: 16px 20px; }
+    .vs ul li, .side ul li { margin: 5px 0; line-height: 1.5; }
+    .mt-l { margin-top: 18px; }
+  }
 </style>
 </head>
 <body data-themes="swiss-grid,minimal-white,corporate-clean,academic-paper,editorial-serif" data-theme-base="../assets/themes/">
@@ -53,6 +83,9 @@
   <p class="kicker">Data Analyst Portfolio · 2026</p>
   <h1 class="h1 anim-fade-up" data-anim="fade-up">숫자는 맞는데<br><span class="gradient-text">답이 틀렸을 때</span></h1>
   <p class="lede">수요예측 · SCM 최적화 · 고객 행동 · 경쟁 분석<br>향수 브랜드의 데이터 파이프라인 구축부터 7개 분석 케이스까지</p>
+  <!-- PDF로 인쇄되면 클릭이 안 되는 뷰어가 있어 주소를 눈에 보이게 함께 적는다 -->
+  <p class="cta"><a href="https://dudfyd84-ai.github.io/portfolio2/dashboard/code.html">대시보드 둘러보기</a>
+    <span>dudfyd84-ai.github.io/portfolio2</span></p>
   <div class="deck-footer"><span class="dim2">LUMEN SCENT (가명) · 모든 고유명사와 매출은 익명 처리</span><span class="slide-number" data-current="1" data-total="30"></span></div>
 </section>
 
