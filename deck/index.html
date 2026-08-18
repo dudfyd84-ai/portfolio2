@@ -94,7 +94,7 @@
   <p class="kicker">TL;DR</p>
   <h2 class="h2">지표를 고친 게 아니라 <span class="gradient-text">지표가 감추던 것</span>을 찾았습니다</h2>
   <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
-    <div class="card"><p class="eyebrow">예측 신뢰도</p><div class="num-mid">−61 <span class="arrow">→</span> <span style="color:var(--good)">89</span></div><p class="dim">지표 정의 재설계</p></div>
+    <div class="card"><p class="eyebrow">예측 신뢰도</p><div class="num-mid">−61 <span class="arrow">→</span> <span style="color:var(--good)">89</span><span style="font-size:20px">%</span></div><p class="dim">지표 정의 재설계</p></div>
     <div class="card"><p class="eyebrow">출고량 최적화</p><div class="num-mid">−50<span style="font-size:20px">%</span></div><p class="dim">결품률은 0.3%p만 증가</p></div>
     <div class="card"><p class="eyebrow">거짓 발주 경보</p><div class="num-mid">16 <span class="arrow">→</span> <span style="color:var(--good)">3</span></div><p class="dim">13건이 오탐이었음</p></div>
     <div class="card"><p class="eyebrow">매출 기회 규모</p><div class="num-mid">+2.3<span style="font-size:20px">만명</span></div><p class="dim">재구매 전환 개선 여지</p></div>
@@ -110,7 +110,7 @@
     <div class="card bad-side side anim-fade-left" data-anim="fade-left">
       <h3>현장에서 벌어지던 일</h3>
       <ul>
-        <li>대시보드 <b>예측 신뢰도가 −61</b>로 표시됨</li>
+        <li>대시보드 <b>예측 신뢰도가 −61%</b>로 표시됨</li>
         <li>매장은 감으로 요청하고 본사는 감으로 출고</li>
         <li>부자재는 "45일 전 발주" 고정 규칙</li>
         <li>고객 이탈·경쟁 위치를 볼 지표가 없음</li>
@@ -209,7 +209,7 @@
 
 <!-- 9 -->
 <section class="slide center tc" data-title="케이스1">
-  <div><p class="kicker">Case 01 · 예측 검증</p><h2 class="h2">신뢰도 <span class="gradient-text">−61점</span>의 정체</h2>
+  <div><p class="kicker">Case 01 · 예측 검증</p><h2 class="h2">신뢰도 <span class="gradient-text">−61%</span>의 정체</h2>
   <p class="lede mt-l">평균 하나가 59개 품목을 대표할 수 있는가</p></div>
 </section>
 
@@ -229,7 +229,7 @@
   </table>
   </div>
   <div class="how">
-    <p><b>무엇을</b> — 신뢰도 −61이 표시되는 걸 보고 지표 산식을 역추적했습니다.</p>
+    <p><b>무엇을</b> — 신뢰도 −61%가 표시되는 걸 보고 지표 산식을 역추적했습니다.</p>
     <p><b>왜</b> — 신뢰도가 음수인 건 데이터 문제가 아니라 <b>정의 문제</b>일 가능성이 높습니다. <code>100 − 평균오차율</code>인데 평균이 161%면 음수가 됩니다.</p>
     <p><b>어떻게</b> — 품목별 오차율을 전부 꺼내 분포를 봤습니다. 월 4개 팔리는 단종 품목에 %오차를 매기면 8,746%가 나오고, 이 한 건이 59종 평균을 지배했습니다.</p>
   </div>
@@ -262,7 +262,7 @@
   <h2 class="h2">산식은 그대로 두고 <span class="gradient-text">판매 중단 품목만 제외</span>했습니다</h2>
   <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
     <div class="card"><p class="eyebrow">품목 평균 WAPE</p><div class="num-big">161<span class="arrow">→</span><span style="color:var(--good)">11</span><span style="font-size:20px">%</span></div></div>
-    <div class="card"><p class="eyebrow">예측 신뢰도</p><div class="num-big">−61<span class="arrow">→</span><span style="color:var(--good)">89</span></div></div>
+    <div class="card"><p class="eyebrow">예측 신뢰도</p><div class="num-big">−61<span class="arrow">→</span><span style="color:var(--good)">89</span><span style="font-size:20px">%</span></div></div>
     <div class="card"><p class="eyebrow">물량 가중 WAPE</p><div class="num-big">7.7<span class="arrow">→</span><span style="color:var(--good)">4.2</span><span style="font-size:20px">%</span></div></div>
   </div>
   <div class="how">
